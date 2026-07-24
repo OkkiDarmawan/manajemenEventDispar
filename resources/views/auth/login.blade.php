@@ -5,7 +5,7 @@
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
-        <!-- Email Address -->
+        <!-- NIK -->
         <div>
             <x-input-label for="nik" :value="__('NIK')" />
             <x-text-input id="nik" class="block mt-1 w-full" type="text" name="nik" :value="old('nik')" required autofocus autocomplete="username" />

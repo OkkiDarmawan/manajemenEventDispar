@@ -7,6 +7,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/home', function () {
+    return view('home');
+});
+
 Route::middleware(['auth'])->prefix('admin')->group(function(){
 Route::get('/dashboard', function (){
     return view('admin.dashboard');
