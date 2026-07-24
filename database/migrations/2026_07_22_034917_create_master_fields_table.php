@@ -30,6 +30,8 @@ return new class extends Migration
             $table->json('options')->nullable();
             $table->string('placeholder')->nullable();
             $table->string('kategori')->nullable();
+            $table->boolean('aktif')->default(true);
+            $table->boolean('readonly')->default(false);
             $table->timestamps();
         });
     }

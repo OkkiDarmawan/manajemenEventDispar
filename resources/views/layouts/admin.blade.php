@@ -11,25 +11,23 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
-
 </head>
 
-<body>
+<body class="min-h-screen flex flex-col bg-gray-50">
 
     @include('components.navbar')
 
-    <div class="container-fluid">
+    <div class="w-full flex-1">
 
-        <div class="row">
+        <div class="flex flex-col md:flex-row">
 
-            <div class="col-md-2 p-0">
+            <div class="w-full md:w-2/12 p-0">
 
                 @include('components.sidebar')
 
             </div>
 
-            <div class="col-md-10 p-4">
+            <div class="w-full md:w-10/12 p-6">
 
                 @yield('content')
 
@@ -40,8 +38,6 @@
     </div>
 
     @include('components.footer')
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 

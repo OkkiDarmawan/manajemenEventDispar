@@ -8,7 +8,7 @@ Route::get('/', function () {
 });
 
 Route::get('/home', function () {
-    return view('home');
+    return view('welcome');
 });
 
 Route::middleware(['auth'])->prefix('admin')->group(function(){
@@ -16,10 +16,6 @@ Route::get('/dashboard', function (){
     return view('admin.dashboard');
 })->name('admin.dashboard');
 });
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

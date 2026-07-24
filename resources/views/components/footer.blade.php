@@ -1,6 +1,6 @@
-<footer class="bg-light border-top py-3 text-center">
+<footer class="bg-gray-100 border-t border-gray-200 py-3 text-center text-gray-600 text-sm">
 
-    <small>
+    <span>
 
         © {{ date('Y') }}
 
@@ -8,6 +8,6 @@
 
         | Dinas Pariwisata
 
-    </small>
+    </span>
 
 </footer>
