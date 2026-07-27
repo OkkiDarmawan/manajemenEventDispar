@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateMasterFieldRequest extends FormRequest
 {
@@ -12,7 +13,7 @@ class UpdateMasterFieldRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +24,37 @@ class UpdateMasterFieldRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+             'label' => [
+                'required',
+                'max:100',
+            ],
+
+            'nama_field' => [
+                'required', 
+                Rule::unique('master_fields', 'nama_field')->ignore($this->masterField),
+            ],
+
+            'tipe' => [
+                'required',
+            ],
+
+            'kategori' => [
+                'nullable',
+            ],
+
+            'placeholder' => [
+                'nullable',
+            ],
+
+            'aktif' => [
+                'required', 
+                'boolean',
+            ],
+
+            'readonly' => [
+                'nullable', 
+                'boolean',
+            ],
         ];
     }
 }

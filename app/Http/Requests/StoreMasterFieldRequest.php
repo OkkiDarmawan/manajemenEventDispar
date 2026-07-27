@@ -23,7 +23,37 @@ class StoreMasterFieldRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'label' => [
+                'required',
+                'max:100',
+            ],
+
+            'nama_field' => [
+                'required', 
+                'unique:master_fields,nama_field',
+            ],
+
+            'tipe' => [
+                'required',
+            ],
+
+            'kategori' => [
+                'nullable',
+            ],
+
+            'placeholder' => [
+                'nullable',
+            ],
+
+            'aktif' => [
+                'required', 
+                'boolean',
+            ],
+
+            'readonly' => [
+                'nullable', 
+                'boolean',
+            ],
         ];
     }
 }

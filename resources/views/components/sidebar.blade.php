@@ -9,7 +9,7 @@
     <ul class="flex flex-col space-y-1">
 
         <li>
-            <a href="#" class="block px-3 py-2 rounded text-white hover:bg-gray-800 transition-colors">
+            <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 rounded text-white hover:bg-gray-800 transition-colors">
                 Dashboard
             </a>
         </li>
@@ -26,7 +26,7 @@
             </a>
         </li>
         <li>
-            <a href="#" class="block px-3 py-2 rounded text-gray-300 hover:text-white hover:bg-gray-800 transition-colors">
+            <a href="{{ route('admin.master-field.index') }}" class="block px-3 py-2 rounded text-gray-300 hover:text-white hover:bg-gray-800 transition-colors">
                 Master Fields
             </a>
         </li>

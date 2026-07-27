@@ -28,8 +28,66 @@
             </div>
 
             <div class="w-full md:w-10/12 p-6">
+                <main class="p-6">
 
-                @yield('content')
+                    {{-- Flash Message --}}
+                    @if (session('success'))
+                        <div id="success-alert"
+                            class="flex items-center gap-3 mb-6 rounded-xl border border-green-300 bg-green-50 px-5 py-4">
+
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7" />
+
+                            </svg>
+
+                            <div>
+
+                                <p class="font-semibold text-green-700">
+
+                                    Berhasil
+
+                                </p>
+
+                                <p class="text-green-600">
+
+                                    {{ session('success') }}
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <script>
+                            setTimeout(function() {
+
+                                const alert = document.getElementById('success-alert');
+
+                                if (alert) {
+
+                                    alert.remove();
+
+                                }
+
+                            }, 3000);
+                        </script>
+                    @endif
+
+                    @if (session('error'))
+                        <div class="mb-5 rounded-lg border border-red-200 bg-red-100 px-4 py-3 text-red-700">
+
+                            {{ session('error') }}
+
+                        </div>
+                    @endif
+
+                    @yield('content')
+
+                </main>
+
 
             </div>
 
@@ -39,6 +97,7 @@
 
     @include('components.footer')
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 </html>
