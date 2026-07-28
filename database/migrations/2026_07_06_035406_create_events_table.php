@@ -18,14 +18,7 @@ return new class extends Migration
             $table->string('lokasi');
             $table->date('tanggal_mulai');
             $table->date('tanggal_selesai');
-            $table->string('poster')->nullable();
-
-            $table->enum('status', [
-                'Akan Datang',
-                'Sedang Berlangsung',
-                'Selesai'
-            ])->default('Akan Datang');   
-            
+            $table->string('poster')->nullable();  
             $table->timestamps();
         });
     }

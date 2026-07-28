@@ -98,6 +98,41 @@
     @include('components.footer')
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+
+function confirmDelete(id){
+
+    Swal.fire({
+
+        title: "Apakah Anda yakin?",
+
+        text: "Data yang dihapus tidak dapat dikembalikan!",
+
+        icon: "warning",
+
+        showCancelButton: true,
+
+        confirmButtonColor: "#dc2626",
+
+        cancelButtonColor: "#6b7280",
+
+        confirmButtonText: "Ya, Hapus",
+
+        cancelButtonText: "Batal"
+
+    }).then((result)=>{
+
+        if(result.isConfirmed){
+
+            document.getElementById('delete-form-'+id).submit();
+
+        }
+
+    });
+
+}
+
+</script>
 </body>
 
 </html>

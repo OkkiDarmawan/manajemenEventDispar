@@ -1,8 +1,6 @@
 @extends('layouts.admin')
 
 @section('content')
-   
-
     <div class="space-y-6">
 
         <!-- Header -->
@@ -240,12 +238,14 @@
 
                                     </a>
 
-                                    <form action="{{ route('admin.master-field.destroy', $field->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus field ini?')">
-                                        
+                                    <form id="delete-form-{{ $field->id }}"
+                                        action="{{ route('admin.master-field.destroy', $field->id) }}" method="POST">
+
                                         @csrf
                                         @method('DELETE')
 
-                                        <button class="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-white">
+                                        <button type="button" onclick="confirmDelete({{ $field->id }})"
+                                            class="px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700">
 
                                             Hapus
 

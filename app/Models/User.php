@@ -30,6 +30,8 @@ class User extends Authenticatable
 
         'tanggal_lahir', 
 
+        'role',
+
         'alamat',
 
     ];

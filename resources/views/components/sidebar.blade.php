@@ -21,7 +21,7 @@
         </span>
 
         <li>
-            <a href="#" class="block px-3 py-2 rounded text-gray-300 hover:text-white hover:bg-gray-800 transition-colors">
+            <a href="{{ route('admin.event.index') }}" class="block px-3 py-2 rounded text-gray-300 hover:text-white hover:bg-gray-800 transition-colors">
                 Event
             </a>
         </li>

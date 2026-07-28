@@ -35,7 +35,7 @@ class MasterFieldController extends Controller
      */
     public function create(MasterField $masterFields)
     {
-        return view('admin.master-field.create', compact('masterField'));
+        return view('admin.master-field.create');
     }
 
     /**
