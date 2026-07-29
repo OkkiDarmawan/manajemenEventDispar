@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreLombaRequest;
+use App\Models\Event;
+use App\Models\Lomba;
 use Illuminate\Http\Request;
 
 class LombaController extends Controller
@@ -12,7 +15,22 @@ class LombaController extends Controller
      */
     public function index()
     {
-        //
+        $lombas = Lomba::with('event')
+            ->latest()
+            ->paginate(10);
+
+        $totalLomba = Lomba::count();
+
+        $totalEvent = Event::count();
+
+        $totalKuota = Lomba::sum('kuota');
+
+        return view('admin.lomba.index', compact(
+            'lombas',
+            'totalLomba',
+            'totalEvent',
+            'totalKuota'
+        ));
     }
 
     /**
@@ -20,15 +38,21 @@ class LombaController extends Controller
      */
     public function create()
     {
-        //
+        $events = Event::orderBy('nama_event')->get();
+
+        return view('admin.lomba.create', compact('events'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreLombaRequest $request)
     {
-        //
+        Lomba::create($request->validated());
+
+        return redirect()
+            ->route('admin.lomba.index')
+            ->with('success', 'Data lomba berhasil ditambahkan.');
     }
 
     /**
@@ -42,9 +66,14 @@ class LombaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Lomba $lomba)
     {
-        //
+        $events = Event::orderBy('nama_event')->get();
+
+        return view('admin.lomba.edit', compact(
+            'lomba',
+            'events'
+        ));
     }
 
     /**

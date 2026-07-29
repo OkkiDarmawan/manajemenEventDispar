@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Admin\LombaController;
 use App\Http\Controllers\Admin\MasterFieldController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -20,6 +21,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     Route::resource('master-field', MasterFieldController::class);
     Route::resource('event', EventController::class);
+    Route::resource('lomba', LombaController::class);
 
 });
 
