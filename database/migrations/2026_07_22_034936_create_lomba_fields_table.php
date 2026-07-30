@@ -25,6 +25,8 @@ return new class extends Migration
 
             $table->integer('urutan')->default(1);
 
+            $table->boolean('is_active')->default(true);
+
             $table->timestamps();
         });
     }

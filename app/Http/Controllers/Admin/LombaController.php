@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreLombaRequest;
+use App\Http\Requests\UpdateLombaRequest;
 use App\Models\Event;
 use App\Models\Lomba;
-use Illuminate\Http\Request;
 
 class LombaController extends Controller
 {
@@ -79,16 +79,41 @@ class LombaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateLombaRequest $request, Lomba $lomba)
     {
-        //
+    $lomba->update([
+            'event_id' => $request->event_id,
+            'nama_lomba' => $request->nama_lomba,
+            'kuota' => $request->kuota,
+            'biaya' => $request->biaya,
+            'hadiah' => $request->hadiah,
+            'pendaftaran_terbuka' => $request->pendaftaran_terbuka,
+            'pendaftaran_tertutup' => $request->pendaftaran_tertutup,
+            'syarat' => $request->syarat,
+            'deskripsi' => $request->deskripsi,
+        ]) ;  
+
+
+
+        $lomba->update($request->validated());
+
+        return redirect()
+            ->route('admin.lomba.index')
+            ->with('success', 'Data lomba berhasil diperbarui.');
+
+         
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Lomba $lomba)
     {
-        //
+        // Hapus data lomba
+    $lomba->delete();
+
+    return redirect()
+        ->route('admin.lomba.index')
+        ->with('success', 'Data lomba berhasil dihapus.');
     }
 }
