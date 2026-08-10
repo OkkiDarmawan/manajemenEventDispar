@@ -5,10 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
-use Carbon\Carbon;
 use App\Models\Event;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
@@ -17,25 +16,25 @@ class EventController extends Controller
      */
     public function index()
     {
-      $today = Carbon::today();
+        $today = Carbon::today();
 
-    $events = Event::latest()->paginate(10);
+        $events = Event::latest()->paginate(10);
 
-    $totalEvent = Event::count();
+        $totalEvent = Event::count();
 
-    $eventAktif = Event::whereDate('tanggal_mulai', '<=', $today)
-        ->whereDate('tanggal_selesai', '>=', $today)
-        ->count();
+        $eventAktif = Event::whereDate('tanggal_mulai', '<=', $today)
+            ->whereDate('tanggal_selesai', '>=', $today)
+            ->count();
 
-    $eventSelesai = Event::whereDate('tanggal_selesai', '<', $today)
-        ->count();
+        $eventSelesai = Event::whereDate('tanggal_selesai', '<', $today)
+            ->count();
 
-    return view('admin.event.index', compact(
-        'events',
-        'totalEvent',
-        'eventAktif',
-        'eventSelesai'
-    ));
+        return view('admin.event.index', compact(
+            'events',
+            'totalEvent',
+            'eventAktif',
+            'eventSelesai'
+        ));
     }
 
     /**
@@ -51,37 +50,35 @@ class EventController extends Controller
      */
     public function store(StoreEventRequest $request)
     {
-          $poster = null;
+        $poster = null;
 
-    if ($request->hasFile('poster')) {
+        if ($request->hasFile('poster')) {
 
-        $poster = $request
-            ->file('poster')
-            ->store('event', 'public');
+            $poster = $request
+                ->file('poster')
+                ->store('event', 'public');
 
-    }
+        }
 
-    Event::create([
+        Event::create([
 
-        'nama_event'=>$request->nama_event,
+            'nama_event' => $request->nama_event,
 
-        'deskripsi'=>$request->deskripsi,
+            'deskripsi' => $request->deskripsi,
 
-        'lokasi'=>$request->lokasi,
+            'lokasi' => $request->lokasi,
 
-        'tanggal_mulai'=>$request->tanggal_mulai,
+            'tanggal_mulai' => $request->tanggal_mulai,
 
-        'tanggal_selesai'=>$request->tanggal_selesai,
+            'tanggal_selesai' => $request->tanggal_selesai,
 
-        'poster'=>$poster,
+            'poster' => $poster,
 
-     
+        ]);
 
-    ]);
-
-    return redirect()
-        ->route('admin.event.index')
-        ->with('success','Event berhasil ditambahkan.');
+        return redirect()
+            ->route('admin.event.index')
+            ->with('success', 'Event berhasil ditambahkan.');
     }
 
     /**
@@ -105,34 +102,34 @@ class EventController extends Controller
      */
     public function update(UpdateEventRequest $request, Event $event)
     {
-         // Gunakan poster lama sebagai default
-    $poster = $event->poster;
+        // Gunakan poster lama sebagai default
+        $poster = $event->poster;
 
-    // Jika ada poster baru
-    if ($request->hasFile('poster')) {
+        // Jika ada poster baru
+        if ($request->hasFile('poster')) {
 
-        // Hapus poster lama jika ada
-        if ($event->poster && Storage::disk('public')->exists($event->poster)) {
-            Storage::disk('public')->delete($event->poster);
+            // Hapus poster lama jika ada
+            if ($event->poster && Storage::disk('public')->exists($event->poster)) {
+                Storage::disk('public')->delete($event->poster);
+            }
+
+            // Upload poster baru
+            $poster = $request->file('poster')->store('event', 'public');
         }
 
-        // Upload poster baru
-        $poster = $request->file('poster')->store('event', 'public');
-    }
+        // Update data
+        $event->update([
+            'nama_event' => $request->nama_event,
+            'deskripsi' => $request->deskripsi,
+            'lokasi' => $request->lokasi,
+            'tanggal_mulai' => $request->tanggal_mulai,
+            'tanggal_selesai' => $request->tanggal_selesai,
+            'poster' => $poster,
+        ]);
 
-    // Update data
-    $event->update([
-        'nama_event'       => $request->nama_event,
-        'deskripsi'        => $request->deskripsi,
-        'lokasi'           => $request->lokasi,
-        'tanggal_mulai'    => $request->tanggal_mulai,
-        'tanggal_selesai'  => $request->tanggal_selesai,
-        'poster'           => $poster,
-    ]);
-
-    return redirect()
-        ->route('admin.event.index')
-        ->with('success', 'Data event berhasil diperbarui.');
+        return redirect()
+            ->route('admin.event.index')
+            ->with('success', 'Data event berhasil diperbarui.');
     }
 
     /**
@@ -141,17 +138,17 @@ class EventController extends Controller
     public function destroy(Event $event)
     {
         // Hapus poster jika ada
-    if ($event->poster && Storage::disk('public')->exists($event->poster)) {
+        if ($event->poster && Storage::disk('public')->exists($event->poster)) {
 
-        Storage::disk('public')->delete($event->poster);
+            Storage::disk('public')->delete($event->poster);
 
-    }
+        }
 
-    // Hapus data event
-    $event->delete();
+        // Hapus data event
+        $event->delete();
 
-    return redirect()
-        ->route('admin.event.index')
-        ->with('success', 'Data event berhasil dihapus.');
+        return redirect()
+            ->route('admin.event.index')
+            ->with('success', 'Data event berhasil dihapus.');
     }
 }

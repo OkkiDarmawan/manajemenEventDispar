@@ -133,6 +133,7 @@ function confirmDelete(id){
 }
 
 </script>
+@stack('scripts')
 </body>
 
 </html>

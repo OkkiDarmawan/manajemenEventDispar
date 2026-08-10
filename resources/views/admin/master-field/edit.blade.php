@@ -95,25 +95,25 @@
                         name="tipe"
                         class="w-full rounded-lg border border-gray-300 px-4 py-2">
 
-                        <option value="">  {{ old('tipe', $masterField->tipe) == 'text' ? 'selected' : '' }} -- Pilih Tipe --</option>
+                        <option value="" {{ old('tipe', $masterField->tipe) == '' ? 'selected' : '' }}> -- Pilih Tipe --</option>
 
-                        <option value="text">  {{ old('tipe', $masterField->tipe) == 'text' ? 'selected' : '' }} Text</option>
+                        <option value="text" {{ old('tipe', $masterField->tipe) == 'text' ? 'selected' : '' }} >  Text</option>
 
-                        <option value="number">  {{ old('tipe', $masterField->tipe) == 'text' ? 'selected' : '' }} Number</option>
+                        <option value="number" {{ old('tipe', $masterField->tipe) == 'number' ? 'selected' : '' }} >  Number</option>
 
-                        <option value="email">  {{ old('tipe', $masterField->tipe) == 'text' ? 'selected' : '' }} Email</option>
+                        <option value="email" {{ old('tipe', $masterField->tipe) == 'email' ? 'selected' : '' }}>   Email</option>
 
-                        <option value="date">  {{ old('tipe', $masterField->tipe) == 'text' ? 'selected' : '' }} Date</option>
+                        <option value="date" {{ old('tipe', $masterField->tipe) == 'date' ? 'selected' : '' }}>   Date</option>
 
-                        <option value="textarea">  {{ old('tipe', $masterField->tipe) == 'text' ? 'selected' : '' }} Textarea</option>
+                        <option value="textarea" {{ old('tipe', $masterField->tipe) == 'textarea' ? 'selected' : '' }}>   Textarea</option>
 
-                        <option value="file">  {{ old('tipe', $masterField->tipe) == 'text' ? 'selected' : '' }} File</option>
+                        <option value="file" {{ old('tipe', $masterField->tipe) == 'file' ? 'selected' : '' }}>   File</option>
 
-                        <option value="select">  {{ old('tipe', $masterField->tipe) == 'text' ? 'selected' : '' }} Select</option>
+                        <option value="select" {{ old('tipe', $masterField->tipe) == 'select' ? 'selected' : '' }}>   Select</option>
 
-                        <option value="radio">  {{ old('tipe', $masterField->tipe) == 'text' ? 'selected' : '' }} Radio</option>
+                        <option value="radio" {{ old('tipe', $masterField->tipe) == 'radio' ? 'selected' : '' }}>   Radio</option>
 
-                        <option value="checkbox">  {{ old('tipe', $masterField->tipe) == 'text' ? 'selected' : '' }} Checkbox</option>
+                        <option value="checkbox" {{ old('tipe', $masterField->tipe) == 'checkbox' ? 'selected' : '' }}>   Checkbox</option>
 
                     </select>
 
@@ -137,17 +137,17 @@
                         name="kategori"
                         class="w-full rounded-lg border border-gray-300 px-4 py-2">
 
-                        <option value="">{{ old('kategori', $masterField->kategori) == 'Identitas' ? 'selected' : '' }} -- Pilih Kategori --</option>
+                        <option value="" {{ old('kategori', $masterField->kategori) == '' ? 'selected' : '' }}> -- Pilih Kategori --</option>
 
-                        <option value="Identitas">{{ old('kategori', $masterField->kategori) == 'Identitas' ? 'selected' : '' }} Identitas</option>
+                        <option value="Identitas" {{ old('kategori', $masterField->kategori) == 'Identitas' ? 'selected' : '' }}> Identitas</option>
 
-                        <option value="Fisik">{{ old('kategori', $masterField->kategori) == 'Identitas' ? 'selected' : '' }} Fisik</option>
+                        <option value="Fisik" {{ old('kategori', $masterField->kategori) == 'Fisik' ? 'selected' : '' }}> Fisik</option>
 
-                        <option value="Pendidikan">{{ old('kategori', $masterField->kategori) == 'Identitas' ? 'selected' : '' }} Pendidikan</option>
+                        <option value="Pendidikan" {{ old('kategori', $masterField->kategori) == 'Pendidikan' ? 'selected' : '' }}> Pendidikan</option>
 
-                        <option value="Dokumen">{{ old('kategori', $masterField->kategori) == 'Identitas' ? 'selected' : '' }} Dokumen</option>
+                        <option value="Dokumen" {{ old('kategori', $masterField->kategori) == 'Dokumen' ? 'selected' : '' }}> Dokumen</option>
 
-                        <option value="Lainnya">{{ old('kategori', $masterField->kategori) == 'Identitas' ? 'selected' : '' }} Lainnya</option>
+                        <option value="Lainnya" {{ old('kategori', $masterField->kategori) == 'Lainnya' ? 'selected' : '' }} >Lainnya</option>
 
                     </select>
 
@@ -192,7 +192,7 @@
                                 type="radio"
                                 name="aktif"
                                 value="1"
-                                {{ old('aktif', $masterField->aktif)==1 ? 'checked' : '' }}
+                                {{ old('aktif', $masterField->aktif)==1 ? 'checked  ' : '' }}
                                 >
 
                             Aktif

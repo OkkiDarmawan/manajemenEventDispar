@@ -38,11 +38,11 @@ class StoreMasterFieldRequest extends FormRequest
             ],
 
             'kategori' => [
-                'nullable',
+                'required',
             ],
 
             'placeholder' => [
-                'nullable',
+                'required',
             ],
 
             'aktif' => [

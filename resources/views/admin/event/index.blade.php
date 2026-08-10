@@ -200,7 +200,7 @@
                             </td>
 
                             <td class="px-6 py-4">
-
+                                <br>
                                 @if($event->poster)
 
                                     <img src="{{ asset('storage/'.$event->poster) }}"

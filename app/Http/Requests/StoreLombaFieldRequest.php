@@ -12,7 +12,7 @@ class StoreLombaFieldRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,12 @@ class StoreLombaFieldRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'master_fields' => ['nullable', 'array'],
+            'master_fields.*' => ['exists:master_fields,id'],
+            'required_fields' => ['nullable', 'array'],
+            'required_fields.*' => ['exists:master_fields,id'],
+            'order' => ['nullable', 'array'],
+            'order.*' => ['integer'],
         ];
     }
 }

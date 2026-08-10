@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('lokasi');
             $table->date('tanggal_mulai');
             $table->date('tanggal_selesai');
+            $table->boolean('is_active')->default(true);
             $table->string('poster')->nullable();  
             $table->timestamps();
         });

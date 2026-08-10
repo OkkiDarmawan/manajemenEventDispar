@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('jawaban_lombas', function (Blueprint $table) {
             $table->id();
+
             $table->foreignId('pendaftaran_lomba_id')
                 ->constrained('pendaftaran_lombas')
                 ->cascadeOnDelete();
@@ -21,7 +22,8 @@ return new class extends Migration
                 ->constrained('master_fields')
                 ->cascadeOnDelete();
 
-            $table->text('value');
+            $table->text('value')->nullable();
+
             $table->timestamps();
         });
     }

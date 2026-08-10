@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class MasterField extends Model
 {
+    public function lombaFields()
+    {
+        return $this->hasMany(LombaField::class);
+    }
+
     protected $fillable = [
 
         'label',
@@ -16,12 +21,12 @@ class MasterField extends Model
 
         'options',
 
-        'placeholger', 
+        'placeholder',
 
         'kategori',
 
         'aktif',
-        
+
         'readonly',
 
     ];

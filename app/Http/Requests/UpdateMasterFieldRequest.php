@@ -23,6 +23,7 @@ class UpdateMasterFieldRequest extends FormRequest
      */
     public function rules(): array
     {
+      
         return [
              'label' => [
                 'required',
@@ -31,7 +32,7 @@ class UpdateMasterFieldRequest extends FormRequest
 
             'nama_field' => [
                 'required', 
-                Rule::unique('master_fields', 'nama_field')->ignore($this->masterField),
+                Rule::unique('master_fields', 'nama_field')->ignore($this->master_field),
             ],
 
             'tipe' => [
@@ -39,11 +40,11 @@ class UpdateMasterFieldRequest extends FormRequest
             ],
 
             'kategori' => [
-                'nullable',
+                'required',
             ],
 
             'placeholder' => [
-                'nullable',
+                'required',
             ],
 
             'aktif' => [
