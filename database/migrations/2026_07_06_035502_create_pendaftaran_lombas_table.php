@@ -28,6 +28,11 @@ return new class extends Migration
                 'Menunggu'
             ])->default('Menunggu');
 
+            $table->unique([
+               'lomba_id',
+               'user_id'
+            ]);
+
             $table->timestamps();
         });
     }

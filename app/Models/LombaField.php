@@ -14,13 +14,21 @@ class LombaField extends Model
 
         'required',
 
-        'urutan',
-
         'is_active',
+
+        'urutan',
 
     ];
 
-     public function lomba()
+    protected $casts = [
+
+        'required' => 'boolean',
+
+        'is_active' => 'boolean',
+
+    ];
+
+    public function lomba()
     {
         return $this->belongsTo(Lomba::class);
     }

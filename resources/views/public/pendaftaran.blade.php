@@ -6,6 +6,17 @@
 
     <div class="max-w-3xl mx-auto px-6 py-12">
 
+ <a href="{{ route('public.lomba.show', $lomba->id) }}"
+            class="inline-flex items-center gap-2
+           text-gray-600 hover:text-blue-600
+           font-medium transition mb-6">
+
+            <span>←</span>
+
+            Kembali
+
+        </a>
+
         <div class="mb-8">
 
             <p class="text-blue-600 font-semibold">
@@ -24,29 +35,17 @@
 
 
         <div class="bg-white rounded-2xl shadow p-8">
-            @if ($errors->any())
-
-                <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-
-                    <ul class="list-disc list-inside text-red-600 text-sm">
-
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-
-                    </ul>
-
-                </div>
-
-            @endif
 
             <form action="{{ route('public.lomba.daftar.store', $lomba->id) }}" method="POST">
+
                 @csrf
+
 
                 @foreach ($fields as $field)
                     @php
                         $masterField = $field->masterField;
                     @endphp
+
 
                     <div class="mb-6">
 
@@ -54,30 +53,46 @@
 
                             {{ $masterField->label }}
 
-                            @if ($field->is_required)
+                            @if ($field->required)
                                 <span class="text-red-500">*</span>
                             @endif
 
                         </label>
 
 
+                        {{-- TEXTAREA --}}
+
                         @if ($masterField->tipe === 'textarea')
                             <textarea name="field_{{ $masterField->id }}" class="w-full rounded-lg border-gray-300"
-                                placeholder="{{ $masterField->placeholder }}" {{ $field->is_required ? 'required' : '' }}></textarea>
+                                placeholder="{{ $masterField->placeholder }}">{{ old('field_' . $masterField->id) }}</textarea>
+
+
+                            {{-- SELECT --}}
                         @elseif($masterField->tipe === 'select')
-                            <select name="field_{{ $masterField->id }}" class="w-full rounded-lg border-gray-300"
-                                {{ $field->is_required ? 'required' : '' }}>
+                            <select name="field_{{ $masterField->id }}" class="w-full rounded-lg border-gray-300">
 
                                 <option value="">
                                     -- Pilih --
                                 </option>
 
                             </select>
+
+
+                            {{-- INPUT BIASA --}}
                         @else
                             <input type="{{ $masterField->tipe }}" name="field_{{ $masterField->id }}"
-                                class="w-full rounded-lg border-gray-300" placeholder="{{ $masterField->placeholder }}"
-                                {{ $field->is_required ? 'required' : '' }}>
+                                value="{{ old('field_' . $masterField->id) }}" class="w-full rounded-lg border-gray-300"
+                                placeholder="{{ $masterField->placeholder }}">
                         @endif
+
+
+                        {{-- ERROR FIELD --}}
+
+                        @error('field_' . $masterField->id)
+                            <p class="text-red-500 text-sm mt-1">
+                                {{ $message }}
+                            </p>
+                        @enderror
 
                     </div>
                 @endforeach

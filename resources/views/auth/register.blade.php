@@ -1,73 +1,352 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Full Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
-        </div>
+    <div class="min-h-screen flex items-center justify-center
+                bg-gradient-to-br from-blue-50 via-white to-blue-100
+                px-6 py-12">
 
-        <!-- NIK -->
-        <div class="mt-4">
-            <x-input-label for="nik" :value="__('NIK')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="text" name="nik" :value="old('nik')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('nik')" class="mt-2" />
-        </div>
+        <div class="w-full max-w-lg">
 
-        <!-- No Handphone -->
-        <div class="mt-4">
-            <x-input-label for="no_hp" :value="__('No Handphone')" />
-            <x-text-input id="no_hp" class="block mt-1 w-full" type="text" name="no_hp" :value="old('no_hp')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('no_hp')" class="mt-2" />
-        </div>
+            {{-- Brand --}}
+            <div class="text-center mb-8">
 
-        <!-- Tanggal Lahir -->
-        <div class="mt-4">
-            <x-input-label for="tanggal_lahir" :value="__('Tanggal Lahir')" />
-            <x-text-input id="tanggal_lahir" class="block mt-1 w-full" type="date" name="tanggal_lahir" :value="old('tanggal_lahir')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('no_hp')" class="mt-2" />
-        </div>
+                <a
+                    href="{{ route('home') }}"
+                    class="inline-flex items-center justify-center gap-3">
 
-        <!-- Alamat -->
-        <div class="mt-4">
-            <x-input-label for="alamat" :value="__('Alamat')" />
-            <x-text-input id="alamat" class="block mt-1 w-full" type="text" name="alamat" :value="old('alamat')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('no_hp')" class="mt-2" />
-        </div>
+                    <div
+                        class="w-12 h-12 bg-blue-600 rounded-2xl
+                               flex items-center justify-center
+                               text-white text-xl font-bold shadow-lg">
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+                        E
 
-            <x-text-input id="password" class="block mt-1 w-full"
+                    </div>
+
+                    <div class="text-left">
+
+                        <h1 class="text-2xl font-bold text-gray-800">
+                            EventKu
+                        </h1>
+
+                        <p class="text-sm text-gray-500">
+                            Manajemen Event
+                        </p>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+
+            {{-- Register Card --}}
+            <div
+                class="bg-white rounded-3xl shadow-xl
+                       border border-gray-100
+                       p-8 md:p-10">
+
+                {{-- Heading --}}
+                <div class="text-center mb-8">
+
+                    <h2 class="text-2xl font-bold text-gray-800">
+                        Buat Akun 👋
+                    </h2>
+
+                    <p class="text-gray-500 mt-2 text-sm">
+                        Daftarkan diri untuk mengikuti berbagai event dan lomba.
+                    </p>
+
+                </div>
+
+
+                <form method="POST" action="{{ route('register') }}">
+
+                    @csrf
+
+
+                    {{-- Nama --}}
+                    <div>
+
+                        <x-input-label
+                            for="name"
+                            :value="__('Nama Lengkap')"
+                            class="text-gray-700 font-semibold"
+                        />
+
+                        <x-text-input
+                            id="name"
+                            class="block mt-2 w-full rounded-xl
+                                   border-gray-300
+                                   focus:border-blue-500
+                                   focus:ring-blue-500
+                                   py-3"
+                            type="text"
+                            name="name"
+                            :value="old('name')"
+                            required
+                            autofocus
+                            autocomplete="name"
+                            placeholder="Masukkan nama lengkap"
+                        />
+
+                        <x-input-error
+                            :messages="$errors->get('name')"
+                            class="mt-2"
+                        />
+
+                    </div>
+
+
+                    {{-- NIK --}}
+                    <div class="mt-5">
+
+                        <x-input-label
+                            for="nik"
+                            :value="__('NIK')"
+                            class="text-gray-700 font-semibold"
+                        />
+
+                        <x-text-input
+                            id="nik"
+                            class="block mt-2 w-full rounded-xl
+                                   border-gray-300
+                                   focus:border-blue-500
+                                   focus:ring-blue-500
+                                   py-3"
+                            type="text"
+                            name="nik"
+                            :value="old('nik')"
+                            required
+                            autocomplete="username"
+                            placeholder="Masukkan NIK"
+                        />
+
+                        <x-input-error
+                            :messages="$errors->get('nik')"
+                            class="mt-2"
+                        />
+
+                    </div>
+
+
+                    {{-- No Handphone --}}
+                    <div class="mt-5">
+
+                        <x-input-label
+                            for="no_hp"
+                            :value="__('No. Handphone')"
+                            class="text-gray-700 font-semibold"
+                        />
+
+                        <x-text-input
+                            id="no_hp"
+                            class="block mt-2 w-full rounded-xl
+                                   border-gray-300
+                                   focus:border-blue-500
+                                   focus:ring-blue-500
+                                   py-3"
+                            type="tel"
+                            name="no_hp"
+                            :value="old('no_hp')"
+                            required
+                            autocomplete="tel"
+                            placeholder="Contoh: 081234567890"
+                        />
+
+                        <x-input-error
+                            :messages="$errors->get('no_hp')"
+                            class="mt-2"
+                        />
+
+                    </div>
+
+
+                    {{-- Tanggal Lahir --}}
+                    <div class="mt-5">
+
+                        <x-input-label
+                            for="tanggal_lahir"
+                            :value="__('Tanggal Lahir')"
+                            class="text-gray-700 font-semibold"
+                        />
+
+                        <x-text-input
+                            id="tanggal_lahir"
+                            class="block mt-2 w-full rounded-xl
+                                   border-gray-300
+                                   focus:border-blue-500
+                                   focus:ring-blue-500
+                                   py-3"
+                            type="date"
+                            name="tanggal_lahir"
+                            :value="old('tanggal_lahir')"
+                            required
+                        />
+
+                        <x-input-error
+                            :messages="$errors->get('tanggal_lahir')"
+                            class="mt-2"
+                        />
+
+                    </div>
+
+
+                    {{-- Alamat --}}
+                    <div class="mt-5">
+
+                        <x-input-label
+                            for="alamat"
+                            :value="__('Alamat')"
+                            class="text-gray-700 font-semibold"
+                        />
+
+                        <textarea
+                            id="alamat"
+                            name="alamat"
+                            rows="3"
+                            required
+                            class="block mt-2 w-full rounded-xl
+                                   border-gray-300
+                                   focus:border-blue-500
+                                   focus:ring-blue-500
+                                   py-3 px-4"
+                            placeholder="Masukkan alamat lengkap">{{ old('alamat') }}</textarea>
+
+                        <x-input-error
+                            :messages="$errors->get('alamat')"
+                            class="mt-2"
+                        />
+
+                    </div>
+
+
+                    {{-- Password --}}
+                    <div class="mt-5">
+
+                        <x-input-label
+                            for="password"
+                            :value="__('Password')"
+                            class="text-gray-700 font-semibold"
+                        />
+
+                        <x-text-input
+                            id="password"
+                            class="block mt-2 w-full rounded-xl
+                                   border-gray-300
+                                   focus:border-blue-500
+                                   focus:ring-blue-500
+                                   py-3"
                             type="password"
                             name="password"
-                            required autocomplete="new-password" />
+                            required
+                            autocomplete="new-password"
+                            placeholder="Buat password"
+                        />
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+                        <x-input-error
+                            :messages="$errors->get('password')"
+                            class="mt-2"
+                        />
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+                    </div>
 
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
+
+                    {{-- Konfirmasi Password --}}
+                    <div class="mt-5">
+
+                        <x-input-label
+                            for="password_confirmation"
+                            :value="__('Konfirmasi Password')"
+                            class="text-gray-700 font-semibold"
+                        />
+
+                        <x-text-input
+                            id="password_confirmation"
+                            class="block mt-2 w-full rounded-xl
+                                   border-gray-300
+                                   focus:border-blue-500
+                                   focus:ring-blue-500
+                                   py-3"
                             type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
+                            name="password_confirmation"
+                            required
+                            autocomplete="new-password"
+                            placeholder="Ulangi password"
+                        />
 
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+                        <x-input-error
+                            :messages="$errors->get('password_confirmation')"
+                            class="mt-2"
+                        />
+
+                    </div>
+
+
+                    {{-- Register Button --}}
+                    <button
+                        type="submit"
+                        class="w-full mt-7
+                               bg-blue-600
+                               hover:bg-blue-700
+                               text-white
+                               font-semibold
+                               py-3.5
+                               rounded-xl
+                               transition
+                               duration-200
+                               shadow-md
+                               hover:shadow-lg">
+
+                        Daftar Sekarang
+
+                    </button>
+
+                </form>
+
+
+                {{-- Login --}}
+                <div
+                    class="mt-7 pt-6
+                           border-t border-gray-100
+                           text-center">
+
+                    <p class="text-sm text-gray-500">
+
+                        Sudah memiliki akun?
+
+                        <a
+                            href="{{ route('login') }}"
+                            class="text-blue-600
+                                   hover:text-blue-700
+                                   font-semibold">
+
+                            Masuk sekarang
+
+                        </a>
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            {{-- Back --}}
+            <div class="text-center mt-6">
+
+                <a
+                    href="{{ route('home') }}"
+                    class="text-sm text-gray-500
+                           hover:text-blue-600 transition">
+
+                    ← Kembali ke halaman utama
+
+                </a>
+
+            </div>
+
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
+    </div>
 
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
 </x-guest-layout>

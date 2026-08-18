@@ -4,13 +4,15 @@ use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\LombaController;
 use App\Http\Controllers\Admin\LombaFieldController;
 use App\Http\Controllers\Admin\MasterFieldController;
-use App\Http\Controllers\Public\LombaController as PublicLombaController;
-use App\Http\Controllers\Public\PendaftaranLombaController;
+use App\Http\Controllers\Admin\PendaftaranLombaController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Public\PendaftaranLombaController as PublicPendaftaranLombaController;
+use App\Http\Controllers\Public\LombaController as PublicLombaController;
+use App\Http\Controllers\Public\PendaftaranController as PublicPendaftaranController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [HomeController::class,'index'])->name('home') ;
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/lomba/{lomba}', [PublicLombaController::class, 'show'])
     ->name('public.lomba.show');
@@ -19,13 +21,18 @@ Route::middleware('auth')->group(function () {
 
     Route::get(
         '/lomba/{lomba}/daftar',
-        [PendaftaranLombaController::class, 'create']
+        [PublicPendaftaranLombaController::class, 'create']
     )->name('public.lomba.daftar');
 
     Route::post(
         '/lomba/{lomba}/daftar',
-        [PendaftaranLombaController::class, 'store']
+        [PublicPendaftaranLombaController::class, 'store']
     )->name('public.lomba.daftar.store');
+
+    Route::get(
+        '/pendaftaran-saya',
+        [PublicPendaftaranController::class, 'index']
+    )->name('public.pendaftaran.index');
 
 });
 
@@ -39,6 +46,21 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::resource('master-field', MasterFieldController::class);
     Route::resource('event', EventController::class);
     Route::resource('lomba', LombaController::class);
+
+    Route::get(
+        '/pendaftaran-lomba',
+        [PendaftaranLombaController::class, 'index']
+    )->name('pendaftaran-lomba.index');
+
+    Route::get(
+        '/pendaftaran-lomba/{pendaftaranLomba}',
+        [PendaftaranLombaController::class, 'show']
+    )->name('pendaftaran-lomba.show');
+
+    Route::patch(
+        '/pendaftaran-lomba/{pendaftaranLomba}/status',
+        [PendaftaranLombaController::class, 'update']
+    )->name('pendaftaran-lomba.status');
 
     Route::get(
         'lomba/{lomba}/field',

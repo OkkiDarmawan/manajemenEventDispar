@@ -16,7 +16,7 @@ class PendaftaranLomba extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function jawaban()
+    public function jawabanLombas()
     {
         return $this->hasMany(JawabanLomba::class);
     }
