@@ -1,6 +1,7 @@
 <x-guest-layout>
 
-    <div class="min-h-screen flex items-center justify-center
+    <div
+        class="min-h-screen flex items-center justify-center
                 bg-gradient-to-br from-blue-50 via-white to-blue-100
                 px-6 py-12">
 
@@ -9,23 +10,21 @@
             {{-- Brand --}}
             <div class="text-center mb-8">
 
-                <a
-                    href="{{ route('home') }}"
-                    class="inline-flex items-center justify-center gap-3">
+                <a href="{{ route('home') }}" class="inline-flex items-center justify-center gap-3">
 
                     <div
-                        class="w-12 h-12 bg-blue-600 rounded-2xl
+                        class="w-16 h-16 rounded-2xl
                                flex items-center justify-center
-                               text-white text-xl font-bold shadow-lg">
+                               text-white text-xl font-bold">
 
-                        E
+                        <img src="{{ asset('images/my_logo.png') }}" alt="">
 
                     </div>
 
                     <div class="text-left">
 
                         <h1 class="text-2xl font-bold text-gray-800">
-                            EventKu
+                            EventKite
                         </h1>
 
                         <p class="text-sm text-gray-500">
@@ -67,32 +66,18 @@
                     {{-- Nama --}}
                     <div>
 
-                        <x-input-label
-                            for="name"
-                            :value="__('Nama Lengkap')"
-                            class="text-gray-700 font-semibold"
-                        />
+                        <x-input-label for="name" :value="__('Nama Lengkap')" class="text-gray-700 font-semibold" />
 
-                        <x-text-input
-                            id="name"
+                        <x-text-input id="name"
                             class="block mt-2 w-full rounded-xl
                                    border-gray-300
                                    focus:border-blue-500
                                    focus:ring-blue-500
                                    py-3"
-                            type="text"
-                            name="name"
-                            :value="old('name')"
-                            required
-                            autofocus
-                            autocomplete="name"
-                            placeholder="Masukkan nama lengkap"
-                        />
+                            type="text" name="name" :value="old('name')" required autofocus autocomplete="name"
+                            placeholder="Masukkan nama lengkap" />
 
-                        <x-input-error
-                            :messages="$errors->get('name')"
-                            class="mt-2"
-                        />
+                        <x-input-error :messages="$errors->get('name')" class="mt-2" />
 
                     </div>
 
@@ -100,31 +85,18 @@
                     {{-- NIK --}}
                     <div class="mt-5">
 
-                        <x-input-label
-                            for="nik"
-                            :value="__('NIK')"
-                            class="text-gray-700 font-semibold"
-                        />
+                        <x-input-label for="nik" :value="__('NIK')" class="text-gray-700 font-semibold" />
 
-                        <x-text-input
-                            id="nik"
+                        <x-text-input id="nik"
                             class="block mt-2 w-full rounded-xl
                                    border-gray-300
                                    focus:border-blue-500
                                    focus:ring-blue-500
                                    py-3"
-                            type="text"
-                            name="nik"
-                            :value="old('nik')"
-                            required
-                            autocomplete="username"
-                            placeholder="Masukkan NIK"
-                        />
+                            type="text" name="nik" :value="old('nik')" required autocomplete="username"
+                            placeholder="Masukkan NIK" />
 
-                        <x-input-error
-                            :messages="$errors->get('nik')"
-                            class="mt-2"
-                        />
+                        <x-input-error :messages="$errors->get('nik')" class="mt-2" />
 
                     </div>
 
@@ -132,31 +104,18 @@
                     {{-- No Handphone --}}
                     <div class="mt-5">
 
-                        <x-input-label
-                            for="no_hp"
-                            :value="__('No. Handphone')"
-                            class="text-gray-700 font-semibold"
-                        />
+                        <x-input-label for="no_hp" :value="__('No. Handphone')" class="text-gray-700 font-semibold" />
 
-                        <x-text-input
-                            id="no_hp"
+                        <x-text-input id="no_hp"
                             class="block mt-2 w-full rounded-xl
                                    border-gray-300
                                    focus:border-blue-500
                                    focus:ring-blue-500
                                    py-3"
-                            type="tel"
-                            name="no_hp"
-                            :value="old('no_hp')"
-                            required
-                            autocomplete="tel"
-                            placeholder="Contoh: 081234567890"
-                        />
+                            type="tel" name="no_hp" :value="old('no_hp')" required autocomplete="tel"
+                            placeholder="Contoh: 081234567890" />
 
-                        <x-input-error
-                            :messages="$errors->get('no_hp')"
-                            class="mt-2"
-                        />
+                        <x-input-error :messages="$errors->get('no_hp')" class="mt-2" />
 
                     </div>
 
@@ -164,29 +123,17 @@
                     {{-- Tanggal Lahir --}}
                     <div class="mt-5">
 
-                        <x-input-label
-                            for="tanggal_lahir"
-                            :value="__('Tanggal Lahir')"
-                            class="text-gray-700 font-semibold"
-                        />
+                        <x-input-label for="tanggal_lahir" :value="__('Tanggal Lahir')" class="text-gray-700 font-semibold" />
 
-                        <x-text-input
-                            id="tanggal_lahir"
+                        <x-text-input id="tanggal_lahir"
                             class="block mt-2 w-full rounded-xl
                                    border-gray-300
                                    focus:border-blue-500
                                    focus:ring-blue-500
                                    py-3"
-                            type="date"
-                            name="tanggal_lahir"
-                            :value="old('tanggal_lahir')"
-                            required
-                        />
+                            type="date" name="tanggal_lahir" :value="old('tanggal_lahir')" required />
 
-                        <x-input-error
-                            :messages="$errors->get('tanggal_lahir')"
-                            class="mt-2"
-                        />
+                        <x-input-error :messages="$errors->get('tanggal_lahir')" class="mt-2" />
 
                     </div>
 
@@ -194,17 +141,9 @@
                     {{-- Alamat --}}
                     <div class="mt-5">
 
-                        <x-input-label
-                            for="alamat"
-                            :value="__('Alamat')"
-                            class="text-gray-700 font-semibold"
-                        />
+                        <x-input-label for="alamat" :value="__('Alamat')" class="text-gray-700 font-semibold" />
 
-                        <textarea
-                            id="alamat"
-                            name="alamat"
-                            rows="3"
-                            required
+                        <textarea id="alamat" name="alamat" rows="3" required
                             class="block mt-2 w-full rounded-xl
                                    border-gray-300
                                    focus:border-blue-500
@@ -212,10 +151,7 @@
                                    py-3 px-4"
                             placeholder="Masukkan alamat lengkap">{{ old('alamat') }}</textarea>
 
-                        <x-input-error
-                            :messages="$errors->get('alamat')"
-                            class="mt-2"
-                        />
+                        <x-input-error :messages="$errors->get('alamat')" class="mt-2" />
 
                     </div>
 
@@ -223,30 +159,42 @@
                     {{-- Password --}}
                     <div class="mt-5">
 
-                        <x-input-label
-                            for="password"
-                            :value="__('Password')"
-                            class="text-gray-700 font-semibold"
-                        />
+                        <x-input-label for="password" :value="__('Password')" class="text-gray-700 font-semibold" />
 
-                        <x-text-input
-                            id="password"
-                            class="block mt-2 w-full rounded-xl
-                                   border-gray-300
-                                   focus:border-blue-500
-                                   focus:ring-blue-500
-                                   py-3"
-                            type="password"
-                            name="password"
-                            required
-                            autocomplete="new-password"
-                            placeholder="Buat password"
-                        />
+                        <div class="relative mt-2">
 
-                        <x-input-error
-                            :messages="$errors->get('password')"
-                            class="mt-2"
-                        />
+                            <x-text-input id="password"
+                                class="block w-full rounded-xl
+               border-gray-300
+               focus:border-blue-500
+               focus:ring-blue-500
+               py-3 pr-12"
+                                type="password" name="password" required autocomplete="new-password"
+                                placeholder="Buat password" />
+
+                            <button type="button" onclick="togglePassword('password', 'eye-password')"
+                                class="absolute inset-y-0 right-0
+               flex items-center px-4
+               text-gray-400 hover:text-gray-600">
+
+                                <svg id="eye-password" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5
+                   c4.477 0 8.268 2.943 9.542 7
+                   -1.274 4.057-5.065 7-9.542 7
+                   -4.477-0-8.268-2.943-9.542-7z" />
+
+                                </svg>
+
+                            </button>
+
+                        </div>
+
+                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
 
                     </div>
 
@@ -254,37 +202,53 @@
                     {{-- Konfirmasi Password --}}
                     <div class="mt-5">
 
-                        <x-input-label
-                            for="password_confirmation"
-                            :value="__('Konfirmasi Password')"
-                            class="text-gray-700 font-semibold"
-                        />
+                        <x-input-label for="password_confirmation" :value="__('Konfirmasi Password')"
+                            class="text-gray-700 font-semibold" />
 
-                        <x-text-input
-                            id="password_confirmation"
-                            class="block mt-2 w-full rounded-xl
-                                   border-gray-300
-                                   focus:border-blue-500
-                                   focus:ring-blue-500
-                                   py-3"
-                            type="password"
-                            name="password_confirmation"
-                            required
-                            autocomplete="new-password"
-                            placeholder="Ulangi password"
-                        />
+                        <div class="relative mt-2">
 
-                        <x-input-error
-                            :messages="$errors->get('password_confirmation')"
-                            class="mt-2"
-                        />
+                            <x-text-input id="password_confirmation"
+                                class="block w-full rounded-xl
+               border-gray-300
+               focus:border-blue-500
+               focus:ring-blue-500
+               py-3 pr-12"
+                                type="password" name="password_confirmation" required autocomplete="new-password"
+                                placeholder="Ulangi password" />
+
+                            <button type="button"
+                                onclick="togglePassword(
+            'password_confirmation',
+            'eye-password-confirmation'
+        )"
+                                class="absolute inset-y-0 right-0
+               flex items-center px-4
+               text-gray-400 hover:text-gray-600">
+
+                                <svg id="eye-password-confirmation" xmlns="http://www.w3.org/2000/svg"
+                                    class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5
+                   c4.477 0 8.268 2.943 9.542 7
+                   -1.274 4.057-5.065 7-9.542 7
+                   -4.477 0-8.268-2.943-9.542-7z" />
+
+                                </svg>
+
+                            </button>
+
+                        </div>
+
+                        <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
 
                     </div>
 
 
                     {{-- Register Button --}}
-                    <button
-                        type="submit"
+                    <button type="submit"
                         class="w-full mt-7
                                bg-blue-600
                                hover:bg-blue-700
@@ -314,8 +278,7 @@
 
                         Sudah memiliki akun?
 
-                        <a
-                            href="{{ route('login') }}"
+                        <a href="{{ route('login') }}"
                             class="text-blue-600
                                    hover:text-blue-700
                                    font-semibold">
@@ -334,8 +297,7 @@
             {{-- Back --}}
             <div class="text-center mt-6">
 
-                <a
-                    href="{{ route('home') }}"
+                <a href="{{ route('home') }}"
                     class="text-sm text-gray-500
                            hover:text-blue-600 transition">
 

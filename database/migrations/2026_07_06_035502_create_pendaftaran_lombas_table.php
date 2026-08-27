@@ -22,6 +22,8 @@ return new class extends Migration
             ->constrained()
             ->cascadeOnDelete();
 
+            $table->text('alasan_penolakan')->nullable();
+
             $table->enum('status', [
                 'Diterima',
                 'Ditolak',

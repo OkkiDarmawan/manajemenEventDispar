@@ -25,5 +25,6 @@ class PendaftaranLomba extends Model
         'lomba_id',
         'user_id',
         'status',
+        'alasan_penolakan',
     ];
 }

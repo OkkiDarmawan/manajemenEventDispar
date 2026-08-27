@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\PendaftaranLomba;
 use App\Models\Lomba;
+use App\Models\PendaftaranLomba;
 use Illuminate\Http\Request;
 
 class PendaftaranLombaController extends Controller
@@ -14,48 +14,48 @@ class PendaftaranLombaController extends Controller
      */
     public function index(Request $request)
     {
-       $query = PendaftaranLomba::with([
-        'lomba.event',
-        'user',
-    ]);
+        $query = PendaftaranLomba::with([
+            'lomba.event',
+            'user',
+        ]);
 
-    // Search nama peserta
-    if ($request->filled('search')) {
+        // Search nama peserta
+        if ($request->filled('search')) {
 
-        $search = $request->search;
+            $search = $request->search;
 
-        $query->whereHas('user', function ($q) use ($search) {
+            $query->whereHas('user', function ($q) use ($search) {
 
-            $q->where('name', 'like', '%' . $search . '%');
+                $q->where('name', 'like', '%'.$search.'%');
 
-        });
-    }
+            });
+        }
 
-    // Filter lomba
-    if ($request->filled('lomba_id')) {
+        // Filter lomba
+        if ($request->filled('lomba_id')) {
 
-        $query->where('lomba_id', $request->lomba_id);
+            $query->where('lomba_id', $request->lomba_id);
 
-    }
+        }
 
-    // Filter status
-    if ($request->filled('status')) {
+        // Filter status
+        if ($request->filled('status')) {
 
-        $query->where('status', $request->status);
+            $query->where('status', $request->status);
 
-    }
+        }
 
-    $pendaftarans = $query
-        ->latest()
-        ->get();
+        $pendaftarans = $query
+            ->latest()
+            ->get();
 
-    $lombas = Lomba::orderBy('nama_lomba')
-        ->get();
+        $lombas = Lomba::orderBy('nama_lomba')
+            ->get();
 
-    return view('admin.pendaftaran-lomba.index', compact(
-        'pendaftarans',
-        'lombas'
-    ));
+        return view('admin.pendaftaran-lomba.index', compact(
+            'pendaftarans',
+            'lombas'
+        ));
     }
 
     /**
@@ -105,21 +105,24 @@ class PendaftaranLombaController extends Controller
     public function update(Request $request, PendaftaranLomba $pendaftaranLomba)
     {
         $request->validate([
-            'status' => [
-                'required',
-                'in:Menunggu,Diterima,Ditolak',
-            ],
+            'status' => 'required|in:Menunggu,Diterima,Ditolak',
+            'alasan_penolakan' => 'required_if:status,Ditolak|nullable|string|max:1000',
+        ], [
+            'status.required' => 'Status wajib dipilih.',
+            'status.in' => 'Status tidak valid.',
+            'alasan_penolakan.required_if' => 'Alasan penolakan wajib diisi.',
+            'alasan_penolakan.max' => 'Alasan penolakan maksimal 1000 karakter.',
         ]);
 
         $pendaftaranLomba->update([
             'status' => $request->status,
+            'alasan_penolakan' => $request->status === 'Ditolak'
+                    ? $request->alasan_penolakan
+                    : null,
         ]);
 
         return redirect()
-            ->route(
-                'admin.pendaftaran-lomba.show',
-                $pendaftaranLomba->id
-            )
+            ->back()
             ->with('success', 'Status pendaftaran berhasil diperbarui.');
     }
 

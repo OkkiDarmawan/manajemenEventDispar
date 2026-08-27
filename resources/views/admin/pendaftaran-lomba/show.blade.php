@@ -93,39 +93,89 @@
 
             <div class="mt-8 pt-6 border-t">
 
-                <h3 class="font-semibold text-gray-800 mb-4">
-                    Ubah Status Pendaftaran
-                </h3>
+                 <h2 class="text-lg font-bold text-gray-800 mb-5">
+        Kelola Status
+    </h2>
 
-                <form action="{{ route('admin.pendaftaran-lomba.status', $pendaftaranLomba->id) }}" method="POST"
-                    class="flex items-center gap-3">
+    <form
+        action="{{ route('admin.pendaftaran-lomba.status', $pendaftaranLomba->id) }}"
+        method="POST"
+    >
+        @csrf
+        @method('PATCH')
 
-                    @csrf
-                    @method('PATCH')
+        <div class="mb-4">
 
-                    <select name="status" class="rounded-lg border-gray-300">
+            <label
+                for="status"
+                class="block text-sm font-semibold text-gray-700 mb-2"
+            >
+                Status Pendaftaran
+            </label>
 
-                        <option value="Menunggu" {{ $pendaftaranLomba->status === 'Menunggu' ? 'selected' : '' }}>
-                            Menunggu
-                        </option>
+            <select
+                id="status"
+                name="status"
+                class="w-full rounded-lg border-gray-300"
+                required
+            >
 
-                        <option value="Diterima" {{ $pendaftaranLomba->status === 'Diterima' ? 'selected' : '' }}>
-                            Diterima
-                        </option>
+                <option value="Menunggu"
+                    {{ $pendaftaranLomba->status === 'Menunggu' ? 'selected' : '' }}>
+                    Menunggu
+                </option>
 
-                        <option value="Ditolak" {{ $pendaftaranLomba->status === 'Ditolak' ? 'selected' : '' }}>
-                            Ditolak
-                        </option>
+                <option value="Diterima"
+                    {{ $pendaftaranLomba->status === 'Diterima' ? 'selected' : '' }}>
+                    Diterima
+                </option>
 
-                    </select>
+                <option value="Ditolak"
+                    {{ $pendaftaranLomba->status === 'Ditolak' ? 'selected' : '' }}>
+                    Ditolak
+                </option>
 
-                    <button type="submit" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+            </select>
 
-                        Simpan Status
+        </div>
 
-                    </button>
 
-                </form>
+        <div class="mb-4">
+
+            <label
+                for="alasan_penolakan"
+                class="block text-sm font-semibold text-gray-700 mb-2"
+            >
+                Alasan Penolakan
+            </label>
+
+            <textarea
+                id="alasan_penolakan"
+                name="alasan_penolakan"
+                rows="4"
+                class="w-full rounded-lg border-gray-300"
+                placeholder="Masukkan alasan jika pendaftaran ditolak..."
+            >{{ old('alasan_penolakan', $pendaftaranLomba->alasan_penolakan) }}</textarea>
+
+            @error('alasan_penolakan')
+                <p class="text-red-500 text-sm mt-1">
+                    {{ $message }}
+                </p>
+            @enderror
+
+        </div>
+
+
+        <button
+            type="submit"
+            class="w-full bg-blue-600 hover:bg-blue-700
+                   text-white py-3 rounded-xl
+                   transition"
+        >
+            Simpan Status
+        </button>
+
+    </form>
 
             </div>
 

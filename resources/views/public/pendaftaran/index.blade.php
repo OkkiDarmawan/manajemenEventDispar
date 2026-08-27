@@ -64,25 +64,42 @@
                             </div>
 
 
-                            <div>
+                            <div class="flex items-center gap-3">
+
+                                <a href="{{ route('public.pendaftaran.show', $pendaftaran->id) }}"
+                                    class="px-4 py-2
+               rounded-lg
+               border border-blue-600
+               text-blue-600
+               hover:bg-blue-50
+               font-medium
+               transition">
+
+                                    Lihat Detail
+
+                                </a>
+
 
                                 @if ($pendaftaran->status === 'Menunggu')
-                                    <span
-                                        class="px-4 py-2 rounded-full
-                                             bg-yellow-100 text-yellow-700">
+                                    <span class="px-4 py-2 rounded-full
+                   bg-yellow-100 text-yellow-700">
+
                                         🟡 Menunggu
+
                                     </span>
                                 @elseif ($pendaftaran->status === 'Diterima')
-                                    <span
-                                        class="px-4 py-2 rounded-full
-                                             bg-green-100 text-green-700">
+                                    <span class="px-4 py-2 rounded-full
+                   bg-green-100 text-green-700">
+
                                         🟢 Diterima
+
                                     </span>
                                 @elseif ($pendaftaran->status === 'Ditolak')
-                                    <span
-                                        class="px-4 py-2 rounded-full
-                                             bg-red-100 text-red-700">
+                                    <span class="px-4 py-2 rounded-full
+                   bg-red-100 text-red-700">
+
                                         🔴 Ditolak
+
                                     </span>
                                 @endif
 

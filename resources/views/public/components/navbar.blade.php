@@ -17,7 +17,7 @@
 
                 <div>
                     <h1 class="font-bold text-gray-800 text-lg">
-                        Senyum Event
+                        EventKite
                     </h1>
 
                     <p class="text-xs text-gray-500">

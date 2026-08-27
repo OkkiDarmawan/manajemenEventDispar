@@ -34,11 +34,16 @@ Route::middleware('auth')->group(function () {
         [PublicPendaftaranController::class, 'index']
     )->name('public.pendaftaran.index');
 
+    Route::get(
+        '/pendaftaran/{pendaftaranLomba}',
+        [PublicPendaftaranLombaController::class, 'show']
+    )->name('public.pendaftaran.show');
+
 });
 
 // Route Admin Start
 
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', function () {
         return view('admin.dashboard');
     })->name('dashboard');

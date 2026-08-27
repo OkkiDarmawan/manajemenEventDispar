@@ -15,12 +15,26 @@ class PendaftaranLombaController extends Controller
     public function create(Lomba $lomba)
     {
 
+        $pendaftaran = PendaftaranLomba::where('user_id', Auth::id())
+            ->where('lomba_id', $lomba->id)
+            ->latest()
+            ->first();
+
+        if ($pendaftaran && $pendaftaran->status !== 'Ditolak') {
+
+            return redirect()
+                ->route('public.pendaftaran.show', $pendaftaran->id)
+                ->with(
+                    'info',
+                    'Anda sudah memiliki pendaftaran untuk lomba ini.'
+                );
+        }
+
         $fields = $lomba->lombaFields()
             ->with('masterField')
             ->where('is_active', true)
             ->orderBy('urutan')
             ->get();
-
 
         return view('public.pendaftaran', compact(
             'lomba',
@@ -53,23 +67,21 @@ class PendaftaranLombaController extends Controller
             }
         }
 
-
-
         $validated = $request->validate(
             $rules,
             $messages
         );
 
-$existing = PendaftaranLomba::where('lomba_id', $lomba->id)
-    ->where('user_id', Auth::id())
-    ->exists();
+        $existing = PendaftaranLomba::where('lomba_id', $lomba->id)
+            ->where('user_id', Auth::id())
+            ->exists();
 
-if ($existing) {
+        if ($existing) {
 
-    return redirect()
-        ->route('public.lomba.show', $lomba->id)
-        ->with('error', 'Anda sudah terdaftar pada lomba ini.');
-}
+            return redirect()
+                ->route('public.lomba.show', $lomba->id)
+                ->with('error', 'Anda sudah terdaftar pada lomba ini.');
+        }
 
         DB::transaction(function () use ($validated, $fields, $lomba) {
 
@@ -96,5 +108,23 @@ if ($existing) {
         return redirect()
             ->route('public.lomba.show', $lomba->id)
             ->with('success', 'Pendaftaran berhasil dikirim.');
+    }
+
+    public function show(PendaftaranLomba $pendaftaranLomba)
+    {
+
+        if ($pendaftaranLomba->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $pendaftaranLomba->load([
+            'lomba.event',
+            'jawabanLombas.masterField',
+        ]);
+
+        return view(
+            'public.pendaftaran.show',
+            compact('pendaftaranLomba')
+        );
     }
 }

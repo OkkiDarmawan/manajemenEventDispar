@@ -21,7 +21,7 @@
                     <div>
 
                         <h2 class="text-white text-xl font-bold">
-                            Senyum Event
+                            EventKite
                         </h2>
 
                         <p class="text-sm text-gray-400">
@@ -140,7 +140,7 @@
 
                 <p class="text-sm text-gray-500">
 
-                    © {{ date('Y') }} EventKu.
+                    © {{ date('Y') }} EventKite.
                     All rights reserved.
 
                 </p>
