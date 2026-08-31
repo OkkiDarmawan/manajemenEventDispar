@@ -24,21 +24,5 @@ class PendaftaranController extends Controller
         );
     }
 
-    public function show(PendaftaranLomba $pendaftaranLomba)
-{
-    
-    if ($pendaftaranLomba->user_id !== auth()->id()) {
-        abort(403);
-    }
-
-    $pendaftaranLomba->load([
-        'lomba.event',
-        'jawabanLombas.masterField',
-    ]);
-
-    return view(
-        'public.pendaftaran.show',
-        compact('pendaftaranLomba')
-    );
-}
+   
 }

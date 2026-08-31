@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\LombaController;
 use App\Http\Controllers\Admin\LombaFieldController;
 use App\Http\Controllers\Admin\MasterFieldController;
 use App\Http\Controllers\Admin\PendaftaranLombaController;
+
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Public\PendaftaranLombaController as PublicPendaftaranLombaController;
@@ -51,6 +53,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('master-field', MasterFieldController::class);
     Route::resource('event', EventController::class);
     Route::resource('lomba', LombaController::class);
+    Route::resource('faq', FaqController::class);
 
     Route::get(
         '/pendaftaran-lomba',
@@ -81,6 +84,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         '/lomba/{lomba}/preview',
         [LombaFieldController::class, 'preview']
     )->name('lomba.preview');
+
+     
 });
 
 // Route Admin End

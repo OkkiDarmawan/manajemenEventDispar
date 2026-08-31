@@ -66,6 +66,12 @@
         </li>
 
         <li>
+            <a href="{{ route('admin.faq.index') }}" class="block px-3 py-2 rounded text-gray-300 hover:text-white hover:bg-gray-800 transition-colors">
+                FAQ
+            </a>
+        </li>
+
+        <li>
             <a href="#" class="block px-3 py-2 rounded text-gray-300 hover:text-white hover:bg-gray-800 transition-colors">
                 Galeri
             </a>

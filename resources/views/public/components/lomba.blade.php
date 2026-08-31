@@ -24,74 +24,35 @@
         <!-- Lomba -->
         @if($event->lombas->count())
 
-            <div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="mt-12 grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 lg:grid-cols-3">
 
                 @foreach($event->lombas as $lomba)
 
-                    <div class="bg-white rounded-2xl shadow-sm hover:shadow-xl transition overflow-hidden">
+                    <div class="w-full bg-white rounded-2xl shadow-sm p-4">
 
-                        <!-- Content -->
-                        <div class="p-6">
+            <p class="text-xs md:text-sm text-blue-600 font-semibold">
+                {{ $lomba->event->nama_event }}
+            </p>
 
-                            <h3 class="text-xl font-bold text-gray-800">
-                                {{ $lomba->nama_lomba }}
-                            </h3>
+            <h2 class="text-sm md:text-lg font-bold text-gray-800 mt-2">
+                {{ $lomba->nama_lomba }}
+            </h2>
 
-                            <p class="mt-3 text-gray-500 line-clamp-3">
-                                {{ $lomba->deskripsi }}
-                            </p>
+            <p class="text-xs md:text-sm text-gray-500 mt-2">
+                {{ Str::limit($lomba->deskripsi, 80) }}
+            </p>
 
-                            <!-- Info -->
-                            <div class="mt-6 space-y-3 text-sm">
+            <a
+                href="{{ route('public.lomba.show', $lomba->id) }}"
+                class="block text-center mt-4
+                       bg-blue-600 hover:bg-blue-700
+                       text-white py-2 rounded-lg
+                       text-xs md:text-sm"
+            >
+                Lihat Detail
+            </a>
 
-                                <div class="flex justify-between">
-
-                                    <span class="text-gray-500">
-                                        Kuota
-                                    </span>
-
-                                    <span class="font-semibold">
-                                        {{ $lomba->kuota }} Peserta
-                                    </span>
-
-                                </div>
-
-                                <div class="flex justify-between">
-
-                                    <span class="text-gray-500">
-                                        Biaya
-                                    </span>
-
-                                    <span class="font-semibold">
-
-                                        @if($lomba->biaya > 0)
-
-                                            Rp {{ number_format($lomba->biaya, 0, ',', '.') }}
-
-                                        @else
-
-                                            Gratis
-
-                                        @endif
-
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-                            <!-- Button -->
-                            <a
-                                href="{{ route('public.lomba.show', $lomba->id) }}"
-                                class="mt-6 block text-center bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl transition">
-
-                                Lihat Detail
-
-                            </a>
-
-                        </div>
-
-                    </div>
+        </div>
 
                 @endforeach
 
