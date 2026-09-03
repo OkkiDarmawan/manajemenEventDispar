@@ -42,7 +42,7 @@
         </li>
 
         <li>
-            <a href="#" class="block px-3 py-2 rounded text-gray-300 hover:text-white hover:bg-gray-800 transition-colors">
+            <a href="{{ route('admin.workshop.index') }}" class="block px-3 py-2 rounded text-gray-300 hover:text-white hover:bg-gray-800 transition-colors">
                 Workshop
             </a>
         </li>
@@ -64,7 +64,12 @@
                 Pendaftaran Lomba
             </a>
         </li>
-
+        <li>
+            <a href="{{ route('admin.pendaftaran-workshop.index') }}" class="block px-3 py-2 rounded text-gray-300 hover:text-white hover:bg-gray-800 transition-colors">
+                Pendaftaran Workshop
+            </a>
+        </li>
+        
         <li>
             <a href="{{ route('admin.faq.index') }}" class="block px-3 py-2 rounded text-gray-300 hover:text-white hover:bg-gray-800 transition-colors">
                 FAQ

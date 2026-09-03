@@ -1,19 +1,25 @@
 <?php
 
+// Import Admin
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\LombaController;
 use App\Http\Controllers\Admin\LombaFieldController;
 use App\Http\Controllers\Admin\MasterFieldController;
 use App\Http\Controllers\Admin\PendaftaranLombaController;
-
+use App\Http\Controllers\Admin\PendaftaranWorkshopController;
+use App\Http\Controllers\Admin\WorkshopController;
+// Import Public
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Public\PendaftaranLombaController as PublicPendaftaranLombaController;
 use App\Http\Controllers\Public\LombaController as PublicLombaController;
-use App\Http\Controllers\Public\PendaftaranController as PublicPendaftaranController;
+use App\Http\Controllers\Public\PendaftaranLombaController as PublicPendaftaranLombaController;
+use App\Http\Controllers\Public\PendaftaranSayaController;
+use App\Http\Controllers\Public\PendaftaranWorkshopController as PublicPendaftaranWorkshopController;
+use App\Http\Controllers\Public\WorkshopController as PublicWorkshopController;
 use Illuminate\Support\Facades\Route;
 
+// ROUTE PUBLIC START
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/lomba/{lomba}', [PublicLombaController::class, 'show'])
@@ -31,17 +37,29 @@ Route::middleware('auth')->group(function () {
         [PublicPendaftaranLombaController::class, 'store']
     )->name('public.lomba.daftar.store');
 
+    Route::get('/workshop', [PublicWorkshopController::class, 'index'])
+        ->name('public.workshop.index');
+
+    Route::get('/workshop/{workshop}', [PublicWorkshopController::class, 'show'])
+        ->name('public.workshop.show');
+
+    Route::get(
+        '/workshop/{workshop}/daftar',
+        [PublicPendaftaranWorkshopController::class, 'create']
+    )->name('public.workshop.daftar');
+
+    Route::post(
+        '/workshop/{workshop}/daftar',
+        [PublicPendaftaranWorkshopController::class, 'store']
+    )->name('public.workshop.daftar.store');
+
     Route::get(
         '/pendaftaran-saya',
-        [PublicPendaftaranController::class, 'index']
-    )->name('public.pendaftaran.index');
-
-    Route::get(
-        '/pendaftaran/{pendaftaranLomba}',
-        [PublicPendaftaranLombaController::class, 'show']
-    )->name('public.pendaftaran.show');
-
+        [PendaftaranSayaController::class, 'index']
+    )->name('public.pendaftaran-saya.index');
 });
+
+// ROUTE PUBLIC END
 
 // Route Admin Start
 
@@ -54,6 +72,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('event', EventController::class);
     Route::resource('lomba', LombaController::class);
     Route::resource('faq', FaqController::class);
+    Route::resource('workshop', WorkshopController::class);
 
     Route::get(
         '/pendaftaran-lomba',
@@ -85,7 +104,21 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         [LombaFieldController::class, 'preview']
     )->name('lomba.preview');
 
-     
+    Route::get(
+        '/pendaftaran-workshop',
+        [PendaftaranWorkshopController::class, 'index']
+    )->name('pendaftaran-workshop.index');
+
+    Route::get(
+        '/pendaftaran-workshop/{pendaftaranWorkshop}',
+        [PendaftaranWorkshopController::class, 'show']
+    )->name('pendaftaran-workshop.show');
+
+    Route::patch(
+        '/pendaftaran-workshop/{pendaftaranWorkshop}/status',
+        [PendaftaranWorkshopController::class, 'update']
+    )->name('pendaftaran-workshop.status');
+
 });
 
 // Route Admin End

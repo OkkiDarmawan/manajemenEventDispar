@@ -22,7 +22,7 @@
     <div class="max-w-5xl mx-auto px-6 py-12">
 
 
-          <a href="{{ route('home') }}#lomba"
+        <a href="{{ route('home') }}#lomba"
             class="inline-flex items-center gap-2
            text-gray-600 hover:text-blue-600
            font-medium transition mb-6">
@@ -134,44 +134,90 @@
         </div>
 
 
-        <!-- Button -->
-        <div class="mt-8 flex justify-end">
+        {{-- Status / Button --}}
+        <div class="mt-8">
 
             @if (!$pendaftaran)
 
-    <a
-        href="{{ route('public.lomba.daftar', $lomba->id) }}"
-        class="inline-flex px-8 py-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold">
+                <a href="{{ route('public.lomba.daftar', $lomba->id) }}"
+                    class="inline-flex px-8 py-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition">
+                    Daftar Sekarang →
+                </a>
+            @elseif ($pendaftaran->status === 'Menunggu')
+                <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-5">
 
-        Daftar Sekarang →
+                    <p class="text-sm text-gray-500">
+                        Status Pendaftaran
+                    </p>
 
-    </a>
+                    <p class="text-yellow-600 font-bold text-lg mt-1">
+                        🟡 Menunggu
+                    </p>
 
-@elseif ($pendaftaran->status === 'Menunggu')
+                    <p class="text-sm text-gray-500 mt-1">
+                        Pendaftaran kamu sedang menunggu verifikasi admin.
+                    </p>
 
-    <div class="inline-flex px-8 py-4 rounded-xl bg-yellow-100 text-yellow-700 font-semibold">
+                    <a href="{{ route('public.pendaftaran-saya.index') }}"
+                        class="inline-block mt-4 px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+                        Lihat Pendaftaran Saya
+                    </a>
 
-        🟡 Pendaftaran Sedang Diproses
+                </div>
+            @elseif ($pendaftaran->status === 'Diterima')
+                <div class="bg-green-50 border border-green-200 rounded-xl p-5">
 
-    </div>
+                    <p class="text-sm text-gray-500">
+                        Status Pendaftaran
+                    </p>
 
-@elseif ($pendaftaran->status === 'Diterima')
+                    <p class="text-green-600 font-bold text-lg mt-1">
+                        🟢 Diterima
+                    </p>
 
-    <div class="inline-flex px-8 py-4 rounded-xl bg-green-100 text-green-700 font-semibold">
+                    <p class="text-sm text-gray-500 mt-1">
+                        Selamat, pendaftaran kamu telah diterima.
+                    </p>
 
-        🟢 Anda Diterima
+                    <a href="{{ route('public.pendaftaran-saya.index') }}"
+                        class="inline-block mt-4 px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+                        Lihat Pendaftaran Saya
+                    </a>
 
-    </div>
+                </div>
+            @elseif ($pendaftaran->status === 'Ditolak')
+                <div class="bg-red-50 border border-red-200 rounded-xl p-5">
 
-@elseif ($pendaftaran->status === 'Ditolak')
+                    <p class="text-sm text-gray-500">
+                        Status Pendaftaran
+                    </p>
 
-    <div class="inline-flex px-8 py-4 rounded-xl bg-red-100 text-red-700 font-semibold">
+                    <p class="text-red-600 font-bold text-lg mt-1">
+                        🔴 Ditolak
+                    </p>
 
-        🔴 Pendaftaran Ditolak
+                    @if ($pendaftaran->alasan_penolakan)
+                        <div class="mt-4 pt-4 border-t border-red-200">
 
-    </div>
+                            <p class="text-sm text-gray-500">
+                                Alasan Penolakan
+                            </p>
 
-@endif
+                            <p class="text-gray-700 mt-1">
+                                {{ $pendaftaran->alasan_penolakan }}
+                            </p>
+
+                        </div>
+                    @endif
+
+                    <a href="{{ route('public.lomba.daftar', $lomba->id) }}"
+                        class="inline-block mt-4 px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+                        Daftar Kembali
+                    </a>
+
+                </div>
+
+            @endif
 
         </div>
 

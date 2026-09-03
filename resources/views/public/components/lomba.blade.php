@@ -1,4 +1,4 @@
-<section id="lomba" class="py-20 bg-gray-50">
+<section id="lomba" class="py-20 bg-gray-50 border-2">
 
     <div class="max-w-7xl mx-auto px-6">
 

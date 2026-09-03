@@ -133,7 +133,7 @@
                                         </a>
 
 
-                                        <form action="{{ route('admin.faq.destroy', $faq->id) }}" method="POST">
+                                        <form id="delete-form-{{ $faq->id }}" action="{{ route('admin.faq.destroy', $faq->id) }}" method="POST">
 
                                             @csrf
                                             @method('DELETE')

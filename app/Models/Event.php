@@ -57,4 +57,9 @@ class Event extends Model
     {
         return $this->hasMany(Lomba::class);
     }
+
+    public function workshops()
+{
+    return $this->hasMany(Workshop::class);
+}
 }

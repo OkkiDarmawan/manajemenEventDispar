@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Lomba;
 use App\Models\PendaftaranLomba;
 
+
 class LombaController extends Controller
 {
       public function show(Lomba $lomba)

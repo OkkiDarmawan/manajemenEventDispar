@@ -77,11 +77,25 @@
                     @endif
 
                     @if (session('error'))
-                        <div class="mb-5 rounded-lg border border-red-200 bg-red-100 px-4 py-3 text-red-700">
+                        <div class="mb-5 rounded-lg border border-red-200 bg-red-100 px-4 py-3 text-red-700" id="error-alert">
 
                             {{ session('error') }}
 
                         </div>
+
+                        <script>
+                            setTimeout(function() {
+
+                                const alert = document.getElementById('error-alert');
+
+                                if (alert) {
+
+                                    alert.remove();
+
+                                }
+
+                            }, 3000);
+                        </script>
                     @endif
 
                     @yield('content')
@@ -99,41 +113,39 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        function confirmDelete(id) {
 
-function confirmDelete(id){
+            Swal.fire({
 
-    Swal.fire({
+                title: "Apakah Anda yakin?",
 
-        title: "Apakah Anda yakin?",
+                text: "Data yang dihapus tidak dapat dikembalikan!",
 
-        text: "Data yang dihapus tidak dapat dikembalikan!",
+                icon: "warning",
 
-        icon: "warning",
+                showCancelButton: true,
 
-        showCancelButton: true,
+                confirmButtonColor: "#dc2626",
 
-        confirmButtonColor: "#dc2626",
+                cancelButtonColor: "#6b7280",
 
-        cancelButtonColor: "#6b7280",
+                confirmButtonText: "Ya, Hapus",
 
-        confirmButtonText: "Ya, Hapus",
+                cancelButtonText: "Batal"
 
-        cancelButtonText: "Batal"
+            }).then((result) => {
 
-    }).then((result)=>{
+                if (result.isConfirmed) {
 
-        if(result.isConfirmed){
+                    document.getElementById('delete-form-' + id).submit();
 
-            document.getElementById('delete-form-'+id).submit();
+                }
+
+            });
 
         }
-
-    });
-
-}
-
-</script>
-@stack('scripts')
+    </script>
+    @stack('scripts')
 </body>
 
 </html>

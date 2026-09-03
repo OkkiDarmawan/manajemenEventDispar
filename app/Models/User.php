@@ -58,4 +58,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function pendaftaranWorkshops()
+{
+    return $this->hasMany(PendaftaranWorkshop::class);
+}
 }

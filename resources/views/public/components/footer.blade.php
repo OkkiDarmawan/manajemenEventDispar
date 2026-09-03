@@ -87,7 +87,7 @@
 
                         <li>
                             <a
-                                href="{{ route('public.pendaftaran.index') }}"
+                                href="{{ route('public.pendaftaran-saya.index') }}"
                                 class="hover:text-white transition">
 
                                 Pendaftaran Saya

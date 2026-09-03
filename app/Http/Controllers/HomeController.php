@@ -2,19 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Event;
+use App\Models\Faq;
+use App\Models\Workshop;
 
 class HomeController extends Controller
 {
-     public function index()
+    public function index()
     {
-       $event = Event::with('lombas')
-    ->where('is_active', true)
-    ->first();
-        
-       
+        $event = Event::with('lombas')
+            ->where('is_active', true)
+            ->first();
 
-        return view('public.home', compact('event'));
+        $faqs = Faq::where('is_active', true)
+            ->orderBy('urutan')
+            ->get();
+
+        $workshops = Workshop::with('event')
+            ->latest()
+            ->get();
+
+        return view('public.home', compact('event', 'faqs', 'workshops'));
     }
 }

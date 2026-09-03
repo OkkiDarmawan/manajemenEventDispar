@@ -5,11 +5,9 @@
         <div class="h-20 flex items-center justify-between">
 
             {{-- Logo --}}
-            <a href="{{ route('home') }}"
-                class="flex items-center gap-3">
+            <a href="{{ route('home') }}" class="flex items-center gap-3">
 
-                <div
-                    class="w-14 h-14 rounded-xl flex items-center justify-center text-white font-bold">
+                <div class="w-14 h-14 rounded-xl flex items-center justify-center text-white font-bold">
 
                     <img src="{{ asset('images/my_logo.png') }}" alt="">
 
@@ -31,34 +29,34 @@
             {{-- Desktop Menu --}}
             <div class="hidden md:flex items-center gap-8">
 
-                <a href="{{ route('home') }}"
-                    class="text-gray-600 hover:text-blue-600 transition">
+                <a href="{{ route('home') }}" class="text-gray-600 hover:text-blue-600 transition">
 
                     Beranda
 
                 </a>
 
 
-                <a href="{{ route('home') }}#lomba"
-                    class="text-gray-600 hover:text-blue-600 transition">
+                <a href="{{ route('home') }}#lomba" class="text-gray-600 hover:text-blue-600 transition">
 
                     Lomba
 
                 </a>
 
 
-                <a href="{{ route('home') }}#workshop"
-                    class="text-gray-600 hover:text-blue-600 transition">
+                <a href="{{ route('home') }}#workshop" class="text-gray-600 hover:text-blue-600 transition">
 
                     Workshop
 
                 </a>
 
+                <a href="{{ route('home') }}#faq" class="text-gray-600 hover:text-blue-600 transition">
+                    FAQ
+                </a>
+
 
                 @auth
 
-                    <a href="{{ route('public.pendaftaran.index') }}"
-                        class="text-gray-600 hover:text-blue-600 transition">
+                    <a href="{{ route('public.pendaftaran-saya.index') }}" class="text-gray-600 hover:text-blue-600 transition">
 
                         Pendaftaran Saya
 
@@ -100,20 +98,15 @@
 
                         @csrf
 
-                        <button
-                            type="submit"
-                            class="px-4 py-2 rounded-lg text-red-600 hover:bg-red-50 transition">
+                        <button type="submit" class="px-4 py-2 rounded-lg text-red-600 hover:bg-red-50 transition">
 
                             Keluar
 
                         </button>
 
                     </form>
-
                 @else
-
-                    <a href="{{ route('login') }}"
-                        class="text-gray-600 hover:text-blue-600 transition">
+                    <a href="{{ route('login') }}" class="text-gray-600 hover:text-blue-600 transition">
 
                         Masuk
 
@@ -133,22 +126,11 @@
 
 
             {{-- Mobile Menu Button --}}
-            <button
-                id="mobile-menu-button"
-                type="button"
-                class="md:hidden text-gray-700">
+            <button id="mobile-menu-button" type="button" class="md:hidden text-gray-700">
 
-                <svg
-                    class="w-7 h-7"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M4 6h16M4 12h16M4 18h16" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
 
                 </svg>
 
@@ -158,40 +140,38 @@
 
 
         {{-- Mobile Menu --}}
-        <div
-            id="mobile-menu"
-            class="hidden md:hidden pb-6">
+        <div id="mobile-menu" class="hidden md:hidden pb-6">
 
             <div class="flex flex-col gap-4">
 
-                <a href="{{ route('home') }}"
-                    class="text-gray-600 hover:text-blue-600">
+                <a href="{{ route('home') }}" class="text-gray-600 hover:text-blue-600">
 
                     Beranda
 
                 </a>
 
 
-                <a href="{{ route('home') }}#lomba"
-                    class="text-gray-600 hover:text-blue-600">
+                <a href="{{ route('home') }}#lomba" class="text-gray-600 hover:text-blue-600">
 
                     Lomba
 
                 </a>
 
 
-                <a href="{{ route('home') }}#workshop"
-                    class="text-gray-600 hover:text-blue-600">
+                <a href="{{ route('home') }}#workshop" class="text-gray-600 hover:text-blue-600">
 
                     Workshop
 
                 </a>
 
+                <a href="{{ route('home') }}#faq" class="text-gray-600 hover:text-blue-600 transition">
+                    FAQ
+                </a>
+
 
                 @auth
 
-                    <a href="{{ route('public.pendaftaran.index') }}"
-                        class="text-gray-600 hover:text-blue-600">
+                    <a href="{{ route('public.pendaftaran-saya.index') }}" class="text-gray-600 hover:text-blue-600">
 
                         Pendaftaran Saya
 
@@ -202,28 +182,22 @@
 
                         @csrf
 
-                        <button
-                            type="submit"
-                            class="text-red-600">
+                        <button type="submit" class="text-red-600">
 
                             Keluar
 
                         </button>
 
                     </form>
-
                 @else
-
-                    <a href="{{ route('login') }}"
-                        class="text-gray-600 hover:text-blue-600">
+                    <a href="{{ route('login') }}" class="text-gray-600 hover:text-blue-600">
 
                         Masuk
 
                     </a>
 
 
-                    <a href="{{ route('register') }}"
-                        class="text-blue-600 font-semibold">
+                    <a href="{{ route('register') }}" class="text-blue-600 font-semibold">
 
                         Daftar
 
@@ -242,17 +216,15 @@
 
 {{-- Mobile Menu Script --}}
 <script>
-
     const mobileMenuButton =
         document.getElementById('mobile-menu-button');
 
     const mobileMenu =
         document.getElementById('mobile-menu');
 
-    mobileMenuButton.addEventListener('click', function () {
+    mobileMenuButton.addEventListener('click', function() {
 
         mobileMenu.classList.toggle('hidden');
 
     });
-
 </script>
