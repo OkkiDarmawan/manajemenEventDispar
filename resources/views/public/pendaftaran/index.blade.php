@@ -67,13 +67,7 @@
                             <div class="flex items-center gap-3">
 
                                 <a href="{{ route('public.pendaftaran.show', $pendaftaran->id) }}"
-                                    class="px-4 py-2
-               rounded-lg
-               border border-blue-600
-               text-blue-600
-               hover:bg-blue-50
-               font-medium
-               transition">
+                                    class="px-4 py-2 rounded-lg border border-blue-600 text-blue-600  hover:bg-blue-50 font-medium transition">
 
                                     Lihat Detail
 

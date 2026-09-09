@@ -21,18 +21,35 @@ class WorkshopController extends Controller
     {
         $workshop->load('event');
 
-    $pendaftaran = null;
+        $pendaftaran = null;
 
-    if (auth()->check()) {
-        $pendaftaran = PendaftaranWorkshop::where('workshop_id', $workshop->id)
-            ->where('user_id', auth()->id())
-            ->latest()
-            ->first();
-    }
+        if (auth()->check()) {
+            $pendaftaran = PendaftaranWorkshop::where('workshop_id', $workshop->id)
+                ->where('user_id', auth()->id())
+                ->latest()
+                ->first();
+        }
 
-    return view(
-        'public.workshop.show',
-        compact('workshop', 'pendaftaran')
-    );
+        // Hitung jumlah peserta yang sudah diterima
+        $jumlahDiterima = PendaftaranWorkshop::where('workshop_id', $workshop->id)
+            ->where('status', 'Diterima')
+            ->count();
+
+        // Hitung sisa kuota
+        $sisaKuota = max(0, $workshop->kuota - $jumlahDiterima);
+
+        // Cek apakah kuota penuh
+        $kuotaPenuh = $jumlahDiterima >= $workshop->kuota;
+
+        return view(
+            'public.workshop.show',
+            compact(
+                'workshop',
+                'pendaftaran',
+                'jumlahDiterima',
+                'sisaKuota',
+                'kuotaPenuh'
+            )
+        );
     }
 }

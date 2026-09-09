@@ -1,279 +1,219 @@
 @extends('layouts.admin')
 
 @section('content')
+    <div class="max-w-3xl mx-auto space-y-6">
 
-<div class="max-w-3xl mx-auto space-y-6">
+        <div>
 
-    <div>
+            <h1 class="text-3xl font-bold text-gray-800">
+                Tambah Workshop
+            </h1>
 
-        <h1 class="text-3xl font-bold text-gray-800">
-            Tambah Workshop
-        </h1>
+            <p class="text-gray-500 mt-1">
+                Tambahkan informasi workshop baru.
+            </p>
 
-        <p class="text-gray-500 mt-1">
-            Tambahkan informasi workshop baru.
-        </p>
-
-    </div>
-
-
-    <div class="bg-white rounded-xl shadow p-8">
-
-        <form
-            action="{{ route('admin.workshop.store') }}"
-            method="POST"
-        >
-
-            @csrf
+        </div>
 
 
-            {{-- Event --}}
-            <div class="mb-6">
+        <div class="bg-white rounded-xl shadow p-8">
 
-                <label
-                    for="event_id"
-                    class="block font-semibold text-gray-700 mb-2"
-                >
-                    Event
-                </label>
+            <form action="{{ route('admin.workshop.store') }}" method="POST" enctype="multipart/form-data">
 
-                <select
-                    id="event_id"
-                    name="event_id"
-                    class="w-full rounded-lg border-gray-300"
-                    required
-                >
+                @csrf
 
-                    <option value="">
-                        -- Pilih Event --
-                    </option>
 
-                    @foreach ($events as $event)
+                {{-- Event --}}
+                <div class="mb-6">
 
-                        <option
-                            value="{{ $event->id }}"
-                            {{ old('event_id') == $event->id ? 'selected' : '' }}
-                        >
-                            {{ $event->nama_event }}
+                    <label for="event_id" class="block font-semibold text-gray-700 mb-2">
+                        Event
+                    </label>
+
+                    <select id="event_id" name="event_id" class="w-full rounded-lg border-gray-300" required>
+
+                        <option value="">
+                            -- Pilih Event --
                         </option>
 
-                    @endforeach
+                        @foreach ($events as $event)
+                            <option value="{{ $event->id }}" {{ old('event_id') == $event->id ? 'selected' : '' }}>
+                                {{ $event->nama_event }}
+                            </option>
+                        @endforeach
 
-                </select>
+                    </select>
 
-                @error('event_id')
-                    <p class="text-red-500 text-sm mt-1">
-                        {{ $message }}
+                    @error('event_id')
+                        <p class="text-red-500 text-sm mt-1">
+                            {{ $message }}
+                        </p>
+                    @enderror
+
+                </div>
+
+
+                {{-- Judul --}}
+                <div class="mb-6">
+
+                    <label for="judul" class="block font-semibold text-gray-700 mb-2">
+                        Judul Workshop
+                    </label>
+
+                    <input type="text" id="judul" name="judul" value="{{ old('judul') }}"
+                        class="w-full rounded-lg border-gray-300" placeholder="Masukkan judul workshop" required>
+
+                    @error('judul')
+                        <p class="text-red-500 text-sm mt-1">
+                            {{ $message }}
+                        </p>
+                    @enderror
+
+                </div>
+
+
+                {{-- Narasumber --}}
+                <div class="mb-6">
+
+                    <label for="narasumber" class="block font-semibold text-gray-700 mb-2">
+                        Narasumber
+                    </label>
+
+                    <input type="text" id="narasumber" name="narasumber" value="{{ old('narasumber') }}"
+                        class="w-full rounded-lg border-gray-300" placeholder="Nama narasumber" required>
+
+                    @error('narasumber')
+                        <p class="text-red-500 text-sm mt-1">
+                            {{ $message }}
+                        </p>
+                    @enderror
+
+                </div>
+
+                <div class="mb-6">
+
+                    <label for="poster" class="block font-semibold text-gray-700 mb-2">
+                        Poster Workshop
+                    </label>
+
+                    <input type="file" id="poster" name="poster" accept="image/*"
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2">
+
+                    <p class="text-xs text-gray-500 mt-1">
+                        Format JPG, JPEG, atau PNG.
                     </p>
-                @enderror
 
-            </div>
+                    @error('poster')
+                        <p class="text-red-500 text-sm mt-1">
+                            {{ $message }}
+                        </p>
+                    @enderror
 
-
-            {{-- Judul --}}
-            <div class="mb-6">
-
-                <label
-                    for="judul"
-                    class="block font-semibold text-gray-700 mb-2"
-                >
-                    Judul Workshop
-                </label>
-
-                <input
-                    type="text"
-                    id="judul"
-                    name="judul"
-                    value="{{ old('judul') }}"
-                    class="w-full rounded-lg border-gray-300"
-                    placeholder="Masukkan judul workshop"
-                    required
-                >
-
-                @error('judul')
-                    <p class="text-red-500 text-sm mt-1">
-                        {{ $message }}
-                    </p>
-                @enderror
-
-            </div>
+                </div>
 
 
-            {{-- Narasumber --}}
-            <div class="mb-6">
+                {{-- Deskripsi --}}
+                <div class="mb-6">
 
-                <label
-                    for="narasumber"
-                    class="block font-semibold text-gray-700 mb-2"
-                >
-                    Narasumber
-                </label>
+                    <label for="deskripsi" class="block font-semibold text-gray-700 mb-2">
+                        Deskripsi
+                    </label>
 
-                <input
-                    type="text"
-                    id="narasumber"
-                    name="narasumber"
-                    value="{{ old('narasumber') }}"
-                    class="w-full rounded-lg border-gray-300"
-                    placeholder="Nama narasumber"
-                    required
-                >
+                    <textarea id="deskripsi" name="deskripsi" rows="5" class="w-full rounded-lg border-gray-300"
+                        placeholder="Masukkan deskripsi workshop" required>{{ old('deskripsi') }}</textarea>
 
-                @error('narasumber')
-                    <p class="text-red-500 text-sm mt-1">
-                        {{ $message }}
-                    </p>
-                @enderror
+                    @error('deskripsi')
+                        <p class="text-red-500 text-sm mt-1">
+                            {{ $message }}
+                        </p>
+                    @enderror
 
-            </div>
+                </div>
 
 
-            {{-- Deskripsi --}}
-            <div class="mb-6">
+                {{-- Tanggal --}}
+                <div class="mb-6">
 
-                <label
-                    for="deskripsi"
-                    class="block font-semibold text-gray-700 mb-2"
-                >
-                    Deskripsi
-                </label>
+                    <label for="tanggal" class="block font-semibold text-gray-700 mb-2">
+                        Tanggal
+                    </label>
 
-                <textarea
-                    id="deskripsi"
-                    name="deskripsi"
-                    rows="5"
-                    class="w-full rounded-lg border-gray-300"
-                    placeholder="Masukkan deskripsi workshop"
-                    required
-                >{{ old('deskripsi') }}</textarea>
+                    <input type="date" id="tanggal" name="tanggal" value="{{ old('tanggal') }}"
+                        class="w-full rounded-lg border-gray-300" required>
 
-                @error('deskripsi')
-                    <p class="text-red-500 text-sm mt-1">
-                        {{ $message }}
-                    </p>
-                @enderror
+                    @error('tanggal')
+                        <p class="text-red-500 text-sm mt-1">
+                            {{ $message }}
+                        </p>
+                    @enderror
 
-            </div>
+                </div>
 
 
-            {{-- Tanggal --}}
-            <div class="mb-6">
+                {{-- Lokasi --}}
+                <div class="mb-6">
 
-                <label
-                    for="tanggal"
-                    class="block font-semibold text-gray-700 mb-2"
-                >
-                    Tanggal
-                </label>
+                    <label for="lokasi" class="block font-semibold text-gray-700 mb-2">
+                        Lokasi
+                    </label>
 
-                <input
-                    type="date"
-                    id="tanggal"
-                    name="tanggal"
-                    value="{{ old('tanggal') }}"
-                    class="w-full rounded-lg border-gray-300"
-                    required
-                >
+                    <input type="text" id="lokasi" name="lokasi" value="{{ old('lokasi') }}"
+                        class="w-full rounded-lg border-gray-300" placeholder="Lokasi workshop" required>
 
-                @error('tanggal')
-                    <p class="text-red-500 text-sm mt-1">
-                        {{ $message }}
-                    </p>
-                @enderror
+                    @error('lokasi')
+                        <p class="text-red-500 text-sm mt-1">
+                            {{ $message }}
+                        </p>
+                    @enderror
 
-            </div>
+                </div>
 
 
-            {{-- Lokasi --}}
-            <div class="mb-6">
+                {{-- Kuota --}}
+                <div class="mb-6">
 
-                <label
-                    for="lokasi"
-                    class="block font-semibold text-gray-700 mb-2"
-                >
-                    Lokasi
-                </label>
+                    <label for="kuota" class="block font-semibold text-gray-700 mb-2">
+                        Kuota Peserta
+                    </label>
 
-                <input
-                    type="text"
-                    id="lokasi"
-                    name="lokasi"
-                    value="{{ old('lokasi') }}"
-                    class="w-full rounded-lg border-gray-300"
-                    placeholder="Lokasi workshop"
-                    required
-                >
+                    <input type="number" id="kuota" name="kuota" value="{{ old('kuota') }}" min="1"
+                        class="w-full rounded-lg border-gray-300" placeholder="Contoh: 50" required>
 
-                @error('lokasi')
-                    <p class="text-red-500 text-sm mt-1">
-                        {{ $message }}
-                    </p>
-                @enderror
+                    @error('kuota')
+                        <p class="text-red-500 text-sm mt-1">
+                            {{ $message }}
+                        </p>
+                    @enderror
 
-            </div>
+                </div>
 
 
-            {{-- Kuota --}}
-            <div class="mb-6">
+                {{-- Button --}}
+                <div class="flex gap-3">
 
-                <label
-                    for="kuota"
-                    class="block font-semibold text-gray-700 mb-2"
-                >
-                    Kuota Peserta
-                </label>
-
-                <input
-                    type="number"
-                    id="kuota"
-                    name="kuota"
-                    value="{{ old('kuota') }}"
-                    min="1"
-                    class="w-full rounded-lg border-gray-300"
-                    placeholder="Contoh: 50"
-                    required
-                >
-
-                @error('kuota')
-                    <p class="text-red-500 text-sm mt-1">
-                        {{ $message }}
-                    </p>
-                @enderror
-
-            </div>
-
-
-            {{-- Button --}}
-            <div class="flex gap-3">
-
-                <a
-                    href="{{ route('admin.workshop.index') }}"
-                    class="px-5 py-3
+                    <a href="{{ route('admin.workshop.index') }}"
+                        class="px-5 py-3
                            rounded-xl
                            border border-gray-300
                            text-gray-700
-                           hover:bg-gray-50"
-                >
-                    Kembali
-                </a>
+                           hover:bg-gray-50">
+                        Kembali
+                    </a>
 
-                <button
-                    type="submit"
-                    class="px-5 py-3
+                    <button type="submit"
+                        class="px-5 py-3
                            rounded-xl
                            bg-blue-600
                            hover:bg-blue-700
-                           text-white font-semibold"
-                >
-                    Simpan Workshop
-                </button>
+                           text-white font-semibold">
+                        Simpan Workshop
+                    </button>
 
-            </div>
+                </div>
 
-        </form>
+            </form>
+
+        </div>
 
     </div>
-
-</div>
-
 @endsection

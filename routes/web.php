@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\WorkshopController;
 // Import Public
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Public\EventController as PublicEventController;
 use App\Http\Controllers\Public\LombaController as PublicLombaController;
 use App\Http\Controllers\Public\PendaftaranLombaController as PublicPendaftaranLombaController;
 use App\Http\Controllers\Public\PendaftaranSayaController;
@@ -24,6 +25,9 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/lomba/{lomba}', [PublicLombaController::class, 'show'])
     ->name('public.lomba.show');
+
+Route::get('/event/{event}',[PublicEventController::class, 'show'])
+    ->name('public.event.show');
 
 Route::middleware('auth')->group(function () {
 

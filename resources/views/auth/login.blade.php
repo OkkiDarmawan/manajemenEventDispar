@@ -94,11 +94,13 @@
 
                         <div class="relative mt-2">
 
-                            <x-text-input id="password" class="block w-full rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500 py-3 pr-12"
+                            <x-text-input id="password"
+                                class="block w-full rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500 py-3 pr-12"
                                 type="password" name="password" required autocomplete="current-password"
                                 placeholder="Masukkan password" />
 
-                            <button type="button" onclick="togglePassword('password', 'eye-password')" class="absolute inset-y-0 right-0 flex items-center px-4 text-gray-400 hover:text-gray-600">
+                            <button type="button" onclick="togglePassword('password', 'eye-password')"
+                                class="absolute inset-y-0 right-0 flex items-center px-4 text-gray-400 hover:text-gray-600">
 
                                 <svg id="eye-password" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">

@@ -28,7 +28,7 @@
 
                 @foreach($event->lombas as $lomba)
 
-                    <div class="w-full bg-white rounded-2xl shadow-sm p-4">
+                    <div class="w-full bg-white rounded-2xl shadow-sm p-4 hover:shadow-lg">
 
             <p class="text-xs md:text-sm text-blue-600 font-semibold">
                 {{ $lomba->event->nama_event }}

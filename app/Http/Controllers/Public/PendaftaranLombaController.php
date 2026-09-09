@@ -23,11 +23,23 @@ class PendaftaranLombaController extends Controller
         if ($pendaftaran && $pendaftaran->status !== 'Ditolak') {
 
             return redirect()
-                ->route('public.pendaftaran.show', $pendaftaran->id)
+                ->route('public.pendaftaran-saya.index', $pendaftaran->id)
                 ->with(
                     'info',
                     'Anda sudah memiliki pendaftaran untuk lomba ini.'
                 );
+        }
+
+        // Cek jumlah peserta yang sudah diterima
+        $jumlahDiterima = PendaftaranLomba::where('lomba_id', $lomba->id)
+            ->where('status', 'Diterima')
+            ->count();
+
+        // Cek apakah kuota sudah penuh
+        if ($jumlahDiterima >= $lomba->kuota) {
+            return redirect()
+                ->route('public.lomba.show', $lomba->id)
+                ->with('error', 'Maaf, kuota lomba sudah penuh.');
         }
 
         $fields = $lomba->lombaFields()
@@ -81,6 +93,18 @@ class PendaftaranLombaController extends Controller
             return redirect()
                 ->route('public.lomba.show', $lomba->id)
                 ->with('error', 'Anda sudah terdaftar pada lomba ini.');
+        }
+
+        // Cek jumlah peserta yang sudah diterima
+        $jumlahDiterima = PendaftaranLomba::where('lomba_id', $lomba->id)
+            ->where('status', 'Diterima')
+            ->count();
+
+        // Cek kuota sebelum menyimpan
+        if ($jumlahDiterima >= $lomba->kuota) {
+            return redirect()
+                ->route('public.lomba.show', $lomba->id)
+                ->with('error', 'Maaf, kuota lomba sudah penuh.');
         }
 
         DB::transaction(function () use ($validated, $fields, $lomba) {

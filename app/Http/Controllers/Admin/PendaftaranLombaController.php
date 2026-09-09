@@ -114,6 +114,24 @@ class PendaftaranLombaController extends Controller
             'alasan_penolakan.max' => 'Alasan penolakan maksimal 1000 karakter.',
         ]);
 
+         if ($request->status === 'Diterima') {
+
+        $jumlahDiterima = PendaftaranLomba::where(
+            'lomba_id',
+            $pendaftaranLomba->lomba_id
+        )
+        ->where('status', 'Diterima')
+        ->where('id', '!=', $pendaftaranLomba->id)
+        ->count();
+
+        $kuota = $pendaftaranLomba->lomba->kuota;
+  
+        if ($jumlahDiterima >= $kuota) {
+            return back()
+                ->with('error', 'Kuota lomba sudah penuh. Peserta tidak dapat diterima.');
+        }
+         }
+
         $pendaftaranLomba->update([
             'status' => $request->status,
             'alasan_penolakan' => $request->status === 'Ditolak'
@@ -131,6 +149,6 @@ class PendaftaranLombaController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        //  
     }
 }

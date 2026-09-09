@@ -9,7 +9,8 @@
         {{-- Kembali --}}
         <div class="mb-6">
 
-            <a href="{{ route('home') }}#workshop" class="text-blue-600 hover:text-blue-800">
+            <a href="{{ route('home') }}#workshop"
+                class="text-blue-600 hover:text-blue-800">
                 ← Kembali ke Workshop
             </a>
 
@@ -48,6 +49,7 @@
             {{-- Informasi --}}
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
 
+                {{-- Tanggal --}}
                 <div class="bg-gray-50 rounded-xl p-4">
 
                     <p class="text-sm text-gray-500">
@@ -61,6 +63,7 @@
                 </div>
 
 
+                {{-- Lokasi --}}
                 <div class="bg-gray-50 rounded-xl p-4">
 
                     <p class="text-sm text-gray-500">
@@ -74,15 +77,61 @@
                 </div>
 
 
+                {{-- Kuota --}}
                 <div class="bg-gray-50 rounded-xl p-4">
 
                     <p class="text-sm text-gray-500">
-                        Kuota
+                        Kuota Peserta
                     </p>
 
                     <p class="font-semibold text-gray-800 mt-1">
-                        {{ $workshop->kuota }} peserta
+                        {{ $workshop->kuota }} orang
                     </p>
+
+                </div>
+
+            </div>
+
+
+            {{-- Informasi Ketersediaan Kuota --}}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+
+                {{-- Sudah Diterima --}}
+                <div class="bg-gray-50 rounded-xl p-4">
+
+                    <p class="text-sm text-gray-500">
+                        Peserta Diterima
+                    </p>
+
+                    <p class="font-semibold text-gray-800 mt-1">
+                        {{ $jumlahDiterima }} orang
+                    </p>
+
+                </div>
+
+
+                {{-- Sisa Kuota --}}
+                <div
+                    class="rounded-xl p-4
+                    {{ $kuotaPenuh ? 'bg-red-50 border border-red-200' : 'bg-green-50 border border-green-200' }}">
+
+                    <p class="text-sm text-gray-500">
+                        Ketersediaan
+                    </p>
+
+                    @if ($kuotaPenuh)
+
+                        <p class="font-bold text-red-600 mt-1">
+                            🔴 Kuota Penuh
+                        </p>
+
+                    @else
+
+                        <p class="font-bold text-green-600 mt-1">
+                            {{ $sisaKuota }} slot tersedia
+                        </p>
+
+                    @endif
 
                 </div>
 
@@ -108,12 +157,38 @@
 
                 @auth
 
+                    {{-- Belum pernah mendaftar --}}
                     @if (!$pendaftaran)
-                        <a href="{{ route('public.workshop.daftar', $workshop->id) }}"
-                            class="inline-flex px-8 py-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition">
-                            Daftar Workshop →
-                        </a>
+
+                        @if ($kuotaPenuh)
+
+                            {{-- Kuota penuh --}}
+                            <div class="bg-red-50 border border-red-200 rounded-xl p-5">
+
+                                <p class="text-red-600 font-bold text-lg">
+                                    🔴 Kuota Workshop Penuh
+                                </p>
+
+                                <p class="text-sm text-gray-500 mt-1">
+                                    Maaf, kuota workshop ini sudah terpenuhi.
+                                </p>
+
+                            </div>
+
+                        @else
+
+                            {{-- Masih tersedia --}}
+                            <a href="{{ route('public.workshop.daftar', $workshop->id) }}"
+                                class="inline-flex px-8 py-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition">
+                                Daftar Workshop →
+                            </a>
+
+                        @endif
+
+
+                    {{-- Menunggu --}}
                     @elseif ($pendaftaran->status === 'Menunggu')
+
                         <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-5">
 
                             <p class="text-sm text-gray-500">
@@ -134,7 +209,11 @@
                             </a>
 
                         </div>
+
+
+                    {{-- Diterima --}}
                     @elseif ($pendaftaran->status === 'Diterima')
+
                         <div class="bg-green-50 border border-green-200 rounded-xl p-5">
 
                             <p class="text-sm text-gray-500">
@@ -155,7 +234,11 @@
                             </a>
 
                         </div>
+
+
+                    {{-- Ditolak --}}
                     @elseif ($pendaftaran->status === 'Ditolak')
+
                         <div class="bg-red-50 border border-red-200 rounded-xl p-5">
 
                             <p class="text-sm text-gray-500">
@@ -166,7 +249,10 @@
                                 🔴 Ditolak
                             </p>
 
+
+                            {{-- Alasan Penolakan --}}
                             @if ($pendaftaran->alasan_penolakan)
+
                                 <div class="mt-4 pt-4 border-t border-red-200">
 
                                     <p class="text-sm text-gray-500">
@@ -178,20 +264,56 @@
                                     </p>
 
                                 </div>
+
                             @endif
 
-                            <a href="{{ route('public.workshop.daftar', $workshop->id) }}"
-                                class="inline-block mt-4 px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
-                                Daftar Kembali
-                            </a>
+
+                            {{-- Daftar Kembali --}}
+                            @if (!$kuotaPenuh)
+
+                                <a href="{{ route('public.workshop.daftar', $workshop->id) }}"
+                                    class="inline-block mt-4 px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+                                    Daftar Kembali
+                                </a>
+
+                            @else
+
+                                <div class="mt-4 text-sm text-red-600 font-semibold">
+                                    🔴 Kuota workshop sudah penuh.
+                                </div>
+
+                            @endif
 
                         </div>
+
                     @endif
+
+
                 @else
-                    <a href="{{ route('login') }}"
-                        class="inline-flex px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition">
-                        Login untuk Mendaftar
-                    </a>
+
+                    {{-- Belum Login --}}
+                    @if ($kuotaPenuh)
+
+                        <div class="bg-red-50 border border-red-200 rounded-xl p-5">
+
+                            <p class="text-red-600 font-bold text-lg">
+                                🔴 Kuota Workshop Penuh
+                            </p>
+
+                            <p class="text-sm text-gray-500 mt-1">
+                                Maaf, kuota workshop ini sudah terpenuhi.
+                            </p>
+
+                        </div>
+
+                    @else
+
+                        <a href="{{ route('login') }}"
+                            class="inline-flex px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition">
+                            Login untuk Mendaftar
+                        </a>
+
+                    @endif
 
                 @endauth
 

@@ -82,6 +82,15 @@
 
                         </a>
                     </li>
+                    <li>
+                        <a
+                            href="{{ route('home') }}#faq"
+                            class="hover:text-white transition">
+
+                            FAQ
+
+                        </a>
+                    </li>
 
                     @auth
 

@@ -48,11 +48,27 @@ class LombaController extends Controller
      */
     public function store(StoreLombaRequest $request)
     {
-        Lomba::create($request->validated());
+        $validated = $request->validate([
+            // validasi yang sudah ada...
+
+            'poster' => [
+                'nullable',
+                'image',
+                'mimes:jpg,jpeg,png',
+                'max:2048',
+            ],
+        ]);
+
+        if ($request->hasFile('poster')) {
+            $validated['poster'] = $request->file('poster')
+                ->store('poster-lomba', 'public');
+        }
+
+        Lomba::create($validated);
 
         return redirect()
             ->route('admin.lomba.index')
-            ->with('success', 'Data lomba berhasil ditambahkan.');
+            ->with('success', 'Lomba berhasil ditambahkan.');
     }
 
     /**
@@ -81,27 +97,31 @@ class LombaController extends Controller
      */
     public function update(UpdateLombaRequest $request, Lomba $lomba)
     {
-    $lomba->update([
-            'event_id' => $request->event_id,
-            'nama_lomba' => $request->nama_lomba,
-            'kuota' => $request->kuota,
-            'biaya' => $request->biaya,
-            'hadiah' => $request->hadiah,
-            'pendaftaran_terbuka' => $request->pendaftaran_terbuka,
-            'pendaftaran_tertutup' => $request->pendaftaran_tertutup,
-            'syarat' => $request->syarat,
-            'deskripsi' => $request->deskripsi,
-        ]) ;  
+       $data = [
+        'event_id' => $request->event_id,
+        'nama_lomba' => $request->nama_lomba,
+        'kuota' => $request->kuota,
+        'biaya' => $request->biaya,
+        'hadiah' => $request->hadiah,
+        'pendaftaran_terbuka' => $request->pendaftaran_terbuka,
+        'pendaftaran_tertutup' => $request->pendaftaran_tertutup,
+        'syarat' => $request->syarat,
+        'deskripsi' => $request->deskripsi,
+    ];
 
+    // Jika ada poster baru
+    if ($request->hasFile('poster')) {
 
+        $data['poster'] = $request->file('poster')
+            ->store('poster-lomba', 'public');
+    }
 
-        $lomba->update($request->validated());
+    $lomba->update($data);
 
-        return redirect()
-            ->route('admin.lomba.index')
-            ->with('success', 'Data lomba berhasil diperbarui.');
+    return redirect()
+        ->route('admin.lomba.index')
+        ->with('success', 'Data lomba berhasil diperbarui.');
 
-         
     }
 
     /**
@@ -110,10 +130,10 @@ class LombaController extends Controller
     public function destroy(Lomba $lomba)
     {
         // Hapus data lomba
-    $lomba->delete();
+        $lomba->delete();
 
-    return redirect()
-        ->route('admin.lomba.index')
-        ->with('success', 'Data lomba berhasil dihapus.');
+        return redirect()
+            ->route('admin.lomba.index')
+            ->with('success', 'Data lomba berhasil dihapus.');
     }
 }

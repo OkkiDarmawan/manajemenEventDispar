@@ -9,6 +9,7 @@ class Workshop extends Model
 {
      protected $fillable = [
         'judul',
+        'poster',
         'narasumber',
         'deskripsi',
         'tanggal',

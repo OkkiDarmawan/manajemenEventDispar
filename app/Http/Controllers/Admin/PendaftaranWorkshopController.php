@@ -80,25 +80,24 @@ class PendaftaranWorkshopController extends Controller
             'alasan_penolakan.required_if' => 'Alasan penolakan wajib diisi.',
             'alasan_penolakan.max' => 'Alasan penolakan maksimal 1000 karakter.',
         ]);
-        
 
-         if ($request->status === 'Diterima') {
+        if ($request->status === 'Diterima') {
 
-        $jumlahDiterima = PendaftaranWorkshop::where(
-            'workshop_id',
-            $pendaftaranWorkshop->workshop_id
-        )
-        ->where('status', 'Diterima')
-        ->where('id', '!=', $pendaftaranWorkshop->id)
-        ->count();
+            $jumlahDiterima = PendaftaranWorkshop::where(
+                'workshop_id',
+                $pendaftaranWorkshop->workshop_id
+            )
+                ->where('status', 'Diterima')
+                ->where('id', '!=', $pendaftaranWorkshop->id)
+                ->count();
 
-        $kuota = $pendaftaranWorkshop->workshop->kuota;
+            $kuota = $pendaftaranWorkshop->workshop->kuota;
 
-        if ($jumlahDiterima >= $kuota) {
-            return back()
-                ->with('error', 'Kuota workshop sudah penuh. Peserta tidak dapat diterima.');
+            if ($jumlahDiterima >= $kuota) {
+                return back()
+                    ->with('error', 'Kuota workshop sudah penuh. Peserta tidak dapat diterima.');
+            }
         }
-    }
 
         $pendaftaranWorkshop->update([
             'status' => $request->status,

@@ -24,7 +24,7 @@
 <body class="bg-gray-50">
 
     {{ $slot }}
-
+@stack('scripts')
 </body>
 
 </html>
