@@ -28,9 +28,7 @@
 
         {{-- Kembali --}}
         <a href="{{ route('home') }}#lomba"
-            class="inline-flex items-center gap-2
-                   text-gray-600 hover:text-blue-600
-                   font-medium transition mb-6">
+            class="inline-flex items-center gap-2 text-gray-600 hover:text-blue-600 font-medium transition mb-6">
 
             <span>←</span>
 
@@ -60,11 +58,11 @@
         {{-- Informasi --}}
         <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
 
-            {{-- Kuota --}}
+            {{-- Jumlah peserta --}}
             <div class="bg-white rounded-xl shadow p-6">
 
                 <h2 class="font-semibold text-gray-800">
-                    Kuota Peserta
+                    Jumlah Peserta
                 </h2>
 
                 <p class="mt-2 text-gray-500">

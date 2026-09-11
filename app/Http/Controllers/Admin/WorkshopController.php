@@ -18,7 +18,29 @@ class WorkshopController extends Controller
             ->latest()
             ->get();
 
-        return view('admin.workshop.index', compact('workshops'));
+        $totalWorkshop = Workshop::count();
+
+        $workshopAkanDatang = Workshop::whereDate(
+            'tanggal_mulai',
+            '>',
+            now()->toDateString()
+        )->count();
+
+        $workshopSelesai = Workshop::whereDate(
+            'tanggal_selesai',
+            '<',
+            now()->toDateString()
+        )->count();
+
+        return view(
+            'admin.workshop.index',
+            compact(
+                'workshops',
+                'totalWorkshop',
+                'workshopAkanDatang',
+                'workshopSelesai'
+            )
+        );
     }
 
     /**
@@ -26,7 +48,7 @@ class WorkshopController extends Controller
      */
     public function create()
     {
-         $events = Event::orderBy('nama_event')->get();
+        $events = Event::orderBy('nama_event')->get();
 
         return view('admin.workshop.create', compact('events'));
     }
@@ -36,31 +58,83 @@ class WorkshopController extends Controller
      */
     public function store(Request $request)
     {
-         $validated = $request->validate([
+        $validated = $request->validate([
             'judul' => 'required|string|max:255',
+
             'narasumber' => 'required|string|max:255',
+
             'deskripsi' => 'required|string',
-            'tanggal' => 'required|date',
+
+            'tanggal_mulai' => 'required|date',
+
+            'tanggal_selesai' => [
+                'required',
+                'date',
+                'after_or_equal:tanggal_mulai',
+            ],
+
             'lokasi' => 'required|string|max:255',
+
             'kuota' => 'required|integer|min:1',
+
             'event_id' => 'required|exists:events,id',
+
+            'poster' => [
+                'nullable',
+                'image',
+                'mimes:jpg,jpeg,png',
+                'max:2048',
+            ],
         ], [
             'judul.required' => 'Judul workshop wajib diisi.',
+
             'narasumber.required' => 'Narasumber wajib diisi.',
+
             'deskripsi.required' => 'Deskripsi workshop wajib diisi.',
-            'tanggal.required' => 'Tanggal workshop wajib diisi.',
+
+            'tanggal_mulai.required' => 'Tanggal mulai workshop wajib diisi.',
+
+            'tanggal_mulai.date' => 'Tanggal mulai workshop tidak valid.',
+
+            'tanggal_selesai.required' => 'Tanggal selesai workshop wajib diisi.',
+
+            'tanggal_selesai.date' => 'Tanggal selesai workshop tidak valid.',
+
+            'tanggal_selesai.after_or_equal' => 'Tanggal selesai harus sama atau setelah tanggal mulai.',
+
             'lokasi.required' => 'Lokasi workshop wajib diisi.',
+
             'kuota.required' => 'Kuota wajib diisi.',
+
             'kuota.min' => 'Kuota minimal 1 peserta.',
+
             'event_id.required' => 'Event wajib dipilih.',
+
             'event_id.exists' => 'Event yang dipilih tidak valid.',
+
+            'poster.image' => 'File poster harus berupa gambar.',
+
+            'poster.mimes' => 'Poster harus berformat JPG, JPEG, atau PNG.',
+
+            'poster.max' => 'Ukuran poster maksimal 2 MB.',
         ]);
 
+        // Upload poster
+        if ($request->hasFile('poster')) {
+
+            $validated['poster'] = $request->file('poster')
+                ->store('poster-workshop', 'public');
+        }
+
+        // Simpan workshop
         Workshop::create($validated);
 
         return redirect()
             ->route('admin.workshop.index')
-            ->with('success', 'Workshop berhasil ditambahkan.');
+            ->with(
+                'success',
+                'Workshop berhasil ditambahkan.'
+            );
     }
 
     /**
@@ -76,12 +150,12 @@ class WorkshopController extends Controller
      */
     public function edit(Workshop $workshop)
     {
-         $events = Event::orderBy('nama_event')->get();
+        $events = Event::orderBy('nama_event')->get();
 
-    return view('admin.workshop.edit', compact(
-        'workshop',
-        'events'
-    ));
+        return view('admin.workshop.edit', compact(
+            'workshop',
+            'events'
+        ));
     }
 
     /**
@@ -90,20 +164,82 @@ class WorkshopController extends Controller
     public function update(Request $request, Workshop $workshop)
     {
         $validated = $request->validate([
-        'judul' => 'required|string|max:255',
-        'narasumber' => 'required|string|max:255',
-        'deskripsi' => 'required|string',
-        'tanggal' => 'required|date',
-        'lokasi' => 'required|string|max:255',
-        'kuota' => 'required|integer|min:1',
-        'event_id' => 'required|exists:events,id',
-    ]);
+            'judul' => 'required|string|max:255',
 
-    $workshop->update($validated);
+            'narasumber' => 'required|string|max:255',
 
-    return redirect()
-        ->route('admin.workshop.index')
-        ->with('success', 'Workshop berhasil diperbarui.');
+            'deskripsi' => 'required|string',
+
+            'tanggal_mulai' => 'required|date',
+
+            'tanggal_selesai' => [
+                'required',
+                'date',
+                'after_or_equal:tanggal_mulai',
+            ],
+
+            'lokasi' => 'required|string|max:255',
+
+            'kuota' => 'required|integer|min:1',
+
+            'event_id' => 'required|exists:events,id',
+
+            'poster' => [
+                'nullable',
+                'image',
+                'mimes:jpg,jpeg,png',
+                'max:2048',
+            ],
+        ], [
+            'judul.required' => 'Judul workshop wajib diisi.',
+
+            'narasumber.required' => 'Narasumber wajib diisi.',
+
+            'deskripsi.required' => 'Deskripsi workshop wajib diisi.',
+
+            'tanggal_mulai.required' => 'Tanggal mulai workshop wajib diisi.',
+
+            'tanggal_mulai.date' => 'Tanggal mulai workshop tidak valid.',
+
+            'tanggal_selesai.required' => 'Tanggal selesai workshop wajib diisi.',
+
+            'tanggal_selesai.date' => 'Tanggal selesai workshop tidak valid.',
+
+            'tanggal_selesai.after_or_equal' => 'Tanggal selesai harus sama atau setelah tanggal mulai.',
+
+            'lokasi.required' => 'Lokasi workshop wajib diisi.',
+
+            'kuota.required' => 'Kuota wajib diisi.',
+
+            'kuota.min' => 'Kuota minimal 1 peserta.',
+
+            'event_id.required' => 'Event wajib dipilih.',
+
+            'event_id.exists' => 'Event yang dipilih tidak valid.',
+
+            'poster.image' => 'File poster harus berupa gambar.',
+
+            'poster.mimes' => 'Poster harus berformat JPG, JPEG, atau PNG.',
+
+            'poster.max' => 'Ukuran poster maksimal 2 MB.',
+        ]);
+
+        // Upload poster baru jika ada
+        if ($request->hasFile('poster')) {
+
+            $validated['poster'] = $request->file('poster')
+                ->store('poster-workshop', 'public');
+        }
+
+        // Update data workshop
+        $workshop->update($validated);
+
+        return redirect()
+            ->route('admin.workshop.index')
+            ->with(
+                'success',
+                'Workshop berhasil diperbarui.'
+            );
     }
 
     /**
@@ -111,10 +247,10 @@ class WorkshopController extends Controller
      */
     public function destroy(Workshop $workshop)
     {
-         $workshop->delete();
+        $workshop->delete();
 
-    return redirect()
-        ->route('admin.workshop.index')
-        ->with('success', 'Workshop berhasil dihapus.');
+        return redirect()
+            ->route('admin.workshop.index')
+            ->with('success', 'Workshop berhasil dihapus.');
     }
 }

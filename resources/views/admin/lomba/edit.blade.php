@@ -138,12 +138,12 @@
                         @if ($lomba->poster)
                             <div class="mb-4">
                                 <img src="{{ asset('storage/' . $lomba->poster) }}" alt="{{ $lomba->nama_lomba }}"
-                                    class="w-48 h-32 object-cover rounded-xl">
+                                    class="w-48 h-32 object-cover rounded-xl border border-gray-50 px-4 py-2">
                             </div>
                         @endif
 
                         <input type="file" id="poster" name="poster" accept="image/*"
-                            class="w-full rounded-lg border-gray-300">
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2">
 
                         <p class="text-xs text-gray-500 mt-1">
                             Kosongkan jika tidak ingin mengganti poster.

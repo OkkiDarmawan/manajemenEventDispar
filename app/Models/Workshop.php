@@ -7,12 +7,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Workshop extends Model
 {
-     protected $fillable = [
+    protected $fillable = [
         'judul',
         'poster',
         'narasumber',
         'deskripsi',
-        'tanggal',
+        'tanggal_mulai',
+        'tanggal_selesai',
         'lokasi',
         'kuota',
         'event_id',
@@ -24,7 +25,7 @@ class Workshop extends Model
     }
 
     public function pendaftarans()
-{
-    return $this->hasMany(PendaftaranWorkshop::class);
-}
+    {
+        return $this->hasMany(PendaftaranWorkshop::class);
+    }
 }

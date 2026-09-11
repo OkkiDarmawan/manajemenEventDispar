@@ -1,7 +1,6 @@
 @extends('public.layouts.app')
 
 @section('content')
-
     {{-- ===================================================== --}}
     {{-- HERO EVENT --}}
     {{-- ===================================================== --}}
@@ -209,121 +208,417 @@
     {{-- LOMBA --}}
     {{-- ===================================================== --}}
 
-    <section class="py-16 bg-gray-50">
+    <section class="py-16 bg-gray-50" x-data="{
+        lombas: @js($event->lombas),
+        search: '',
+        biaya: 'all',
+    
+        filteredLombas() {
+    
+            const keyword = this.search
+                .toLowerCase()
+                .trim();
+    
+            return this.lombas.filter(lomba => {
+    
+                const nama = (
+                    lomba.nama_lomba ?? ''
+                ).toLowerCase();
+    
+                const deskripsi = (
+                    lomba.deskripsi ?? ''
+                ).toLowerCase();
+    
+                const cocokSearch =
+                    nama.includes(keyword) ||
+                    deskripsi.includes(keyword);
+    
+    
+                let cocokBiaya = true;
+    
+                if (this.biaya === 'gratis') {
+    
+                    cocokBiaya =
+                        Number(lomba.biaya ?? 0) === 0;
+    
+                }
+    
+                if (this.biaya === 'berbayar') {
+    
+                    cocokBiaya =
+                        Number(lomba.biaya ?? 0) > 0;
+    
+                }
+    
+    
+                return cocokSearch && cocokBiaya;
+            });
+        }
+    }">
 
-        <div class="max-w-7xl
-                   mx-auto
-                   px-6
-                   lg:px-8">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+
+
+            {{-- ================================================= --}}
+            {{-- HEADER --}}
+            {{-- ================================================= --}}
 
             <div class="text-center">
 
-                <p class="text-blue-600
-                           font-semibold">
+                <p class="text-blue-600 font-semibold">
                     KOMPETISI
                 </p>
 
                 <h2
                     class="mt-2
-                           text-3xl
-                           font-bold
-                           text-gray-900">
+                       text-3xl
+                       font-bold
+                       text-gray-900">
                     Lomba yang Tersedia
                 </h2>
 
-                <p class="mt-3
-                           text-gray-500">
+                <p class="mt-3 text-gray-500">
                     Pilih lomba yang ingin kamu ikuti.
                 </p>
 
             </div>
 
 
-            @if ($event->lombas->isEmpty())
-                <div
-                    class="mt-10
-                           bg-white
-                           rounded-2xl
-                           p-10
-                           text-center">
+            {{-- ================================================= --}}
+            {{-- FILTER --}}
+            {{-- ================================================= --}}
 
-                    <p class="text-gray-500">
+            <div class="mt-10">
+
+                <div
+                    class="max-w-4xl
+                       mx-auto
+                       bg-white
+                       border border-gray-100
+                       rounded-2xl
+                       shadow-sm
+                       p-4">
+
+                    <div
+                        class="flex
+                           flex-col
+                           md:flex-row
+                           gap-4">
+
+
+                        {{-- Search --}}
+                        <div class="relative flex-1">
+
+                            <span
+                                class="absolute
+                                   left-4
+                                   top-1/2
+                                   -translate-y-1/2
+                                   text-gray-400">
+                                🔎
+                            </span>
+
+
+                            <input type="text" x-model="search" placeholder="Cari nama lomba atau deskripsi..."
+                                class="w-full
+                                   pl-11
+                                   pr-4
+                                   py-3
+                                   rounded-xl
+                                   border border-gray-200
+                                   bg-gray-50
+                                   focus:border-blue-500
+                                   focus:ring-blue-500">
+
+                        </div>
+
+
+                        {{-- Filter Biaya --}}
+                        <div class="md:w-52">
+
+                            <select x-model="biaya"
+                                class="w-full
+                                   py-3
+                                   px-4
+                                   rounded-xl
+                                   border border-gray-200
+                                   bg-gray-50
+                                   text-gray-700
+                                   focus:border-blue-500
+                                   focus:ring-blue-500">
+
+                                <option value="all">
+                                    Semua Lomba
+                                </option>
+
+                                <option value="gratis">
+                                    Gratis
+                                </option>
+
+                                <option value="berbayar">
+                                    Berbayar
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            {{-- ================================================= --}}
+            {{-- JUMLAH HASIL --}}
+            {{-- ================================================= --}}
+
+            <div class="mt-8">
+
+                <p class="text-sm text-gray-500">
+
+                    Menampilkan
+
+                    <span class="font-semibold text-gray-800" x-text="filteredLombas().length"></span>
+
+                    lomba
+
+                </p>
+
+            </div>
+
+
+            {{-- ================================================= --}}
+            {{-- TIDAK ADA LOMBA --}}
+            {{-- ================================================= --}}
+
+            <template x-if="lombas.length === 0">
+
+                <div
+                    class="mt-8
+                       bg-white
+                       rounded-2xl
+                       p-10
+                       text-center">
+
+                    <div class="text-5xl mb-4">
+                        🏆
+                    </div>
+
+                    <h3 class="text-xl
+                           font-semibold
+                           text-gray-800">
+                        Belum Ada Lomba
+                    </h3>
+
+                    <p class="mt-2 text-gray-500">
                         Belum ada lomba untuk event ini.
                     </p>
 
                 </div>
-            @else
+
+            </template>
+
+
+            {{-- ================================================= --}}
+            {{-- FILTER TIDAK MENEMUKAN HASIL --}}
+            {{-- ================================================= --}}
+
+            <template
+                x-if="
+                lombas.length > 0 &&
+                filteredLombas().length === 0
+            ">
+
                 <div
-                    class="mt-10
-                           grid
-                           grid-cols-1
-                           md:grid-cols-2
-                           lg:grid-cols-3
-                           gap-6">
+                    class="mt-8
+                       bg-white
+                       rounded-2xl
+                       p-10
+                       text-center">
 
-                    @foreach ($event->lombas as $lomba)
-                        <a href="{{ route('public.lomba.show', $lomba->id) }}" class="group">
+                    <div class="text-5xl mb-4">
+                        🔎
+                    </div>
 
+                    <h3 class="text-xl
+                           font-semibold
+                           text-gray-800">
+                        Lomba Tidak Ditemukan
+                    </h3>
+
+                    <p class="mt-2 text-gray-500">
+                        Coba gunakan kata kunci atau filter biaya lainnya.
+                    </p>
+
+                </div>
+
+            </template>
+
+
+            {{-- ================================================= --}}
+            {{-- CARDS LOMBA --}}
+            {{-- ================================================= --}}
+
+            <div x-show="filteredLombas().length > 0"
+                class="mt-8
+                   grid
+                   grid-cols-1
+                   md:grid-cols-2
+                   lg:grid-cols-3
+                   gap-6">
+
+                <template x-for="lomba in filteredLombas()" :key="lomba.id">
+
+                    <a :href="'{{ url('/lomba') }}/' + lomba.id" class="group">
+
+                        <div
+                            class="bg-white
+                               rounded-2xl
+                               border border-gray-100
+                               overflow-hidden
+                               shadow-sm
+                               hover:shadow-xl
+                               hover:-translate-y-1
+                               transition-all
+                               duration-300">
+
+
+                            {{-- Poster --}}
                             <div
-                                class="bg-white
-                                       rounded-2xl
-                                       border
-                                       border-gray-100
-                                       p-6
-                                       shadow-sm
-                                       hover:shadow-xl
-                                       hover:-translate-y-1
-                                       transition-all
-                                       duration-300">
+                                class="relative
+                                   h-52
+                                   overflow-hidden">
 
-                                <div
-                                    class="w-12 h-12
-                                           rounded-xl
-                                           bg-blue-50
+                                <template x-if="lomba.poster">
+
+                                    <img :src="'{{ asset('storage') }}/' + lomba.poster" :alt="lomba.nama_lomba"
+                                        class="w-full
+                                           h-full
+                                           object-cover
+                                           transition-transform
+                                           duration-700
+                                           group-hover:scale-105">
+
+                                </template>
+
+
+                                <template x-if="!lomba.poster">
+
+                                    <div
+                                        class="w-full
+                                           h-full
+                                           bg-gray-100
                                            flex
                                            items-center
                                            justify-center
-                                           text-2xl">
-                                    🏆
+                                           text-5xl">
+                                        🏆
+                                    </div>
+
+                                </template>
+
+
+                                {{-- Overlay --}}
+                                <div
+                                    class="absolute
+                                       inset-0
+                                       bg-gradient-to-t
+                                       from-black/60
+                                       via-transparent
+                                       to-transparent">
                                 </div>
 
 
-                                <h3
-                                    class="mt-5
-                                           text-xl
-                                           font-bold
-                                           text-gray-900
-                                           group-hover:text-blue-600">
-                                    {{ $lomba->nama_lomba }}
-                                </h3>
+                                {{-- Biaya --}}
+                                <div
+                                    class="absolute
+                                       top-4
+                                       right-4">
+
+                                    <template
+                                        x-if="
+                                        Number(lomba.biaya ?? 0) === 0
+                                    ">
+
+                                        <span
+                                            class="inline-flex
+                                               px-3 py-1.5
+                                               rounded-full
+                                               bg-green-500/90
+                                               text-white
+                                               text-xs
+                                               font-bold">
+                                            Gratis
+                                        </span>
+
+                                    </template>
 
 
-                                <p
-                                    class="mt-3
-                                           text-sm
-                                           text-gray-500
-                                           line-clamp-3">
-                                    {{ $lomba->deskripsi }}
-                                </p>
+                                    <template
+                                        x-if="
+                                        Number(lomba.biaya ?? 0) > 0
+                                    ">
+
+                                        <span
+                                            class="inline-flex
+                                               px-3 py-1.5
+                                               rounded-full
+                                               bg-blue-600/90
+                                               text-white
+                                               text-xs
+                                               font-bold">
+                                            Berbayar
+                                        </span>
+
+                                    </template>
+
+                                </div>
+
+                            </div>
 
 
+                            {{-- Content --}}
+                            <div class="p-6">
+
+
+                                {{-- Nama Lomba --}}
+                                <h3 class="text-xl
+                                       font-bold
+                                       text-gray-900
+                                       group-hover:text-blue-600
+                                       transition"
+                                    x-text="lomba.nama_lomba"></h3>
+
+
+                                {{-- Deskripsi --}}
+                                <p class="mt-3
+                                       text-sm
+                                       text-gray-500
+                                       line-clamp-3"
+                                    x-text="lomba.deskripsi"></p>
+
+
+                                {{-- Footer --}}
                                 <div
                                     class="mt-5
-                                           flex
-                                           items-center
-                                           justify-between">
+                                       flex
+                                       items-center
+                                       justify-between">
 
                                     <span class="text-sm
-                                               text-gray-500">
+                                           text-gray-500">
                                         Kuota:
-                                        {{ $lomba->kuota }}
+                                        <span x-text="lomba.kuota"></span>
                                     </span>
+
 
                                     <span
                                         class="text-blue-600
-                                               font-semibold
-                                               group-hover:translate-x-1
-                                               transition">
+                                           font-semibold
+                                           group-hover:translate-x-1
+                                           transition">
                                         Lihat →
                                     </span>
 
@@ -331,11 +626,13 @@
 
                             </div>
 
-                        </a>
-                    @endforeach
+                        </div>
 
-                </div>
-            @endif
+                    </a>
+
+                </template>
+
+            </div>
 
         </div>
 
@@ -346,136 +643,628 @@
     {{-- WORKSHOP --}}
     {{-- ===================================================== --}}
 
-    <section class="py-16 bg-white">
+    <section class="py-16 bg-white" x-data="{
+        workshops: @js($event->workshops),
+    
+        search: '',
+    
+        waktu: 'all',
+    
+    
+        filteredWorkshops() {
+    
+            const keyword = this.search
+                .toLowerCase()
+                .trim();
+    
+    
+            return this.workshops.filter(workshop => {
+    
+                const judul = (
+                    workshop.judul ?? ''
+                ).toLowerCase();
+    
+                const narasumber = (
+                    workshop.narasumber ?? ''
+                ).toLowerCase();
+    
+                const deskripsi = (
+                    workshop.deskripsi ?? ''
+                ).toLowerCase();
+    
+                const lokasi = (
+                    workshop.lokasi ?? ''
+                ).toLowerCase();
+    
+    
+                const cocokSearch =
+                    judul.includes(keyword) ||
+                    narasumber.includes(keyword) ||
+                    deskripsi.includes(keyword) ||
+                    lokasi.includes(keyword);
+    
+    
+                let cocokWaktu = true;
+    
+    
+                const tanggalMulai =
+                    new Date(workshop.tanggal_mulai);
+    
+                const tanggalSelesai =
+                    new Date(workshop.tanggal_selesai);
+    
+                const sekarang = new Date();
+    
+    
+                if (this.waktu === 'mendatang') {
+    
+                    cocokWaktu =
+                        sekarang < tanggalMulai;
+    
+                }
+    
+    
+                if (this.waktu === 'berlangsung') {
+    
+                    cocokWaktu =
+                        sekarang >= tanggalMulai &&
+                        sekarang <= tanggalSelesai;
+    
+                }
+    
+    
+                if (this.waktu === 'selesai') {
+    
+                    cocokWaktu =
+                        sekarang > tanggalSelesai;
+    
+                }
+    
+    
+                return cocokSearch && cocokWaktu;
+    
+            });
+        },
+    
+    
+        getStatus(workshop) {
+    
+            const tanggalMulai =
+                new Date(workshop.tanggal_mulai);
+    
+            const tanggalSelesai =
+                new Date(workshop.tanggal_selesai);
+    
+            const sekarang = new Date();
+    
+    
+            if (sekarang < tanggalMulai) {
+    
+                return 'mendatang';
+    
+            }
+    
+    
+            if (
+                sekarang >= tanggalMulai &&
+                sekarang <= tanggalSelesai
+            ) {
+    
+                return 'berlangsung';
+    
+            }
+    
+    
+            return 'selesai';
+    
+        }
+    }">
 
-        <div class="max-w-7xl
-                   mx-auto
-                   px-6
-                   lg:px-8">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+
+
+            {{-- ================================================= --}}
+            {{-- HEADER --}}
+            {{-- ================================================= --}}
 
             <div class="text-center">
 
-                <p class="text-blue-600
-                           font-semibold">
+                <p class="text-blue-600 font-semibold">
                     PEMBELAJARAN
                 </p>
 
                 <h2
                     class="mt-2
-                           text-3xl
-                           font-bold
-                           text-gray-900">
+                       text-3xl
+                       font-bold
+                       text-gray-900">
                     Workshop yang Tersedia
                 </h2>
 
-                <p class="mt-3
-                           text-gray-500">
+                <p class="mt-3 text-gray-500">
                     Ikuti workshop yang tersedia dalam event ini.
                 </p>
 
             </div>
 
 
-            @if ($event->workshops->isEmpty())
-                <div
-                    class="mt-10
-                           bg-gray-50
-                           rounded-2xl
-                           p-10
-                           text-center">
+            {{-- ================================================= --}}
+            {{-- FILTER --}}
+            {{-- ================================================= --}}
 
-                    <p class="text-gray-500">
+            <div class="mt-10">
+
+                <div
+                    class="max-w-4xl
+                       mx-auto
+                       bg-gray-50
+                       border border-gray-100
+                       rounded-2xl
+                       p-4">
+
+                    <div
+                        class="flex
+                           flex-col
+                           md:flex-row
+                           gap-4">
+
+
+                        {{-- Search --}}
+                        <div class="relative flex-1">
+
+                            <span
+                                class="absolute
+                                   left-4
+                                   top-1/2
+                                   -translate-y-1/2
+                                   text-gray-400">
+                                🔎
+                            </span>
+
+
+                            <input type="text" x-model="search"
+                                placeholder="Cari workshop, narasumber, atau lokasi..."
+                                class="w-full
+                                   pl-11
+                                   pr-4
+                                   py-3
+                                   rounded-xl
+                                   border border-gray-200
+                                   bg-white
+                                   focus:border-blue-500
+                                   focus:ring-blue-500">
+
+                        </div>
+
+
+                        {{-- Filter Waktu --}}
+                        <div class="md:w-60">
+
+                            <select x-model="waktu"
+                                class="w-full
+                                   py-3
+                                   px-4
+                                   rounded-xl
+                                   border border-gray-200
+                                   bg-white
+                                   text-gray-700
+                                   focus:border-blue-500
+                                   focus:ring-blue-500">
+
+                                <option value="all">
+                                    Semua Workshop
+                                </option>
+
+                                <option value="mendatang">
+                                    Akan Datang
+                                </option>
+
+                                <option value="berlangsung">
+                                    Sedang Berlangsung
+                                </option>
+
+                                <option value="selesai">
+                                    Sudah Berlangsung
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            {{-- ================================================= --}}
+            {{-- JUMLAH HASIL --}}
+            {{-- ================================================= --}}
+
+            <div class="mt-8">
+
+                <p class="text-sm text-gray-500">
+
+                    Menampilkan
+
+                    <span class="font-semibold text-gray-800" x-text="filteredWorkshops().length"></span>
+
+                    workshop
+
+                </p>
+
+            </div>
+
+
+            {{-- ================================================= --}}
+            {{-- BELUM ADA WORKSHOP --}}
+            {{-- ================================================= --}}
+
+            <template x-if="workshops.length === 0">
+
+                <div
+                    class="mt-8
+                       bg-gray-50
+                       rounded-2xl
+                       p-10
+                       text-center">
+
+                    <div class="text-5xl mb-4">
+                        🎓
+                    </div>
+
+                    <h3 class="text-xl
+                           font-semibold
+                           text-gray-800">
+                        Belum Ada Workshop
+                    </h3>
+
+                    <p class="mt-2 text-gray-500">
                         Belum ada workshop untuk event ini.
                     </p>
 
                 </div>
-            @else
-                <div
-                    class="mt-10
-                           grid
-                           grid-cols-1
-                           md:grid-cols-2
-                           lg:grid-cols-3
-                           gap-6">
 
-                    @foreach ($event->workshops as $workshop)
-                        <a href="{{ route('public.workshop.show', $workshop->id) }}" class="group">
+            </template>
+
+
+            {{-- ================================================= --}}
+            {{-- HASIL FILTER KOSONG --}}
+            {{-- ================================================= --}}
+
+            <template
+                x-if="
+                workshops.length > 0 &&
+                filteredWorkshops().length === 0
+            ">
+
+                <div
+                    class="mt-8
+                       bg-gray-50
+                       rounded-2xl
+                       p-10
+                       text-center">
+
+                    <div class="text-5xl mb-4">
+                        🔎
+                    </div>
+
+                    <h3 class="text-xl
+                           font-semibold
+                           text-gray-800">
+                        Workshop Tidak Ditemukan
+                    </h3>
+
+                    <p class="mt-2 text-gray-500">
+                        Coba gunakan kata kunci atau filter waktu lainnya.
+                    </p>
+
+                </div>
+
+            </template>
+
+
+            {{-- ================================================= --}}
+            {{-- CARDS WORKSHOP --}}
+            {{-- ================================================= --}}
+
+            <div x-show="filteredWorkshops().length > 0"
+                class="mt-8
+                   grid
+                   grid-cols-1
+                   md:grid-cols-2
+                   lg:grid-cols-3
+                   gap-6">
+
+                <template x-for="workshop in filteredWorkshops()" :key="workshop.id">
+
+                    <a :href="'{{ url('/workshop') }}/' + workshop.id" class="group">
+
+                        <div
+                            class="bg-white
+                               rounded-2xl
+                               border border-gray-100
+                               overflow-hidden
+                               shadow-sm
+                               hover:shadow-xl
+                               hover:-translate-y-1
+                               transition-all
+                               duration-300">
+
+
+                            {{-- ================================================= --}}
+                            {{-- POSTER --}}
+                            {{-- ================================================= --}}
 
                             <div
-                                class="bg-white
-                                       rounded-2xl
-                                       border
-                                       border-gray-100
-                                       p-6
-                                       shadow-sm
-                                       hover:shadow-xl
-                                       hover:-translate-y-1
-                                       transition-all
-                                       duration-300">
+                                class="relative
+                                   h-52
+                                   overflow-hidden">
 
-                                <div
-                                    class="w-12 h-12
-                                           rounded-xl
-                                           bg-blue-50
+                                <template x-if="workshop.poster">
+
+                                    <img :src="'{{ asset('storage') }}/' + workshop.poster" :alt="workshop.judul"
+                                        class="w-full
+                                           h-full
+                                           object-cover
+                                           transition-transform
+                                           duration-700
+                                           group-hover:scale-105">
+
+                                </template>
+
+
+                                <template x-if="!workshop.poster">
+
+                                    <div
+                                        class="w-full
+                                           h-full
+                                           bg-gray-100
                                            flex
                                            items-center
                                            justify-center
-                                           text-2xl">
-                                    🎓
+                                           text-5xl">
+                                        🎓
+                                    </div>
+
+                                </template>
+
+
+                                {{-- Status --}}
+                                <div
+                                    class="absolute
+                                       top-4
+                                       right-4">
+
+
+                                    {{-- Akan Datang --}}
+                                    <template
+                                        x-if="
+                                        getStatus(workshop)
+                                        === 'mendatang'
+                                    ">
+
+                                        <span
+                                            class="inline-flex
+                                               px-3 py-1.5
+                                               rounded-full
+                                               bg-blue-600/90
+                                               text-white
+                                               text-xs
+                                               font-bold">
+                                            Akan Datang
+                                        </span>
+
+                                    </template>
+
+
+                                    {{-- Sedang Berlangsung --}}
+                                    <template
+                                        x-if="
+                                        getStatus(workshop)
+                                        === 'berlangsung'
+                                    ">
+
+                                        <span
+                                            class="inline-flex
+                                               px-3 py-1.5
+                                               rounded-full
+                                               bg-green-500/90
+                                               text-white
+                                               text-xs
+                                               font-bold">
+                                            Sedang Berlangsung
+                                        </span>
+
+                                    </template>
+
+
+                                    {{-- Selesai --}}
+                                    <template
+                                        x-if="
+                                        getStatus(workshop)
+                                        === 'selesai'
+                                    ">
+
+                                        <span
+                                            class="inline-flex
+                                               px-3 py-1.5
+                                               rounded-full
+                                               bg-gray-700/90
+                                               text-white
+                                               text-xs
+                                               font-bold">
+                                            Sudah Berlangsung
+                                        </span>
+
+                                    </template>
+
                                 </div>
 
-
-                                <h3
-                                    class="mt-5
-                                           text-xl
-                                           font-bold
-                                           text-gray-900
-                                           group-hover:text-blue-600">
-                                    {{ $workshop->judul }}
-                                </h3>
+                            </div>
 
 
+                            {{-- ================================================= --}}
+                            {{-- CONTENT --}}
+                            {{-- ================================================= --}}
+
+                            <div class="p-6">
+
+
+                                {{-- Judul --}}
+                                <h3 class="text-xl
+                                       font-bold
+                                       text-gray-900
+                                       group-hover:text-blue-600
+                                       transition"
+                                    x-text="workshop.judul"></h3>
+
+
+                                {{-- Narasumber --}}
                                 <p
                                     class="mt-3
-                                           text-sm
-                                           text-gray-500
-                                           line-clamp-3">
-                                    {{ $workshop->deskripsi }}
+                                       text-sm
+                                       text-gray-500">
+                                    🎤
+                                    <span x-text="workshop.narasumber"></span>
                                 </p>
 
 
+                                {{-- Deskripsi --}}
+                                <p class="mt-3
+                                       text-sm
+                                       text-gray-500
+                                       line-clamp-3"
+                                    x-text="workshop.deskripsi"></p>
+
+
+                                {{-- Info --}}
                                 <div
                                     class="mt-5
-                                           flex
-                                           items-center
-                                           justify-between">
+                                       space-y-2
+                                       text-sm
+                                       text-gray-500">
 
-                                    <span class="text-sm
-                                               text-gray-500">
-                                        Kuota:
-                                        {{ $workshop->kuota }}
+
+                                    {{-- Tanggal --}}
+                                    <div
+                                        class="flex
+                                           items-start
+                                           gap-2">
+
+                                        <span>📅</span>
+
+                                        <span>
+
+                                            <span
+                                                x-text="
+                                                new Date(
+                                                    workshop.tanggal_mulai
+                                                ).toLocaleDateString('id-ID', {
+                                                    day: 'numeric',
+                                                    month: 'long',
+                                                    year: 'numeric'
+                                                })
+                                            "></span>
+
+                                            <span>
+                                                -
+                                            </span>
+
+                                            <span
+                                                x-text="
+                                                new Date(
+                                                    workshop.tanggal_selesai
+                                                ).toLocaleDateString('id-ID', {
+                                                    day: 'numeric',
+                                                    month: 'long',
+                                                    year: 'numeric'
+                                                })
+                                            "></span>
+
+                                        </span>
+
+                                    </div>
+
+
+                                    {{-- Lokasi --}}
+                                    <div
+                                        class="flex
+                                           items-center
+                                           gap-2">
+
+                                        <span>📍</span>
+
+                                        <span
+                                            x-text="
+                                            workshop.lokasi
+                                            || 'Lokasi belum ditentukan'
+                                        "></span>
+
+                                    </div>
+
+
+                                    {{-- Kuota --}}
+                                    <div
+                                        class="flex
+                                           items-center
+                                           gap-2">
+
+                                        <span>👥</span>
+
+                                        <span>
+
+                                            Kuota:
+
+                                            <span x-text="workshop.kuota"></span>
+
+                                            peserta
+
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+
+                                {{-- ================================================= --}}
+                                {{-- FOOTER --}}
+                                {{-- ================================================= --}}
+
+                                <div
+                                    class="mt-5
+                                       flex
+                                       items-center
+                                       justify-between">
+
+                                    <span
+                                        class="text-blue-600
+                                           font-semibold
+                                           text-sm">
+                                        Lihat Workshop
                                     </span>
 
                                     <span
                                         class="text-blue-600
-                                               font-semibold
-                                               group-hover:translate-x-1
-                                               transition">
-                                        Lihat →
+                                           group-hover:translate-x-1
+                                           transition">
+                                        →
                                     </span>
 
                                 </div>
 
                             </div>
 
-                        </a>
-                    @endforeach
+                        </div>
 
-                </div>
-            @endif
+                    </a>
+
+                </template>
+
+            </div>
 
         </div>
 
     </section>
-
 @endsection

@@ -72,15 +72,15 @@
                 </div>
 
 
-                {{-- Narasumber --}}
+                {{-- Penyelenggara --}}
                 <div class="mb-6">
 
                     <label for="narasumber" class="block font-semibold text-gray-700 mb-2">
-                        Narasumber
+                        Penyelenggara
                     </label>
 
                     <input type="text" id="narasumber" name="narasumber" value="{{ old('narasumber') }}"
-                        class="w-full rounded-lg border-gray-300" placeholder="Nama narasumber" required>
+                        class="w-full rounded-lg border-gray-300" placeholder="Nama penyelenggara" required>
 
                     @error('narasumber')
                         <p class="text-red-500 text-sm mt-1">
@@ -131,21 +131,49 @@
                 </div>
 
 
-                {{-- Tanggal --}}
-                <div class="mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
 
-                    <label for="tanggal" class="block font-semibold text-gray-700 mb-2">
-                        Tanggal
-                    </label>
+                    {{-- Tanggal Mulai --}}
+                    <div>
 
-                    <input type="date" id="tanggal" name="tanggal" value="{{ old('tanggal') }}"
-                        class="w-full rounded-lg border-gray-300" required>
+                        <label for="tanggal_mulai" class="block font-semibold text-gray-700 mb-2">
+                            Tanggal Mulai
+                        </label>
 
-                    @error('tanggal')
-                        <p class="text-red-500 text-sm mt-1">
-                            {{ $message }}
-                        </p>
-                    @enderror
+                        <input type="date" id="tanggal_mulai" name="tanggal_mulai" value="{{ old('tanggal_mulai') }}"
+                            class="w-full rounded-xl border-gray-300
+                   focus:border-blue-500
+                   focus:ring-blue-500">
+
+                        @error('tanggal_mulai')
+                            <p class="text-red-500 text-sm mt-1">
+                                {{ $message }}
+                            </p>
+                        @enderror
+
+                    </div>
+
+
+                    {{-- Tanggal Selesai --}}
+                    <div>
+
+                        <label for="tanggal_selesai" class="block font-semibold text-gray-700 mb-2">
+                            Tanggal Selesai
+                        </label>
+
+                        <input type="date" id="tanggal_selesai" name="tanggal_selesai"
+                            value="{{ old('tanggal_selesai') }}"
+                            class="w-full rounded-xl border-gray-300
+                   focus:border-blue-500
+                   focus:ring-blue-500">
+
+                        @error('tanggal_selesai')
+                            <p class="text-red-500 text-sm mt-1">
+                                {{ $message }}
+                            </p>
+                        @enderror
+
+                    </div>
 
                 </div>
 
@@ -201,11 +229,7 @@
                     </a>
 
                     <button type="submit"
-                        class="px-5 py-3
-                           rounded-xl
-                           bg-blue-600
-                           hover:bg-blue-700
-                           text-white font-semibold">
+                        class="px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold">
                         Simpan Workshop
                     </button>
 

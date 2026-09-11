@@ -49,7 +49,55 @@ class LombaController extends Controller
     public function store(StoreLombaRequest $request)
     {
         $validated = $request->validate([
-            // validasi yang sudah ada...
+            'event_id' => [
+                'required',
+                'exists:events,id',
+            ],
+
+            'nama_lomba' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+
+            'kuota' => [
+                'required',
+                'integer',
+                'min:1',
+            ],
+
+            'biaya' => [
+                'required',
+                'numeric',
+                'min:0',
+            ],
+
+            'hadiah' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+
+            'pendaftaran_terbuka' => [
+                'required',
+                'date',
+            ],
+
+            'pendaftaran_tertutup' => [
+                'required',
+                'date',
+                'after_or_equal:pendaftaran_terbuka',
+            ],
+
+            'syarat' => [
+                'required',
+                'string',
+            ],
+
+            'deskripsi' => [
+                'required',
+                'string',
+            ],
 
             'poster' => [
                 'nullable',
@@ -97,30 +145,30 @@ class LombaController extends Controller
      */
     public function update(UpdateLombaRequest $request, Lomba $lomba)
     {
-       $data = [
-        'event_id' => $request->event_id,
-        'nama_lomba' => $request->nama_lomba,
-        'kuota' => $request->kuota,
-        'biaya' => $request->biaya,
-        'hadiah' => $request->hadiah,
-        'pendaftaran_terbuka' => $request->pendaftaran_terbuka,
-        'pendaftaran_tertutup' => $request->pendaftaran_tertutup,
-        'syarat' => $request->syarat,
-        'deskripsi' => $request->deskripsi,
-    ];
+        $data = [
+            'event_id' => $request->event_id,
+            'nama_lomba' => $request->nama_lomba,
+            'kuota' => $request->kuota,
+            'biaya' => $request->biaya,
+            'hadiah' => $request->hadiah,
+            'pendaftaran_terbuka' => $request->pendaftaran_terbuka,
+            'pendaftaran_tertutup' => $request->pendaftaran_tertutup,
+            'syarat' => $request->syarat,
+            'deskripsi' => $request->deskripsi,
+        ];
 
-    // Jika ada poster baru
-    if ($request->hasFile('poster')) {
+        // Jika ada poster baru
+        if ($request->hasFile('poster')) {
 
-        $data['poster'] = $request->file('poster')
-            ->store('poster-lomba', 'public');
-    }
+            $data['poster'] = $request->file('poster')
+                ->store('poster-lomba', 'public');
+        }
 
-    $lomba->update($data);
+        $lomba->update($data);
 
-    return redirect()
-        ->route('admin.lomba.index')
-        ->with('success', 'Data lomba berhasil diperbarui.');
+        return redirect()
+            ->route('admin.lomba.index')
+            ->with('success', 'Data lomba berhasil diperbarui.');
 
     }
 

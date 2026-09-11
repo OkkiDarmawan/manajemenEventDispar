@@ -1,4 +1,4 @@
-<div class="bg-gray-900 text-white min-h-screen p-4">
+<div class="bg-gray-900 text-white h-full p-4">
 
     <img src="{{ asset('images/my_logo.png') }}" alt="Logo Website" class="w-1/2 block mx-auto pb-4">
 
@@ -73,18 +73,6 @@
         <li>
             <a href="{{ route('admin.faq.index') }}" class="block px-3 py-2 rounded text-gray-300 hover:text-white hover:bg-gray-800 transition-colors">
                 FAQ
-            </a>
-        </li>
-
-        <li>
-            <a href="#" class="block px-3 py-2 rounded text-gray-300 hover:text-white hover:bg-gray-800 transition-colors">
-                Galeri
-            </a>
-        </li>
-
-        <li>
-            <a href="#" class="block px-3 py-2 rounded text-gray-300 hover:text-white hover:bg-gray-800 transition-colors">
-                Pengumuman
             </a>
         </li>
 

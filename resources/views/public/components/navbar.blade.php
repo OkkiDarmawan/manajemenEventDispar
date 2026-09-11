@@ -36,18 +36,12 @@
                 </a>
 
 
-                <a href="{{ route('home') }}#lomba" class="text-gray-600 hover:text-blue-600 transition">
+                <a href="{{ route('home') }}#event" class="text-gray-600 hover:text-blue-600 transition">
 
-                    Lomba
-
-                </a>
-
-
-                <a href="{{ route('home') }}#workshop" class="text-gray-600 hover:text-blue-600 transition">
-
-                    Workshop
+                    Event
 
                 </a>
+
 
                 <a href="{{ route('home') }}#faq" class="text-gray-600 hover:text-blue-600 transition">
                     FAQ
@@ -151,16 +145,9 @@
                 </a>
 
 
-                <a href="{{ route('home') }}#lomba" class="text-gray-600 hover:text-blue-600">
+                <a href="{{ route('home') }}#event" class="text-gray-600 hover:text-blue-600">
 
-                    Lomba
-
-                </a>
-
-
-                <a href="{{ route('home') }}#workshop" class="text-gray-600 hover:text-blue-600">
-
-                    Workshop
+                    Event
 
                 </a>
 
