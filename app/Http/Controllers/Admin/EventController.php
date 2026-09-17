@@ -7,6 +7,7 @@ use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
 use App\Models\Event;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class EventController extends Controller
@@ -14,27 +15,64 @@ class EventController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $today = Carbon::today();
 
-        $events = Event::latest()->paginate(10);
+        // Query utama untuk data event
+        $query = Event::query();
 
+        // Search
+        if ($request->filled('search')) {
+
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+
+                $q->where('nama_event', 'like', "%{$search}%")
+                    ->orWhere('lokasi', 'like', "%{$search}%")
+                    ->orWhere('deskripsi', 'like', "%{$search}%");
+
+            });
+        }
+
+        // Pagination 6 data per halaman
+        $events = $query
+            ->latest()
+            ->paginate(6)
+            ->withQueryString();
+
+        // Summary
         $totalEvent = Event::count();
 
-        $eventAktif = Event::whereDate('tanggal_mulai', '<=', $today)
-            ->whereDate('tanggal_selesai', '>=', $today)
+        $eventAktif = Event::whereDate(
+            'tanggal_mulai',
+            '<=',
+            $today
+        )
+            ->whereDate(
+                'tanggal_selesai',
+                '>=',
+                $today
+            )
             ->count();
 
-        $eventSelesai = Event::whereDate('tanggal_selesai', '<', $today)
+        $eventSelesai = Event::whereDate(
+            'tanggal_selesai',
+            '<',
+            $today
+        )
             ->count();
 
-        return view('admin.event.index', compact(
-            'events',
-            'totalEvent',
-            'eventAktif',
-            'eventSelesai'
-        ));
+        return view(
+            'admin.event.index',
+            compact(
+                'events',
+                'totalEvent',
+                'eventAktif',
+                'eventSelesai'
+            )
+        );
     }
 
     /**

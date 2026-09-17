@@ -37,6 +37,8 @@ class Lomba extends Model
 
         'poster',
 
+        'penyelenggara',
+
         'deskripsi',
 
         'syarat',

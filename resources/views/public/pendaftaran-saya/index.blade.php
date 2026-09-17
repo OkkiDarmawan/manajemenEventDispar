@@ -59,10 +59,25 @@
                                     Menunggu
                                 </span>
                             @elseif ($pendaftaran->status === 'Diterima')
-                                <span
-                                    class="inline-flex px-4 py-2 rounded-full bg-green-100 text-green-700 text-sm font-semibold">
+                                <span class="inline-flex px-4 py-2 rounded-full bg-green-100 text-green-700 text-sm font-semibold">
                                     Diterima
                                 </span>
+
+                                <div
+                                    class="mt-3 text-sm text-green-700 font-semibold">
+                                    Nomor Peserta:
+
+                                    @if ($pendaftaran->nomor_peserta)
+                                        <span class="text-lg">
+                                            #{{ $pendaftaran->nomor_peserta }}
+                                        </span>
+                                    @else
+                                        <span class="text-red-500">
+                                            Belum tersedia
+                                        </span>
+                                    @endif
+
+                                </div>
                             @elseif ($pendaftaran->status === 'Ditolak')
                                 <span
                                     class="inline-flex px-4 py-2 rounded-full bg-red-100 text-red-700 text-sm font-semibold">
@@ -92,11 +107,12 @@
 
                     @if ($pendaftaran->status === 'Ditolak')
                         <div class="mt-6">
-    
-                            <a href="{{ route('public.lomba.daftar', $pendaftaran->lomba->id) }}" class="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition">
+
+                            <a href="{{ route('public.lomba.daftar', $pendaftaran->lomba->id) }}"
+                                class="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition">
                                 Daftar Kembali
                             </a>
-    
+
                         </div>
                     @endif
                 </div>
@@ -153,11 +169,26 @@
                                     class="inline-flex px-4 py-2 rounded-full bg-yellow-100 text-yellow-700 text-sm font-semibold">
                                     Menunggu
                                 </span>
-                            @elseif ($pendaftaran->status === 'Diterima')
-                                <span
-                                    class="inline-flex px-4 py-2 rounded-full bg-green-100 text-green-700 text-sm font-semibold">
+                              @elseif ($pendaftaran->status === 'Diterima')
+                                <span class="inline-flex px-4 py-2 rounded-full bg-green-100 text-green-700 text-sm font-semibold">
                                     Diterima
                                 </span>
+
+                                <div
+                                    class="mt-3 text-sm text-green-700 font-semibold">
+                                    Nomor Peserta:
+
+                                    @if ($pendaftaran->nomor_peserta)
+                                        <span class="text-lg">
+                                            #{{ $pendaftaran->nomor_peserta }}
+                                        </span>
+                                    @else
+                                        <span class="text-red-500">
+                                            Belum tersedia
+                                        </span>
+                                    @endif
+
+                                </div>
                             @elseif ($pendaftaran->status === 'Ditolak')
                                 <span
                                     class="inline-flex px-4 py-2 rounded-full bg-red-100 text-red-700 text-sm font-semibold">
@@ -185,13 +216,14 @@
                         </div>
                     @endif
 
-                      @if ($pendaftaran->status === 'Ditolak')
+                    @if ($pendaftaran->status === 'Ditolak')
                         <div class="mt-6">
-    
-                            <a href="{{ route('public.workshop.daftar', $pendaftaran->workshop->id) }}" class="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition">
+
+                            <a href="{{ route('public.workshop.daftar', $pendaftaran->workshop->id) }}"
+                                class="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition">
                                 Daftar Kembali
                             </a>
-    
+
                         </div>
                     @endif
 

@@ -12,12 +12,40 @@ class WorkshopController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $workshops = Workshop::with('event')
-            ->latest()
-            ->get();
+        $query = Workshop::with('event');
 
+        // Search
+        if ($request->filled('search')) {
+
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+
+                $q->where('judul', 'like', "%{$search}%")
+                    ->orWhere('narasumber', 'like', "%{$search}%")
+                    ->orWhere('lokasi', 'like', "%{$search}%")
+                    ->orWhereHas('event', function ($eventQuery) use ($search) {
+
+                        $eventQuery->where(
+                            'nama_event',
+                            'like',
+                            "%{$search}%"
+                        );
+
+                    });
+
+            });
+        }
+
+        // Pagination 6 data per halaman
+        $workshops = $query
+            ->latest()
+            ->paginate(6)
+            ->withQueryString();
+
+        // Summary
         $totalWorkshop = Workshop::count();
 
         $workshopAkanDatang = Workshop::whereDate(
@@ -77,6 +105,12 @@ class WorkshopController extends Controller
 
             'kuota' => 'required|integer|min:1',
 
+            'biaya' => [
+            'required',
+            'numeric',
+            'min:0',
+        ],
+
             'event_id' => 'required|exists:events,id',
 
             'poster' => [
@@ -108,6 +142,9 @@ class WorkshopController extends Controller
 
             'kuota.min' => 'Kuota minimal 1 peserta.',
 
+            'biaya.required' =>
+            'Biaya workshop wajib diisi.',
+
             'event_id.required' => 'Event wajib dipilih.',
 
             'event_id.exists' => 'Event yang dipilih tidak valid.',
@@ -118,6 +155,13 @@ class WorkshopController extends Controller
 
             'poster.max' => 'Ukuran poster maksimal 2 MB.',
         ]);
+
+         $allowedTags = '<p><br><strong><b><em><i><u><ol><ul><li><h1><h2><h3><blockquote>';
+
+        $validated['deskripsi'] = strip_tags(
+            $validated['deskripsi'],
+            $allowedTags
+        );
 
         // Upload poster
         if ($request->hasFile('poster')) {
@@ -182,6 +226,12 @@ class WorkshopController extends Controller
 
             'kuota' => 'required|integer|min:1',
 
+             'biaya' => [
+            'required',
+            'numeric',
+            'min:0',
+        ],
+
             'event_id' => 'required|exists:events,id',
 
             'poster' => [
@@ -212,6 +262,15 @@ class WorkshopController extends Controller
             'kuota.required' => 'Kuota wajib diisi.',
 
             'kuota.min' => 'Kuota minimal 1 peserta.',
+
+            'biaya.required' =>
+            'Biaya workshop wajib diisi.',
+
+        'biaya.numeric' =>
+            'Biaya workshop harus berupa angka.',
+
+        'biaya.min' =>
+            'Biaya workshop tidak boleh kurang dari 0.',
 
             'event_id.required' => 'Event wajib dipilih.',
 

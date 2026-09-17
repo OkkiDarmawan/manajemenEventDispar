@@ -4,13 +4,13 @@
 
 <div class="max-w-5xl mx-auto space-y-6">
 
-    <!-- Header -->
+    {{-- Header --}}
     <div class="flex items-center justify-between">
 
         <div>
 
             <h1 class="text-3xl font-bold text-gray-800">
-                 Tambah FAQ
+                Tambah FAQ
             </h1>
 
             <p class="text-gray-500 mt-1">
@@ -28,15 +28,79 @@
 
     </div>
 
-    <!-- Form -->
 
+    {{-- Form --}}
     <div class="bg-white rounded-xl shadow p-8">
 
         <form action="{{ route('admin.faq.store') }}" method="POST">
 
             @csrf
 
-           {{-- Pertanyaan --}}
+
+            {{-- Kategori --}}
+            <div class="mb-6">
+
+                <label
+                    for="kategori"
+                    class="block font-semibold text-gray-700 mb-2"
+                >
+                    Kategori
+                </label>
+
+                <select
+                    id="kategori"
+                    name="kategori"
+                    class="w-full rounded-lg border-gray-300
+                           focus:border-blue-500
+                           focus:ring-blue-500"
+                >
+
+                    <option value="">
+                        Pilih Kategori
+                    </option>
+
+                    <option value="Umum"
+                        {{ old('kategori') == 'Umum' ? 'selected' : '' }}>
+                        Umum
+                    </option>
+
+                    <option value="Lomba"
+                        {{ old('kategori') == 'Lomba' ? 'selected' : '' }}>
+                        Lomba
+                    </option>
+
+                    <option value="Workshop"
+                        {{ old('kategori') == 'Workshop' ? 'selected' : '' }}>
+                        Workshop
+                    </option>
+
+                    <option value="Pendaftaran"
+                        {{ old('kategori') == 'Pendaftaran' ? 'selected' : '' }}>
+                        Pendaftaran
+                    </option>
+
+                    <option value="Akun"
+                        {{ old('kategori') == 'Akun' ? 'selected' : '' }}>
+                        Akun
+                    </option>
+
+                    <option value="UMKM"
+                        {{ old('kategori') == 'UMKM' ? 'selected' : '' }}>
+                        UMKM
+                    </option>
+
+                </select>
+
+                @error('kategori')
+                    <p class="text-red-500 text-sm mt-1">
+                        {{ $message }}
+                    </p>
+                @enderror
+
+            </div>
+
+
+            {{-- Pertanyaan --}}
             <div class="mb-6">
 
                 <label
@@ -53,7 +117,6 @@
                     value="{{ old('pertanyaan') }}"
                     class="w-full rounded-lg border-gray-300"
                     placeholder="Contoh: Bagaimana cara mendaftar lomba?"
-                    required
                 >
 
                 @error('pertanyaan')
@@ -81,7 +144,6 @@
                     rows="5"
                     class="w-full rounded-lg border-gray-300"
                     placeholder="Masukkan jawaban..."
-                    required
                 >{{ old('jawaban') }}</textarea>
 
                 @error('jawaban')
@@ -130,9 +192,9 @@
                         type="checkbox"
                         name="is_active"
                         value="1"
-                        checked
                         class="rounded border-gray-300
                                text-blue-600"
+                        checked
                     >
 
                     <span class="font-semibold text-gray-700">
@@ -170,7 +232,6 @@
                 </button>
 
             </div>
-
 
         </form>
 

@@ -1,6 +1,28 @@
 @extends('layouts.admin')
 
 @section('content')
+    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+
+    <style>
+        .ql-container {
+            height: auto !important;
+            min-height: 220px;
+        }
+
+        .ql-editor {
+            min-height: 220px;
+            height: auto;
+        }
+
+        #syarat-editor .ql-editor {
+            min-height: 260px;
+        }
+
+        #deskripsi-editor .ql-editor {
+            min-height: 220px;
+        }
+    </style>
+
     <div class="max-w-5xl mx-auto space-y-6">
 
         <!-- Header -->
@@ -30,7 +52,7 @@
 
         <div class="bg-white rounded-xl shadow p-8">
 
-            <form action="{{ route('admin.lomba.store') }}" method="POST" enctype="multipart/form-data">
+            <form id="lomba-form" action="{{ route('admin.lomba.store') }}" method="POST" enctype="multipart/form-data">
 
                 @csrf
 
@@ -80,6 +102,32 @@
                             placeholder="Masukkan nama lomba..." class="w-full rounded-lg border border-gray-300 px-4 py-2">
 
                         @error('nama_lomba')
+                            <p class="text-red-500 text-sm mt-1">
+                                {{ $message }}
+                            </p>
+                        @enderror
+
+                    </div>
+
+                    <div class="md:col-span-2">
+
+                        <label for="penyelenggara"
+                            class="block
+               font-semibold
+               text-gray-700
+               mb-2">
+                            Penyelenggara
+                        </label>
+
+                        <input type="text" id="penyelenggara" name="penyelenggara" value="{{ old('penyelenggara') }}"
+                            placeholder="Masukkan nama penyelenggara"
+                            class="w-full
+               rounded-xl
+               border-gray-300
+               focus:border-blue-500
+               focus:ring-blue-500">
+
+                        @error('penyelenggara')
                             <p class="text-red-500 text-sm mt-1">
                                 {{ $message }}
                             </p>
@@ -208,35 +256,16 @@
 
                     </div>
 
-                    <!-- Syarat -->
-
+                    {{-- Deskripsi --}}
                     <div class="md:col-span-2">
 
-                        <label class="block font-medium mb-2">
-                            Syarat
-                        </label>
-
-                        <textarea name="syarat" rows="4" placeholder="Masukkan syarat lomba..."
-                            class="w-full rounded-lg border border-gray-300 px-4 py-2">{{ old('syarat') }}</textarea>
-
-                        @error('syarat')
-                            <p class="text-red-500 text-sm mt-1">
-                                {{ $message }}
-                            </p>
-                        @enderror
-
-                    </div>
-
-                    <!-- Deskripsi -->
-
-                    <div class="md:col-span-2">
-
-                        <label class="block font-medium mb-2">
+                        <label class="block font-semibold text-gray-700 mb-2">
                             Deskripsi
                         </label>
 
-                        <textarea name="deskripsi" rows="6" placeholder="Masukkan deskripsi lomba..."
-                            class="w-full rounded-lg border border-gray-300 px-4 py-2">{{ old('deskripsi') }}</textarea>
+                        <div id="deskripsi-editor" class="bg-white"></div>
+
+                        <input type="hidden" name="deskripsi" id="deskripsi" value="{{ old('deskripsi') }}">
 
                         @error('deskripsi')
                             <p class="text-red-500 text-sm mt-1">
@@ -246,13 +275,35 @@
 
                     </div>
 
+                    {{-- Syarat --}}
+                    <div class="md:col-span-2">
+
+                        <label class="block font-semibold text-gray-700 mb-2">
+                            Syarat dan Ketentuan
+                        </label>
+
+                        <div id="syarat-editor" class="bg-white  border border-gray-300"></div>
+
+                        <input type="hidden" name="syarat" id="syarat" value="{{ old('syarat') }}">
+
+                        @error('syarat')
+                            <p class="text-red-500 text-sm mt-1">
+                                {{ $message }}
+                            </p>
+                        @enderror
+
+                    </div>
+
+
+
                 </div>
 
                 <!-- Button -->
 
                 <div class="mt-8 flex justify-end gap-3">
 
-                    <a href="{{ route('admin.lomba.index') }}" class="px-5 py-2 rounded-lg bg-gray-300 hover:bg-gray-400">
+                    <a href="{{ route('admin.lomba.index') }}"
+                        class="px-5 py-2 rounded-lg bg-gray-300 hover:bg-gray-400">
 
                         Batal
 
@@ -271,4 +322,73 @@
         </div>
 
     </div>
+
+    <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const toolbarOptions = [
+                ['bold', 'italic', 'underline'],
+                [{
+                    'header': [1, 2, 3, false]
+                }],
+                [{
+                    'list': 'ordered'
+                }, {
+                    'list': 'bullet'
+                }],
+                [{
+                    'align': []
+                }],
+                ['blockquote', 'clean']
+            ];
+
+            // Editor Deskripsi
+            const deskripsiEditor = new Quill('#deskripsi-editor', {
+                theme: 'snow',
+                placeholder: 'Tulis deskripsi lomba...',
+                modules: {
+                    toolbar: toolbarOptions
+                }
+            });
+
+            // Editor Syarat
+            const syaratEditor = new Quill('#syarat-editor', {
+                theme: 'snow',
+                placeholder: 'Tulis syarat dan ketentuan lomba...',
+                modules: {
+                    toolbar: toolbarOptions
+                }
+            });
+
+
+            // Ambil old input jika validasi gagal
+            const oldDeskripsi = @json(old('deskripsi'));
+            const oldSyarat = @json(old('syarat'));
+
+            if (oldDeskripsi) {
+                deskripsiEditor.clipboard.dangerouslyPasteHTML(oldDeskripsi);
+            }
+
+            if (oldSyarat) {
+                syaratEditor.clipboard.dangerouslyPasteHTML(oldSyarat);
+            }
+
+
+            // Sebelum submit, masukkan HTML editor ke hidden input
+            const form = document.getElementById('lomba-form');
+
+            form.addEventListener('submit', function() {
+
+                document.getElementById('deskripsi').value =
+                    deskripsiEditor.root.innerHTML;
+
+                document.getElementById('syarat').value =
+                    syaratEditor.root.innerHTML;
+
+            });
+
+        });
+    </script>
 @endsection

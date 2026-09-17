@@ -93,89 +93,65 @@
 
             <div class="mt-8 pt-6 border-t">
 
-                 <h2 class="text-lg font-bold text-gray-800 mb-5">
-        Kelola Status
-    </h2>
+                <h2 class="text-lg font-bold text-gray-800 mb-5">
+                    Kelola Status
+                </h2>
 
-    <form
-        action="{{ route('admin.pendaftaran-lomba.status', $pendaftaranLomba->id) }}"
-        method="POST"
-    >
-        @csrf
-        @method('PATCH')
+                <form action="{{ route('admin.pendaftaran-lomba.status', $pendaftaranLomba->id) }}" method="POST">
+                    @csrf
+                    @method('PATCH')
 
-        <div class="mb-4">
+                    <div class="mb-4">
 
-            <label
-                for="status"
-                class="block text-sm font-semibold text-gray-700 mb-2"
-            >
-                Status Pendaftaran
-            </label>
+                        <label for="status" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Status Pendaftaran
+                        </label>
 
-            <select
-                id="status"
-                name="status"
-                class="w-full rounded-lg border-gray-300"
-                required
-            >
+                        <select id="status" name="status" class="w-full rounded-lg border-gray-300" required>
 
-                <option value="Menunggu"
-                    {{ $pendaftaranLomba->status === 'Menunggu' ? 'selected' : '' }}>
-                    Menunggu
-                </option>
+                            <option value="Menunggu" {{ $pendaftaranLomba->status === 'Menunggu' ? 'selected' : '' }}>
+                                Menunggu
+                            </option>
 
-                <option value="Diterima"
-                    {{ $pendaftaranLomba->status === 'Diterima' ? 'selected' : '' }}>
-                    Diterima
-                </option>
+                            <option value="Diterima" {{ $pendaftaranLomba->status === 'Diterima' ? 'selected' : '' }}>
+                                Diterima
+                            </option>
 
-                <option value="Ditolak"
-                    {{ $pendaftaranLomba->status === 'Ditolak' ? 'selected' : '' }}>
-                    Ditolak
-                </option>
+                            <option value="Ditolak" {{ $pendaftaranLomba->status === 'Ditolak' ? 'selected' : '' }}>
+                                Ditolak
+                            </option>
 
-            </select>
+                        </select>
 
-        </div>
+                    </div>
 
 
-        <div class="mb-4">
+                    <div class="mb-4">
 
-            <label
-                for="alasan_penolakan"
-                class="block text-sm font-semibold text-gray-700 mb-2"
-            >
-                Alasan Penolakan
-            </label>
+                        <label for="alasan_penolakan" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Alasan Penolakan
+                        </label>
 
-            <textarea
-                id="alasan_penolakan"
-                name="alasan_penolakan"
-                rows="4"
-                class="w-full rounded-lg border-gray-300"
-                placeholder="Masukkan alasan jika pendaftaran ditolak..."
-            >{{ old('alasan_penolakan', $pendaftaranLomba->alasan_penolakan) }}</textarea>
+                        <textarea id="alasan_penolakan" name="alasan_penolakan" rows="4" class="w-full rounded-lg border-gray-300"
+                            placeholder="Masukkan alasan jika pendaftaran ditolak...">{{ old('alasan_penolakan', $pendaftaranLomba->alasan_penolakan) }}</textarea>
 
-            @error('alasan_penolakan')
-                <p class="text-red-500 text-sm mt-1">
-                    {{ $message }}
-                </p>
-            @enderror
+                        @error('alasan_penolakan')
+                            <p class="text-red-500 text-sm mt-1">
+                                {{ $message }}
+                            </p>
+                        @enderror
 
-        </div>
+                    </div>
 
 
-        <button
-            type="submit"
-            class="w-full bg-blue-600 hover:bg-blue-700
+                    <button type="submit"
+                        class="w-full bg-blue-600 hover:bg-blue-700
                    text-white py-3 rounded-xl
-                   transition"
-        >
-            Simpan Status
-        </button>
+                   transition">
+                        Simpan Status
+                    </button>
 
-    </form>
+                </form>
 
             </div>
 
@@ -184,7 +160,8 @@
 
 
 
-        {{-- Jawaban Peserta --}}
+
+        {{-- Data Pendaftaran --}}
 
         <div class="bg-white rounded-xl shadow p-8">
 
@@ -192,18 +169,120 @@
                 Data Pendaftaran
             </h2>
 
-            <div class="space-y-5">
+            <div class="space-y-6">
 
                 @foreach ($pendaftaranLomba->jawabanLombas as $jawaban)
                     <div>
 
-                        <p class="text-sm text-gray-500">
+                        {{-- Label Field --}}
+                        <p class="text-sm text-gray-500 mb-2">
                             {{ $jawaban->masterField->label }}
                         </p>
 
-                        <p class="font-semibold text-gray-800">
-                            {{ $jawaban->value }}
-                        </p>
+
+                        {{-- Field File --}}
+                        @if ($jawaban->masterField->tipe === 'file')
+                            @if ($jawaban->value)
+                                @php
+                                    $file = $jawaban->value;
+                                    $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+                                @endphp
+
+
+                                {{-- Jika gambar --}}
+                                @if (in_array($extension, ['jpg', 'jpeg', 'png', 'webp']))
+                                    <div class="space-y-3">
+
+                                        <img src="{{ asset('storage/' . $file) }}"
+                                            alt="{{ $jawaban->masterField->label }}"
+                                            class="max-w-md w-full
+                                           rounded-xl
+                                           border border-gray-200
+                                           shadow-sm">
+
+                                        <a href="{{ asset('storage/' . $file) }}" target="_blank"
+                                            class="inline-flex items-center
+                                           px-4 py-2
+                                           bg-blue-600
+                                           hover:bg-blue-700
+                                           text-white
+                                           rounded-lg
+                                           transition">
+                                            Lihat Ukuran Penuh
+                                        </a>
+
+                                    </div>
+
+
+                                    {{-- Jika PDF --}}
+                                @elseif ($extension === 'pdf')
+                                    <div class="flex items-center gap-4">
+
+                                        <div
+                                            class="w-12 h-12
+                                           rounded-xl
+                                           bg-red-100
+                                           text-red-600
+                                           flex items-center
+                                           justify-center
+                                           font-bold">
+                                            PDF
+                                        </div>
+
+                                        <div>
+
+                                            <p class="font-semibold text-gray-800">
+                                                Dokumen PDF
+                                            </p>
+
+                                            <p class="text-sm text-gray-500">
+                                                File {{ $jawaban->masterField->label }}
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+
+                                    <a href="{{ asset('storage/' . $file) }}" target="_blank"
+                                        class="inline-flex items-center
+                                       mt-3
+                                       px-4 py-2
+                                       bg-blue-600
+                                       hover:bg-blue-700
+                                       text-white
+                                       rounded-lg
+                                       transition">
+                                        Buka File
+                                    </a>
+
+
+                                    {{-- File lainnya --}}
+                                @else
+                                    <a href="{{ asset('storage/' . $file) }}" target="_blank"
+                                        class="inline-flex items-center
+                                       px-4 py-2
+                                       bg-gray-100
+                                       hover:bg-gray-200
+                                       text-gray-700
+                                       rounded-lg
+                                       font-medium
+                                       transition">
+                                        Buka File
+                                    </a>
+                                @endif
+                            @else
+                                <p class="text-gray-400">
+                                    Tidak ada file yang diunggah.
+                                </p>
+                            @endif
+
+
+                            {{-- Field Biasa --}}
+                        @else
+                            <p class="font-semibold text-gray-800">
+                                {{ $jawaban->value ?: '-' }}
+                            </p>
+                        @endif
 
                     </div>
                 @endforeach
@@ -211,6 +290,8 @@
             </div>
 
         </div>
+
+
 
     </div>
 @endsection

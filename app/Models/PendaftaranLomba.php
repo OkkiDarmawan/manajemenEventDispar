@@ -26,5 +26,6 @@ class PendaftaranLomba extends Model
         'user_id',
         'status',
         'alasan_penolakan',
+        'nomor_peserta',
     ];
 }

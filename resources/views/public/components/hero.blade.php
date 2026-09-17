@@ -125,10 +125,10 @@
                             ></h1>
 
                             {{-- Deskripsi --}}
-                            <p
+                            {{-- <p
                                 class="mt-6 text-base md:text-lg text-gray-200 max-w-2xl leading-relaxed"
                                 x-text="event.deskripsi"
-                            ></p>
+                            ></p> --}}
 
                             {{-- Tanggal --}}
                             <div class="mt-8 flex flex-wrap gap-3">

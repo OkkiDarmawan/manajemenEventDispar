@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Faq extends Model
 {
     protected $fillable = [
+        'kategori',
         'pertanyaan',
         'jawaban',
         'urutan',

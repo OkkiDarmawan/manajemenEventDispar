@@ -1,6 +1,28 @@
 @extends('layouts.admin')
 
 @section('content')
+    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+
+    <style>
+        .ql-container {
+            height: auto !important;
+            min-height: 220px;
+        }
+
+        .ql-editor {
+            min-height: 220px;
+            height: auto;
+        }
+
+        #syarat-editor .ql-editor {
+            min-height: 260px;
+        }
+
+        #deskripsi-editor .ql-editor {
+            min-height: 220px;
+        }
+    </style>
+
     <div class="max-w-3xl mx-auto space-y-6">
 
         <div>
@@ -18,7 +40,7 @@
 
         <div class="bg-white rounded-xl shadow p-8">
 
-            <form action="{{ route('admin.workshop.store') }}" method="POST" enctype="multipart/form-data">
+            <form id="workshop-form" action="{{ route('admin.workshop.store') }}" method="POST" enctype="multipart/form-data">
 
                 @csrf
 
@@ -112,23 +134,7 @@
                 </div>
 
 
-                {{-- Deskripsi --}}
-                <div class="mb-6">
 
-                    <label for="deskripsi" class="block font-semibold text-gray-700 mb-2">
-                        Deskripsi
-                    </label>
-
-                    <textarea id="deskripsi" name="deskripsi" rows="5" class="w-full rounded-lg border-gray-300"
-                        placeholder="Masukkan deskripsi workshop" required>{{ old('deskripsi') }}</textarea>
-
-                    @error('deskripsi')
-                        <p class="text-red-500 text-sm mt-1">
-                            {{ $message }}
-                        </p>
-                    @enderror
-
-                </div>
 
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
@@ -215,6 +221,63 @@
 
                 </div>
 
+                {{-- BIAYA --}}
+
+                <div class="mb-6">
+
+                    <label for="biaya" class="block font-semibold text-gray-700 mb-2">
+                        Biaya Workshop
+                    </label>
+
+                    <div class="flex">
+
+                        <span
+                            class="inline-flex items-center px-4 rounded-l-xl border border-r-0 border-gray-300 bg-gray-50 text-gray-600 font-medium">
+                            Rp
+                        </span>
+
+                        <input type="number" id="biaya" name="biaya" value="{{ old('biaya', 0) }}" min="0"
+                            step="1000" placeholder="0"
+                            class="w-full
+                   rounded-r-xl
+                   border-gray-300
+                   focus:border-blue-500
+                   focus:ring-blue-500
+                   py-3">
+
+                    </div>
+
+                    <p class="text-xs text-gray-500 mt-1">
+                        Isi 0 jika workshop gratis.
+                    </p>
+
+                    @error('biaya')
+                        <p class="text-red-500 text-sm mt-1">
+                            {{ $message }}
+                        </p>
+                    @enderror
+
+                </div>
+
+                {{-- Deskripsi --}}
+                <div class="mb-6">
+
+                    <label class="block font-semibold text-gray-700 mb-2">
+                        Deskripsi
+                    </label>
+
+                    <div id="deskripsi-editor" class="bg-white"></div>
+
+                    <input type="hidden" name="deskripsi" id="deskripsi" value="{{ old('deskripsi') }}">
+
+                    @error('deskripsi')
+                        <p class="text-red-500 text-sm mt-1">
+                            {{ $message }}
+                        </p>
+                    @enderror
+
+                </div>
+
 
                 {{-- Button --}}
                 <div class="flex gap-3">
@@ -240,4 +303,59 @@
         </div>
 
     </div>
+
+    <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const toolbarOptions = [
+                ['bold', 'italic', 'underline'],
+                [{
+                    'header': [1, 2, 3, false]
+                }],
+                [{
+                    'list': 'ordered'
+                }, {
+                    'list': 'bullet'
+                }],
+                [{
+                    'align': []
+                }],
+                ['blockquote', 'clean']
+            ];
+
+            // Editor Deskripsi
+            const deskripsiEditor = new Quill('#deskripsi-editor', {
+                theme: 'snow',
+                placeholder: 'Tulis deskripsi lomba...',
+                modules: {
+                    toolbar: toolbarOptions
+                }
+            });
+
+            
+
+
+            // Ambil old input jika validasi gagal
+            const oldDeskripsi = @json(old('deskripsi'));
+
+
+            if (oldDeskripsi) {
+                deskripsiEditor.clipboard.dangerouslyPasteHTML(oldDeskripsi);
+            }
+
+
+
+            // Sebelum submit, masukkan HTML editor ke hidden input
+            const form = document.getElementById('workshop-form');
+
+            form.addEventListener('submit', function() {
+
+                document.getElementById('deskripsi').value =
+                    deskripsiEditor.root.innerHTML;
+            });
+
+        });
+    </script>
 @endsection

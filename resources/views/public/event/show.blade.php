@@ -592,12 +592,11 @@
                                     x-text="lomba.nama_lomba"></h3>
 
 
-                                {{-- Deskripsi --}}
-                                <p class="mt-3
-                                       text-sm
-                                       text-gray-500
-                                       line-clamp-3"
-                                    x-text="lomba.deskripsi"></p>
+                                {{-- Penyelenggara --}}
+                              
+
+                                <p class="mt-3 text-sm font-bold text-black" x-text="lomba.penyelenggara">
+
 
 
                                 {{-- Footer --}}
@@ -1131,12 +1130,7 @@
                                 </p>
 
 
-                                {{-- Deskripsi --}}
-                                <p class="mt-3
-                                       text-sm
-                                       text-gray-500
-                                       line-clamp-3"
-                                    x-text="workshop.deskripsi"></p>
+                            
 
 
                                 {{-- Info --}}

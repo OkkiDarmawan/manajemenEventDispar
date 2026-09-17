@@ -129,14 +129,94 @@
         </div>
 
         <!-- Search -->
-        <div class="bg-white rounded-xl shadow p-5">
+        <div class="bg-white
+           rounded-2xl
+           border border-gray-100
+           shadow-sm
+           p-5">
 
-            <form>
+            <form method="GET" action="{{ route('admin.event.index') }}" class="flex flex-col md:flex-row gap-4">
 
-                <input type="text" placeholder="Cari nama event atau lokasi..."
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                <div class="relative flex-1">
+
+                    <span
+                        class="absolute
+                       left-4
+                       top-1/2
+                       -translate-y-1/2
+                       text-gray-400">
+                        🔎
+                    </span>
+
+                    <input type="text" name="search" value="{{ request('search') }}"
+                        placeholder="Cari nama event, lokasi, atau deskripsi..."
+                        class="w-full
+                       pl-11
+                       pr-4
+                       py-3
+                       rounded-xl
+                       border border-gray-200
+                       bg-gray-50
+                       focus:border-blue-500
+                       focus:ring-blue-500">
+
+                </div>
+
+
+                <button type="submit"
+                    class="px-6 py-3
+                   rounded-xl
+                   bg-blue-600
+                   hover:bg-blue-700
+                   text-white
+                   font-semibold
+                   transition">
+                    Cari
+                </button>
+
+
+                @if (request('search'))
+                    <a href="{{ route('admin.event.index') }}"
+                        class="px-6 py-3
+                       rounded-xl
+                       bg-gray-100
+                       hover:bg-gray-200
+                       text-gray-700
+                       font-semibold
+                       transition
+                       text-center">
+                        Reset
+                    </a>
+                @endif
 
             </form>
+
+        </div>
+
+        <div class="flex items-center justify-between">
+
+            <p class="text-sm text-gray-500">
+
+                @if (request('search'))
+                    Hasil pencarian untuk:
+                    <span class="font-semibold text-gray-800">
+                        "{{ request('search') }}"
+                    </span>
+                @else
+                    Menampilkan data event
+                @endif
+
+            </p>
+
+            <p class="text-sm text-gray-500">
+
+                Total:
+                <span class="font-semibold text-gray-800">
+                    {{ $events->total() }}
+                </span>
+                event
+
+            </p>
 
         </div>
 
@@ -264,7 +344,7 @@
 
         <!-- Pagination -->
 
-        <div>
+        <div class="px-6 py-5 border-t border-gray-100">
 
             {{ $events->links() }}
 

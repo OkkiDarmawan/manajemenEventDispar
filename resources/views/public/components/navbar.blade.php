@@ -50,10 +50,15 @@
 
                 @auth
 
-                    <a href="{{ route('public.pendaftaran-saya.index') }}" class="text-gray-600 hover:text-blue-600 transition">
+                    <a href="{{ route('public.pendaftaran-saya.index') }}"
+                        class="text-gray-600 hover:text-blue-600 transition">
 
                         Pendaftaran Saya
 
+                    </a>
+
+                      <a href="{{ route('public.profile.show') }}" class="text-gray-700 hover:text-blue-600 transition">
+                        Profil Saya
                     </a>
 
                 @endauth
@@ -162,6 +167,10 @@
 
                         Pendaftaran Saya
 
+                    </a>
+
+                    <a href="{{ route('public.profile.show') }}" class="text-gray-700 hover:text-blue-600 transition">
+                        Profil Saya
                     </a>
 
 

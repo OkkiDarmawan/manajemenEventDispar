@@ -16,6 +16,7 @@ class Workshop extends Model
         'tanggal_selesai',
         'lokasi',
         'kuota',
+        'biaya',
         'event_id',
     ];
 

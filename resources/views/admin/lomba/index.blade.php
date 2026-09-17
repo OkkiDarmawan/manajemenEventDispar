@@ -131,14 +131,85 @@
 
         <!-- Search -->
 
-        <div class="bg-white rounded-xl shadow p-5">
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
 
-            <form>
+            <form method="GET" action="{{ route('admin.lomba.index') }}" class="flex flex-col md:flex-row gap-4">
 
-                <input type="text" placeholder="Cari nama lomba..."
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500">
+                <div class="relative flex-1">
+
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                        🔎
+                    </span>
+
+                    <input type="text" name="search" value="{{ request('search') }}"
+                        placeholder="Cari nama event, lokasi, atau deskripsi..."
+                        class="w-full
+                       pl-11
+                       pr-4
+                       py-3
+                       rounded-xl
+                       border border-gray-200
+                       bg-gray-50
+                       focus:border-blue-500
+                       focus:ring-blue-500">
+
+                </div>
+
+
+                <button type="submit"
+                    class="px-6 py-3
+                   rounded-xl
+                   bg-blue-600
+                   hover:bg-blue-700
+                   text-white
+                   font-semibold
+                   transition">
+                    Cari
+                </button>
+
+
+                @if (request('search'))
+                    <a href="{{ route('admin.lomba.index') }}"
+                        class="px-6 py-3
+                       rounded-xl
+                       bg-gray-100
+                       hover:bg-gray-200
+                       text-gray-700
+                       font-semibold
+                       transition
+                       text-center">
+                        Reset
+                    </a>
+                @endif
 
             </form>
+
+        </div>
+
+        <div class="flex items-center justify-between">
+
+            <p class="text-sm text-gray-500">
+
+                @if (request('search'))
+                    Hasil pencarian untuk:
+                    <span class="font-semibold text-gray-800">
+                        "{{ request('search') }}"
+                    </span>
+                @else
+                    Menampilkan data lomba
+                @endif
+
+            </p>
+
+            <p class="text-sm text-gray-500">
+
+                Total:
+                <span class="font-semibold text-gray-800">
+                    {{ $lombas->total() }}
+                </span>
+                lomba
+
+            </p>
 
         </div>
 
@@ -154,6 +225,10 @@
 
                         <th class="px-6 py-3 text-left">
                             No
+                        </th>
+
+                        <th class="px-6 py-3 text-left">
+                            Poster
                         </th>
 
                         <th class="px-6 py-3 text-left">
@@ -192,6 +267,30 @@
                             <td class="px-6 py-4">
 
                                 {{ $loop->iteration }}
+
+                            </td>
+
+                            {{-- Poster --}}
+                            <td class="px-6 py-4">
+
+                                @if ($lomba->poster)
+                                    <img src="{{ asset('storage/' . $lomba->poster) }}" alt="{{ $lomba->judul }}"
+                                        class="w-16 h-16
+                                               object-cover
+                                               rounded-lg
+                                               border
+                                               border-gray-200">
+                                @else
+                                    <div
+                                        class="w-16 h-16
+                                               rounded-lg
+                                               bg-gray-100
+                                               flex items-center
+                                               justify-center
+                                               text-2xl">
+                                        🎓
+                                    </div>
+                                @endif
 
                             </td>
 
@@ -235,17 +334,17 @@
 
                             <td class="px-6 py-4">
 
-                                <div class="flex justify-center gap-2">
+                                <div class="flex justify-center items-center gap-2">
 
                                     <a href="{{ route('admin.lomba.field', $lomba->id) }}"
-                                        class="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg">
+                                        class="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-center rounded-lg">
 
                                         Kelola Field
 
                                     </a>
 
                                     <a href="{{ route('admin.lomba.edit', $lomba->id) }}"
-                                        class="px-3 py-1 bg-yellow-500 hover:bg-yellow-600 text-white rounded">
+                                        class="px-3 py-1 bg-yellow-500 hover:bg-yellow-600 text-white text-center rounded">
 
                                         Edit
 
@@ -293,7 +392,7 @@
 
         <!-- Pagination -->
 
-        <div>
+        <div class="px-6 py-5 border-t border-gray-100">
 
             {{ $lombas->links() }}
 

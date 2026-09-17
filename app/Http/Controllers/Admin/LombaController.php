@@ -7,30 +7,60 @@ use App\Http\Requests\StoreLombaRequest;
 use App\Http\Requests\UpdateLombaRequest;
 use App\Models\Event;
 use App\Models\Lomba;
+use Illuminate\Http\Request;
 
 class LombaController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $lombas = Lomba::with('event')
-            ->latest()
-            ->paginate(10);
+        $query = Lomba::with('event');
 
+        // Search
+        if ($request->filled('search')) {
+
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+
+                $q->where('nama_lomba', 'like', "%{$search}%")
+                    ->orWhereHas('event', function ($eventQuery) use ($search) {
+
+                        $eventQuery->where(
+                            'nama_event',
+                            'like',
+                            "%{$search}%"
+                        );
+
+                    });
+
+            });
+        }
+
+        // Pagination 6 data per halaman
+        $lombas = $query
+            ->latest()
+            ->paginate(6)
+            ->withQueryString();
+
+        // Summary
         $totalLomba = Lomba::count();
 
         $totalEvent = Event::count();
 
         $totalKuota = Lomba::sum('kuota');
 
-        return view('admin.lomba.index', compact(
-            'lombas',
-            'totalLomba',
-            'totalEvent',
-            'totalKuota'
-        ));
+        return view(
+            'admin.lomba.index',
+            compact(
+                'lombas',
+                'totalLomba',
+                'totalEvent',
+                'totalKuota'
+            )
+        );
     }
 
     /**
@@ -105,7 +135,26 @@ class LombaController extends Controller
                 'mimes:jpg,jpeg,png',
                 'max:2048',
             ],
+
+            'penyelenggara' => [
+                'required',
+                'string',
+                'max:255',
+            ],
         ]);
+
+        // Sanitasi HTML dari Quill
+        $allowedTags = '<p><br><strong><b><em><i><u><ol><ul><li><h1><h2><h3><blockquote>';
+
+        $validated['deskripsi'] = strip_tags(
+            $validated['deskripsi'],
+            $allowedTags
+        );
+
+        $validated['syarat'] = strip_tags(
+            $validated['syarat'],
+            $allowedTags
+        );
 
         if ($request->hasFile('poster')) {
             $validated['poster'] = $request->file('poster')
@@ -155,6 +204,7 @@ class LombaController extends Controller
             'pendaftaran_tertutup' => $request->pendaftaran_tertutup,
             'syarat' => $request->syarat,
             'deskripsi' => $request->deskripsi,
+            'penyelenggara' => $request->penyelenggara,
         ];
 
         // Jika ada poster baru

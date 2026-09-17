@@ -1,230 +1,209 @@
 @extends('layouts.admin')
 
 @section('content')
-
-<div
-    class="max-w-7xl mx-auto space-y-6"
-    x-data="{
+    <div class="max-w-7xl mx-auto space-y-6" x-data="{
         search: '',
-
+    
         filterWorkshop(judul, narasumber, event) {
-
+    
             const keyword = this.search
                 .toLowerCase()
                 .trim();
-
+    
             return (
                 judul.toLowerCase().includes(keyword) ||
                 narasumber.toLowerCase().includes(keyword) ||
                 event.toLowerCase().includes(keyword)
             );
         }
-    }"
->
+    }">
 
-    {{-- ===================================================== --}}
-    {{-- HEADER --}}
-    {{-- ===================================================== --}}
+        {{-- ===================================================== --}}
+        {{-- HEADER --}}
+        {{-- ===================================================== --}}
 
-    <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between">
 
-        <div>
+            <div>
 
-            <h1 class="text-3xl font-bold text-gray-800">
-                Kelola Workshop
-            </h1>
+                <h1 class="text-3xl font-bold text-gray-800">
+                    Kelola Workshop
+                </h1>
 
-            <p class="text-gray-500 mt-1">
-                Kelola data workshop yang tersedia.
-            </p>
+                <p class="text-gray-500 mt-1">
+                    Kelola data workshop yang tersedia.
+                </p>
 
-        </div>
+            </div>
 
 
-        <a
-            href="{{ route('admin.workshop.create') }}"
-            class="px-5 py-3
+            <a href="{{ route('admin.workshop.create') }}"
+                class="px-5 py-3
                    bg-blue-600
                    hover:bg-blue-700
                    text-white
                    rounded-xl
-                   transition"
-        >
-            + Tambah Workshop
-        </a>
+                   transition">
+                + Tambah Workshop
+            </a>
 
-    </div>
+        </div>
 
 
-    {{-- ===================================================== --}}
-    {{-- SUMMARY CARD --}}
-    {{-- ===================================================== --}}
+        {{-- ===================================================== --}}
+        {{-- SUMMARY CARD --}}
+        {{-- ===================================================== --}}
 
-    <div
-        class="grid
+        <div class="grid
                grid-cols-1
                md:grid-cols-3
-               gap-6"
-    >
+               gap-6">
 
-        {{-- Total Workshop --}}
-        <div
-            class="bg-white
+            {{-- Total Workshop --}}
+            <div
+                class="bg-white
                    rounded-2xl
                    border border-gray-100
                    shadow-sm
-                   p-6"
-        >
+                   p-6">
 
-            <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between">
 
-                <div>
+                    <div>
 
-                    <p class="text-sm text-gray-500">
-                        Total Workshop
-                    </p>
+                        <p class="text-sm text-gray-500">
+                            Total Workshop
+                        </p>
 
-                    <h2
-                        class="mt-2
+                        <h2
+                            class="mt-2
                                text-3xl
                                font-bold
-                               text-gray-800"
-                    >
-                        {{ $totalWorkshop }}
-                    </h2>
+                               text-gray-800">
+                            {{ $totalWorkshop }}
+                        </h2>
 
-                </div>
+                    </div>
 
-                <div
-                    class="w-12 h-12
+                    <div
+                        class="w-12 h-12
                            rounded-xl
                            bg-blue-50
                            flex items-center
                            justify-center
-                           text-2xl"
-                >
-                    🎓
+                           text-2xl">
+                        🎓
+                    </div>
+
                 </div>
 
             </div>
 
-        </div>
 
-
-        {{-- Akan Datang --}}
-        <div
-            class="bg-white
+            {{-- Akan Datang --}}
+            <div
+                class="bg-white
                    rounded-2xl
                    border border-gray-100
                    shadow-sm
-                   p-6"
-        >
+                   p-6">
 
-            <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between">
 
-                <div>
+                    <div>
 
-                    <p class="text-sm text-gray-500">
-                        Akan Datang
-                    </p>
+                        <p class="text-sm text-gray-500">
+                            Akan Datang
+                        </p>
 
-                    <h2
-                        class="mt-2
+                        <h2
+                            class="mt-2
                                text-3xl
                                font-bold
-                               text-gray-800"
-                    >
-                        {{ $workshopAkanDatang }}
-                    </h2>
+                               text-gray-800">
+                            {{ $workshopAkanDatang }}
+                        </h2>
 
-                </div>
+                    </div>
 
-                <div
-                    class="w-12 h-12
+                    <div
+                        class="w-12 h-12
                            rounded-xl
                            bg-green-50
                            flex items-center
                            justify-center
-                           text-2xl"
-                >
-                    📅
+                           text-2xl">
+                        📅
+                    </div>
+
                 </div>
 
             </div>
 
-        </div>
 
-
-        {{-- Sudah Berlangsung --}}
-        <div
-            class="bg-white
+            {{-- Sudah Berlangsung --}}
+            <div
+                class="bg-white
                    rounded-2xl
                    border border-gray-100
                    shadow-sm
-                   p-6"
-        >
+                   p-6">
 
-            <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between">
 
-                <div>
+                    <div>
 
-                    <p class="text-sm text-gray-500">
-                        Sudah Berlangsung
-                    </p>
+                        <p class="text-sm text-gray-500">
+                            Sudah Berlangsung
+                        </p>
 
-                    <h2
-                        class="mt-2
+                        <h2
+                            class="mt-2
                                text-3xl
                                font-bold
-                               text-gray-800"
-                    >
-                        {{ $workshopSelesai }}
-                    </h2>
+                               text-gray-800">
+                            {{ $workshopSelesai }}
+                        </h2>
 
-                </div>
+                    </div>
 
-                <div
-                    class="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center"
-                >
-                    ✓
+                    <div class="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center">
+                        ✓
+                    </div>
+
                 </div>
 
             </div>
 
         </div>
 
-    </div>
 
+        {{-- ===================================================== --}}
+        {{-- SEARCH --}}
+        {{-- ===================================================== --}}
 
-    {{-- ===================================================== --}}
-    {{-- SEARCH --}}
-    {{-- ===================================================== --}}
+        <div class="bg-white
+           rounded-2xl
+           border border-gray-100
+           shadow-sm
+           p-5">
 
-    <div
-        class="bg-white
-               rounded-2xl
-               border border-gray-100
-               shadow-sm
-               p-5"
-    >
+            <form method="GET" action="{{ route('admin.workshop.index') }}" class="flex flex-col md:flex-row gap-4">
 
-        <div class="relative">
+                <div class="relative flex-1">
 
-            <span
-                class="absolute
+                    <span
+                        class="absolute
                        left-4
                        top-1/2
                        -translate-y-1/2
-                       text-gray-400"
-            >
-                🔎
-            </span>
+                       text-gray-400">
+                        🔎
+                    </span>
 
-            <input
-                type="text"
-                x-model="search"
-                placeholder="Cari judul workshop, narasumber, atau event..."
-                class="w-full
+                    <input type="text" name="search" value="{{ request('search') }}"
+                        placeholder="Cari nama event, lokasi, atau deskripsi..."
+                        class="w-full
                        pl-11
                        pr-4
                        py-3
@@ -232,264 +211,285 @@
                        border border-gray-200
                        bg-gray-50
                        focus:border-blue-500
-                       focus:ring-blue-500"
-            >
+                       focus:ring-blue-500">
+
+                </div>
+
+
+                <button type="submit"
+                    class="px-6 py-3
+                   rounded-xl
+                   bg-blue-600
+                   hover:bg-blue-700
+                   text-white
+                   font-semibold
+                   transition">
+                    Cari
+                </button>
+
+
+                @if (request('search'))
+                    <a href="{{ route('admin.workshop.index') }}"
+                        class="px-6 py-3
+                       rounded-xl
+                       bg-gray-100
+                       hover:bg-gray-200
+                       text-gray-700
+                       font-semibold
+                       transition
+                       text-center">
+                        Reset
+                    </a>
+                @endif
+
+            </form>
 
         </div>
 
-    </div>
+        <div class="flex items-center justify-between">
 
+            <p class="text-sm text-gray-500">
 
-    {{-- ===================================================== --}}
-    {{-- TABLE --}}
-    {{-- ===================================================== --}}
+                @if (request('search'))
+                    Hasil pencarian untuk:
+                    <span class="font-semibold text-gray-800">
+                        "{{ request('search') }}"
+                    </span>
+                @else
+                    Menampilkan data workshop
+                @endif
 
-    <div
-        class="bg-white
+            </p>
+
+            <p class="text-sm text-gray-500">
+
+                Total:
+                <span class="font-semibold text-gray-800">
+                    {{ $workshops->total() }}
+                </span>
+                workshop
+
+            </p>
+
+        </div>
+
+        {{-- ===================================================== --}}
+        {{-- TABLE --}}
+        {{-- ===================================================== --}}
+
+        <div class="bg-white
                rounded-xl
                shadow
-               overflow-hidden"
-    >
+               overflow-hidden">
 
-        <div class="overflow-x-auto">
+            <div class="overflow-x-auto">
 
-            <table class="w-full">
+                <table class="w-full">
 
-                <thead class="bg-gray-100 border-b">
+                    <thead class="bg-gray-100 border-b">
 
-                    <tr>
+                        <tr>
 
-                        <th class="px-6 py-4 text-left">
-                            No
-                        </th>
+                            <th class="px-6 py-4 text-left">
+                                No
+                            </th>
 
-                        <th class="px-6 py-4 text-left">
-                            Poster
-                        </th>
+                            <th class="px-6 py-4 text-left">
+                                Poster
+                            </th>
 
-                        <th class="px-6 py-4 text-left">
-                            Judul
-                        </th>
+                            <th class="px-6 py-4 text-left">
+                                Judul
+                            </th>
 
-                        <th class="px-6 py-4 text-left">
-                            Narasumber
-                        </th>
+                            <th class="px-6 py-4 text-left">
+                                Narasumber
+                            </th>
 
-                        <th class="px-6 py-4 text-left">
-                            Event
-                        </th>
+                            <th class="px-6 py-4 text-left">
+                                Event
+                            </th>
 
-                        <th class="px-6 py-4 text-left">
-                            Tanggal
-                        </th>
+                            <th class="px-6 py-4 text-left">
+                                Tanggal
+                            </th>
 
-                        <th class="px-6 py-4 text-left">
-                            Kuota
-                        </th>
+                            <th class="px-6 py-4 text-left">
+                                Kuota
+                            </th>
 
-                        <th class="px-6 py-4 text-left">
-                            Aksi
-                        </th>
+                            <th class="px-6 py-4 text-left">
+                                Aksi
+                            </th>
 
-                    </tr>
+                        </tr>
 
-                </thead>
+                    </thead>
 
 
-                <tbody class="divide-y">
+                    <tbody class="divide-y">
 
-                    @forelse ($workshops as $workshop)
-
-                        <tr
-                            x-show="
+                        @forelse ($workshops as $workshop)
+                            <tr x-show="
                                 filterWorkshop(
                                     @js($workshop->judul),
                                     @js($workshop->narasumber),
                                     @js($workshop->event->nama_event)
                                 )
                             "
-                            class="hover:bg-gray-50"
-                        >
+                                class="hover:bg-gray-50">
 
-                            {{-- No --}}
-                            <td class="px-6 py-4">
-                                {{ $loop->iteration }}
-                            </td>
+                                {{-- No --}}
+                                <td class="px-6 py-4">
+                                    {{ $loop->iteration }}
+                                </td>
 
 
-                            {{-- Poster --}}
-                            <td class="px-6 py-4">
+                                {{-- Poster --}}
+                                <td class="px-6 py-4">
 
-                                @if ($workshop->poster)
-
-                                    <img
-                                        src="{{ asset(
-                                            'storage/' . $workshop->poster
-                                        ) }}"
-                                        alt="{{ $workshop->judul }}"
-                                        class="w-16 h-16
+                                    @if ($workshop->poster)
+                                        <img src="{{ asset('storage/' . $workshop->poster) }}"
+                                            alt="{{ $workshop->judul }}"
+                                            class="w-16 h-16
                                                object-cover
                                                rounded-lg
                                                border
-                                               border-gray-200"
-                                    >
-
-                                @else
-
-                                    <div
-                                        class="w-16 h-16
+                                               border-gray-200">
+                                    @else
+                                        <div
+                                            class="w-16 h-16
                                                rounded-lg
                                                bg-gray-100
                                                flex items-center
                                                justify-center
-                                               text-2xl"
-                                    >
-                                        🎓
-                                    </div>
+                                               text-2xl">
+                                            🎓
+                                        </div>
+                                    @endif
 
-                                @endif
-
-                            </td>
+                                </td>
 
 
-                            {{-- Judul --}}
-                            <td class="px-6 py-4 font-semibold">
-                                {{ $workshop->judul }}
-                            </td>
+                                {{-- Judul --}}
+                                <td class="px-6 py-4 font-semibold">
+                                    {{ $workshop->judul }}
+                                </td>
 
 
-                            {{-- Narasumber --}}
-                            <td class="px-6 py-4">
-                                {{ $workshop->narasumber }}
-                            </td>
+                                {{-- Narasumber --}}
+                                <td class="px-6 py-4">
+                                    {{ $workshop->narasumber }}
+                                </td>
 
 
-                            {{-- Event --}}
-                            <td class="px-6 py-4">
-                                {{ $workshop->event->nama_event }}
-                            </td>
+                                {{-- Event --}}
+                                <td class="px-6 py-4">
+                                    {{ $workshop->event->nama_event }}
+                                </td>
 
 
-                            {{-- Tanggal --}}
-                            <td class="px-6 py-4">
+                                {{-- Tanggal --}}
+                                <td class="px-6 py-4">
 
-                                <div class="text-sm">
+                                    <div class="text-sm">
 
-                                    <div>
+                                        <div>
 
-                                        <span class="font-medium">
-                                            Mulai:
-                                        </span>
+                                            <span class="font-medium">
+                                                Mulai:
+                                            </span>
 
-                                        {{ \Carbon\Carbon::parse(
-                                            $workshop->tanggal_mulai
-                                        )->format('d-m-Y') }}
+                                            {{ \Carbon\Carbon::parse($workshop->tanggal_mulai)->format('d-m-Y') }}
 
-                                    </div>
+                                        </div>
 
 
-                                    <div class="mt-1">
+                                        <div class="mt-1">
 
-                                        <span class="font-medium">
-                                            Selesai:
-                                        </span>
+                                            <span class="font-medium">
+                                                Selesai:
+                                            </span>
 
-                                        {{ \Carbon\Carbon::parse(
-                                            $workshop->tanggal_selesai
-                                        )->format('d-m-Y') }}
+                                            {{ \Carbon\Carbon::parse($workshop->tanggal_selesai)->format('d-m-Y') }}
+
+                                        </div>
 
                                     </div>
 
-                                </div>
-
-                            </td>
+                                </td>
 
 
-                            {{-- Kuota --}}
-                            <td class="px-6 py-4">
-                                {{ $workshop->kuota }} peserta
-                            </td>
+                                {{-- Kuota --}}
+                                <td class="px-6 py-4">
+                                    {{ $workshop->kuota }} peserta
+                                </td>
 
 
-                            {{-- Aksi --}}
-                            <td class="px-6 py-4">
+                                {{-- Aksi --}}
+                                <td class="px-6 py-4">
 
-                                <div class="flex gap-2">
+                                    <div class="flex justify-center gap-2">
 
-                                    <a
-                                        href="{{ route(
-                                            'admin.workshop.edit',
-                                            $workshop->id
-                                        ) }}"
-                                        class="px-3 py-2
-                                               bg-yellow-500
-                                               hover:bg-yellow-600
-                                               text-white
-                                               rounded-lg"
-                                    >
-                                        Edit
-                                    </a>
+                                        <a href="{{ route('admin.workshop.edit', $workshop->id) }}"
+                                            class="px-3 py-2 bg-yellow-500 hover:bg-yellow-600 text-white text-center rounded-lg">
+                                            Edit
+                                        </a>
 
 
-                                    <form
-                                        id="delete-form-{{ $workshop->id }}"
-                                        action="{{ route(
-                                            'admin.workshop.destroy',
-                                            $workshop->id
-                                        ) }}"
-                                        method="POST"
-                                    >
+                                        <form id="delete-form-{{ $workshop->id }}"
+                                            action="{{ route('admin.workshop.destroy', $workshop->id) }}" method="POST">
 
-                                        @csrf
-                                        @method('DELETE')
+                                            @csrf
+                                            @method('DELETE')
 
-                                        <button
-                                            type="button"
-                                            onclick="confirmDelete(
+                                            <button type="button"
+                                                onclick="confirmDelete(
                                                 {{ $workshop->id }}
                                             )"
-                                            class="px-3 py-2
+                                                class="px-3 py-2
                                                    bg-red-600
                                                    hover:bg-red-700
                                                    text-white
-                                                   rounded"
-                                        >
-                                            Hapus
-                                        </button>
+                                                   rounded">
+                                                Hapus
+                                            </button>
 
-                                    </form>
+                                        </form>
 
-                                </div>
+                                    </div>
 
-                            </td>
+                                </td>
 
-                        </tr>
+                            </tr>
 
-                    @empty
+                        @empty
 
-                        <tr>
+                            <tr>
 
-                            <td
-                                colspan="8"
-                                class="px-6 py-10
+                                <td colspan="8"
+                                    class="px-6 py-10
                                        text-center
-                                       text-gray-500"
-                            >
-                                Belum ada workshop.
-                            </td>
+                                       text-gray-500">
+                                    Belum ada workshop.
+                                </td>
 
-                        </tr>
+                            </tr>
+                        @endforelse
 
-                    @endforelse
+                    </tbody>
 
-                </tbody>
+                </table>
 
-            </table>
+            </div>
+
+            <div class="px-6 py-5 border-t border-gray-100">
+
+                {{ $workshops->links() }}
+
+            </div>
 
         </div>
 
     </div>
-
-</div>
-
 @endsection

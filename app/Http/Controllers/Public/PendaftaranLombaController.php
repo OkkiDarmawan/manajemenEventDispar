@@ -9,6 +9,7 @@ use App\Models\PendaftaranLomba;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class PendaftaranLombaController extends Controller
 {
@@ -68,14 +69,41 @@ class PendaftaranLombaController extends Controller
 
             $fieldName = 'field_'.$field->master_field_id;
 
-            $rules[$fieldName] = $field->required
-                ? 'required'
-                : 'nullable';
+            // Jika field bertipe file
+            if ($field->masterField->tipe === 'file') {
 
-            if ($field->required) {
+                $rules[$fieldName] = [
+                    $field->required ? 'required' : 'nullable',
+                    'file',
+                    'mimes:jpg,jpeg,png,pdf',
+                    'max:2048',
+                ];
 
-                $messages[$fieldName.'.required'] =
-                    $field->masterField->label.' wajib diisi.';
+                if ($field->required) {
+
+                    $messages[$fieldName.'.required'] =
+                        $field->masterField->label.' wajib diunggah.';
+                }
+
+                $messages[$fieldName.'.mimes'] =
+                    $field->masterField->label.' harus berupa JPG, JPEG, PNG, atau PDF.';
+
+                $messages[$fieldName.'.max'] =
+                    $field->masterField->label.' maksimal 2 MB.';
+
+            } else {
+
+                // Field biasa
+                $rules[$fieldName] = [
+                    $field->required ? 'required' : 'nullable',
+                    'string',
+                ];
+
+                if ($field->required) {
+
+                    $messages[$fieldName.'.required'] =
+                        $field->masterField->label.' wajib diisi.';
+                }
             }
         }
 
@@ -84,14 +112,16 @@ class PendaftaranLombaController extends Controller
             $messages
         );
 
-        $existing = PendaftaranLomba::where('lomba_id', $lomba->id)
-            ->where('user_id', Auth::id())
-            ->exists();
+        // Cari pendaftaran sebelumnya
+        $existing = PendaftaranLomba::where('user_id', auth()->id())
+            ->where('lomba_id', $lomba->id)
+            ->first();
 
-        if ($existing) {
+        // Jika masih Menunggu atau sudah Diterima,
+        // tidak boleh mendaftar lagi
+        if ($existing && in_array($existing->status, ['Menunggu', 'Diterima'])) {
 
-            return redirect()
-                ->route('public.lomba.show', $lomba->id)
+            return back()
                 ->with('error', 'Anda sudah terdaftar pada lomba ini.');
         }
 
@@ -102,30 +132,124 @@ class PendaftaranLombaController extends Controller
 
         // Cek kuota sebelum menyimpan
         if ($jumlahDiterima >= $lomba->kuota) {
+
             return redirect()
                 ->route('public.lomba.show', $lomba->id)
                 ->with('error', 'Maaf, kuota lomba sudah penuh.');
         }
 
-        DB::transaction(function () use ($validated, $fields, $lomba) {
+        DB::transaction(function () use (
+            $request,
+            $validated,
+            $fields,
+            $lomba,
+            $existing
+        ) {
 
-            $pendaftaran = PendaftaranLomba::create([
-                'lomba_id' => $lomba->id,
-                'user_id' => Auth::id(),
-                'status' => 'Menunggu',
-            ]);
+            /*
+            |--------------------------------------------------------------------------
+            | Jika sebelumnya Ditolak
+            |--------------------------------------------------------------------------
+            */
+            if ($existing && $existing->status === 'Ditolak') {
 
+                $pendaftaran = $existing;
+
+                $pendaftaran->update([
+                    'status' => 'Menunggu',
+                    'alasan_penolakan' => null,
+                    'nomor_peserta' => null,
+                ]);
+
+                // Ambil jawaban lama
+                $jawabanLama = JawabanLomba::where(
+                    'pendaftaran_lomba_id',
+                    $pendaftaran->id
+                )->get();
+
+                // Hapus file lama jika ada
+                foreach ($jawabanLama as $jawaban) {
+
+                    $oldField = $fields->firstWhere(
+                        'master_field_id',
+                        $jawaban->master_field_id
+                    );
+
+                    if (
+                        $oldField &&
+                        $oldField->masterField->tipe === 'file' &&
+                        $jawaban->value
+                    ) {
+                        Storage::disk('public')->delete($jawaban->value);
+                    }
+                }
+
+                // Hapus jawaban lama
+                JawabanLomba::where(
+                    'pendaftaran_lomba_id',
+                    $pendaftaran->id
+                )->delete();
+
+            } else {
+
+                /*
+                |--------------------------------------------------------------------------
+                | Belum pernah mendaftar
+                |--------------------------------------------------------------------------
+                */
+                $pendaftaran = PendaftaranLomba::create([
+                    'lomba_id' => $lomba->id,
+                    'user_id' => Auth::id(),
+                    'status' => 'Menunggu',
+                ]);
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Simpan jawaban
+            |--------------------------------------------------------------------------
+            */
             foreach ($fields as $field) {
 
-                $value = $validated[
-                    'field_'.$field->master_field_id
-                ] ?? null;
+                $fieldName = 'field_'.$field->master_field_id;
 
-                JawabanLomba::create([
-                    'pendaftaran_lomba_id' => $pendaftaran->id,
-                    'master_field_id' => $field->master_field_id,
-                    'value' => $value,
-                ]);
+                /*
+                |--------------------------------------------------------------------------
+                | Jika field berupa file
+                |--------------------------------------------------------------------------
+                */
+                if ($field->masterField->tipe === 'file') {
+
+                    $filePath = null;
+
+                    if ($request->hasFile($fieldName)) {
+
+                        $filePath = $request
+                            ->file($fieldName)
+                            ->store('pendaftaran-lomba', 'public');
+                    }
+
+                    JawabanLomba::create([
+                        'pendaftaran_lomba_id' => $pendaftaran->id,
+                        'master_field_id' => $field->master_field_id,
+                        'value' => $filePath,
+                    ]);
+
+                } else {
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Field biasa
+                    |--------------------------------------------------------------------------
+                    */
+                    $value = $validated[$fieldName] ?? null;
+
+                    JawabanLomba::create([
+                        'pendaftaran_lomba_id' => $pendaftaran->id,
+                        'master_field_id' => $field->master_field_id,
+                        'value' => $value,
+                    ]);
+                }
             }
         });
 

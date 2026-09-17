@@ -12,6 +12,8 @@ class PendaftaranWorkshop extends Model
         'user_id',
         'status',
         'alasan_penolakan',
+        'nomor_peserta',
+        'bukti_pembayaran',
     ];
 
     public function workshop(): BelongsTo
