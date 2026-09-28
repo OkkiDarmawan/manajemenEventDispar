@@ -1,22 +1,27 @@
 <?php
 
 // Import Admin
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\LombaController;
 use App\Http\Controllers\Admin\LombaFieldController;
 use App\Http\Controllers\Admin\MasterFieldController;
 use App\Http\Controllers\Admin\PendaftaranLombaController;
+use App\Http\Controllers\Admin\PendaftaranUmkmController;
 use App\Http\Controllers\Admin\PendaftaranWorkshopController;
+use App\Http\Controllers\Admin\UmkmController;
+use App\Http\Controllers\Admin\UmkmFieldController;
 use App\Http\Controllers\Admin\WorkshopController;
 // Import Public
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Public\ProfileController;
 use App\Http\Controllers\Public\EventController as PublicEventController;
 use App\Http\Controllers\Public\LombaController as PublicLombaController;
 use App\Http\Controllers\Public\PendaftaranLombaController as PublicPendaftaranLombaController;
 use App\Http\Controllers\Public\PendaftaranSayaController;
 use App\Http\Controllers\Public\PendaftaranWorkshopController as PublicPendaftaranWorkshopController;
+use App\Http\Controllers\Public\ProfileController;
+use App\Http\Controllers\Public\UmkmController as PublicUmkmController;
 use App\Http\Controllers\Public\WorkshopController as PublicWorkshopController;
 use Illuminate\Support\Facades\Route;
 
@@ -76,6 +81,18 @@ Route::middleware('auth')->group(function () {
         '/pendaftaran-saya',
         [PendaftaranSayaController::class, 'index']
     )->name('public.pendaftaran-saya.index');
+
+    Route::get('/umkm/{umkm}', [PublicUmkmController::class, 'show'])
+        ->name('public.umkm.show');
+
+    Route::get('/umkm/{umkm}/daftar', [PublicUmkmController::class, 'create'])
+        ->middleware('auth')
+        ->name('public.umkm.daftar');
+
+    Route::post('/umkm/{umkm}/daftar', [PublicUmkmController::class, 'store'])
+        ->middleware('auth')
+        ->name('public.umkm.daftar.store');
+
 });
 
 // ROUTE PUBLIC END
@@ -83,20 +100,26 @@ Route::middleware('auth')->group(function () {
 // Route Admin Start
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('dashboard');
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->name('dashboard');
 
     Route::resource('master-field', MasterFieldController::class);
     Route::resource('event', EventController::class);
     Route::resource('lomba', LombaController::class);
     Route::resource('faq', FaqController::class);
     Route::resource('workshop', WorkshopController::class);
+    Route::resource('umkm', UmkmController::class);
 
     Route::get(
         '/pendaftaran-lomba',
         [PendaftaranLombaController::class, 'index']
     )->name('pendaftaran-lomba.index');
+
+    Route::get(
+        '/pendaftaran-lomba/export',
+        [PendaftaranLombaController::class, 'export']
+    )->name('pendaftaran-lomba.export');
 
     Route::get(
         '/pendaftaran-lomba/{pendaftaranLomba}',
@@ -129,6 +152,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     )->name('pendaftaran-workshop.index');
 
     Route::get(
+        '/pendaftaran-workshop/export',
+        [PendaftaranWorkshopController::class, 'export']
+    )->name('pendaftaran-workshop.export');
+
+    Route::get(
         '/pendaftaran-workshop/{pendaftaranWorkshop}',
         [PendaftaranWorkshopController::class, 'show']
     )->name('pendaftaran-workshop.show');
@@ -137,6 +165,42 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         '/pendaftaran-workshop/{pendaftaranWorkshop}/status',
         [PendaftaranWorkshopController::class, 'update']
     )->name('pendaftaran-workshop.status');
+
+    Route::get('/umkm/{umkm}/field', [UmkmFieldController::class, 'edit'])
+        ->name('umkm.field');
+
+    Route::post('/umkm/{umkm}/field', [UmkmFieldController::class, 'store'])
+        ->name('umkm.field.store');
+
+    Route::get('/pendaftaran-umkm', [PendaftaranUmkmController::class, 'index'])
+        ->name('pendaftaran-umkm.index');
+
+    Route::get(
+        '/pendaftaran-umkm/export',
+        [PendaftaranUmkmController::class, 'export']
+    )->name('pendaftaran-umkm.export');
+
+    Route::get('/pendaftaran-umkm/{pendaftaranUmkm}', [PendaftaranUmkmController::class, 'show'])
+        ->name('pendaftaran-umkm.show');
+
+    Route::patch('/pendaftaran-umkm/{pendaftaranUmkm}/status', [PendaftaranUmkmController::class, 'updateStatus'])
+        ->name('pendaftaran-umkm.status');
+
+    Route::get(
+        '/pendaftaran-lomba/{pendaftaranLomba}',
+        [PendaftaranLombaController::class, 'show']
+    )->name('pendaftaran-lomba.show');
+
+
+    Route::get(
+        '/pendaftaran-workshop/{pendaftaranWorkshop}',
+        [PendaftaranWorkshopController::class, 'show']
+    )->name('pendaftaran-workshop.show');
+
+    Route::get(
+        '/pendaftaran-umkm/{pendaftaranUmkm}',
+        [PendaftaranUmkmController::class, 'show']
+    )->name('pendaftaran-umkm.show');
 
 });
 

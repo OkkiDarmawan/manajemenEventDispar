@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Models\PendaftaranLomba;
+use App\Models\PendaftaranUmkm;
 use App\Models\PendaftaranWorkshop;
-use Illuminate\Http\Request;
 
 class PendaftaranSayaController extends Controller
 {
@@ -21,9 +21,15 @@ class PendaftaranSayaController extends Controller
             ->latest()
             ->get();
 
+        $pendaftaranUmkm = PendaftaranUmkm::with('umkm.event')
+            ->where('user_id', auth()->id())
+            ->latest()
+            ->get();
+
         return view('public.pendaftaran-saya.index', compact(
             'pendaftaranLomba',
-            'pendaftaranWorkshop'
+            'pendaftaranWorkshop',
+            'pendaftaranUmkm'
         ));
     }
 }

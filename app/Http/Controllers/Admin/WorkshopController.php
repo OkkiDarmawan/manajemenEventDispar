@@ -33,9 +33,7 @@ class WorkshopController extends Controller
                             'like',
                             "%{$search}%"
                         );
-
                     });
-
             });
         }
 
@@ -91,7 +89,11 @@ class WorkshopController extends Controller
 
             'narasumber' => 'required|string|max:255',
 
+            'penyelenggara' => 'required|string|max:255',
+
             'deskripsi' => 'required|string',
+
+            'syarat' => 'nullable|string',
 
             'tanggal_mulai' => 'required|date',
 
@@ -106,10 +108,10 @@ class WorkshopController extends Controller
             'kuota' => 'required|integer|min:1',
 
             'biaya' => [
-            'required',
-            'numeric',
-            'min:0',
-        ],
+                'required',
+                'numeric',
+                'min:0',
+            ],
 
             'event_id' => 'required|exists:events,id',
 
@@ -134,7 +136,8 @@ class WorkshopController extends Controller
 
             'tanggal_selesai.date' => 'Tanggal selesai workshop tidak valid.',
 
-            'tanggal_selesai.after_or_equal' => 'Tanggal selesai harus sama atau setelah tanggal mulai.',
+            'tanggal_selesai.after_or_equal' =>
+                'Tanggal selesai harus sama atau setelah tanggal mulai.',
 
             'lokasi.required' => 'Lokasi workshop wajib diisi.',
 
@@ -142,8 +145,11 @@ class WorkshopController extends Controller
 
             'kuota.min' => 'Kuota minimal 1 peserta.',
 
-            'biaya.required' =>
-            'Biaya workshop wajib diisi.',
+            'biaya.required' => 'Biaya workshop wajib diisi.',
+
+            'biaya.numeric' => 'Biaya workshop harus berupa angka.',
+
+            'biaya.min' => 'Biaya workshop tidak boleh kurang dari 0.',
 
             'event_id.required' => 'Event wajib dipilih.',
 
@@ -151,26 +157,33 @@ class WorkshopController extends Controller
 
             'poster.image' => 'File poster harus berupa gambar.',
 
-            'poster.mimes' => 'Poster harus berformat JPG, JPEG, atau PNG.',
+            'poster.mimes' =>
+                'Poster harus berformat JPG, JPEG, atau PNG.',
 
-            'poster.max' => 'Ukuran poster maksimal 2 MB.',
+            'poster.max' =>
+                'Ukuran poster maksimal 2 MB.',
         ]);
 
-         $allowedTags = '<p><br><strong><b><em><i><u><ol><ul><li><h1><h2><h3><blockquote>';
+        /*
+        |--------------------------------------------------------------------------
+        | Upload poster
+        |--------------------------------------------------------------------------
+        */
 
-        $validated['deskripsi'] = strip_tags(
-            $validated['deskripsi'],
-            $allowedTags
-        );
-
-        // Upload poster
         if ($request->hasFile('poster')) {
-
             $validated['poster'] = $request->file('poster')
                 ->store('poster-workshop', 'public');
         }
 
-        // Simpan workshop
+        /*
+        |--------------------------------------------------------------------------
+        | Simpan workshop
+        |--------------------------------------------------------------------------
+        |
+        | Deskripsi dan syarat dapat berisi HTML custom.
+        |
+        */
+
         Workshop::create($validated);
 
         return redirect()
@@ -196,10 +209,13 @@ class WorkshopController extends Controller
     {
         $events = Event::orderBy('nama_event')->get();
 
-        return view('admin.workshop.edit', compact(
-            'workshop',
-            'events'
-        ));
+        return view(
+            'admin.workshop.edit',
+            compact(
+                'workshop',
+                'events'
+            )
+        );
     }
 
     /**
@@ -214,6 +230,10 @@ class WorkshopController extends Controller
 
             'deskripsi' => 'required|string',
 
+            'penyelenggara' => 'required|string|max:255',
+
+            'syarat' => 'nullable|string',
+
             'tanggal_mulai' => 'required|date',
 
             'tanggal_selesai' => [
@@ -226,11 +246,11 @@ class WorkshopController extends Controller
 
             'kuota' => 'required|integer|min:1',
 
-             'biaya' => [
-            'required',
-            'numeric',
-            'min:0',
-        ],
+            'biaya' => [
+                'required',
+                'numeric',
+                'min:0',
+            ],
 
             'event_id' => 'required|exists:events,id',
 
@@ -247,50 +267,72 @@ class WorkshopController extends Controller
 
             'deskripsi.required' => 'Deskripsi workshop wajib diisi.',
 
-            'tanggal_mulai.required' => 'Tanggal mulai workshop wajib diisi.',
+            'tanggal_mulai.required' =>
+                'Tanggal mulai workshop wajib diisi.',
 
-            'tanggal_mulai.date' => 'Tanggal mulai workshop tidak valid.',
+            'tanggal_mulai.date' =>
+                'Tanggal mulai workshop tidak valid.',
 
-            'tanggal_selesai.required' => 'Tanggal selesai workshop wajib diisi.',
+            'tanggal_selesai.required' =>
+                'Tanggal selesai workshop wajib diisi.',
 
-            'tanggal_selesai.date' => 'Tanggal selesai workshop tidak valid.',
+            'tanggal_selesai.date' =>
+                'Tanggal selesai workshop tidak valid.',
 
-            'tanggal_selesai.after_or_equal' => 'Tanggal selesai harus sama atau setelah tanggal mulai.',
+            'tanggal_selesai.after_or_equal' =>
+                'Tanggal selesai harus sama atau setelah tanggal mulai.',
 
-            'lokasi.required' => 'Lokasi workshop wajib diisi.',
+            'lokasi.required' =>
+                'Lokasi workshop wajib diisi.',
 
-            'kuota.required' => 'Kuota wajib diisi.',
+            'kuota.required' =>
+                'Kuota wajib diisi.',
 
-            'kuota.min' => 'Kuota minimal 1 peserta.',
+            'kuota.min' =>
+                'Kuota minimal 1 peserta.',
 
             'biaya.required' =>
-            'Biaya workshop wajib diisi.',
+                'Biaya workshop wajib diisi.',
 
-        'biaya.numeric' =>
-            'Biaya workshop harus berupa angka.',
+            'biaya.numeric' =>
+                'Biaya workshop harus berupa angka.',
 
-        'biaya.min' =>
-            'Biaya workshop tidak boleh kurang dari 0.',
+            'biaya.min' =>
+                'Biaya workshop tidak boleh kurang dari 0.',
 
-            'event_id.required' => 'Event wajib dipilih.',
+            'event_id.required' =>
+                'Event wajib dipilih.',
 
-            'event_id.exists' => 'Event yang dipilih tidak valid.',
+            'event_id.exists' =>
+                'Event yang dipilih tidak valid.',
 
-            'poster.image' => 'File poster harus berupa gambar.',
+            'poster.image' =>
+                'File poster harus berupa gambar.',
 
-            'poster.mimes' => 'Poster harus berformat JPG, JPEG, atau PNG.',
+            'poster.mimes' =>
+                'Poster harus berformat JPG, JPEG, atau PNG.',
 
-            'poster.max' => 'Ukuran poster maksimal 2 MB.',
+            'poster.max' =>
+                'Ukuran poster maksimal 2 MB.',
         ]);
 
-        // Upload poster baru jika ada
-        if ($request->hasFile('poster')) {
+        /*
+        |--------------------------------------------------------------------------
+        | Upload poster baru jika ada
+        |--------------------------------------------------------------------------
+        */
 
+        if ($request->hasFile('poster')) {
             $validated['poster'] = $request->file('poster')
                 ->store('poster-workshop', 'public');
         }
 
-        // Update data workshop
+        /*
+        |--------------------------------------------------------------------------
+        | Update workshop
+        |--------------------------------------------------------------------------
+        */
+
         $workshop->update($validated);
 
         return redirect()
@@ -310,6 +352,10 @@ class WorkshopController extends Controller
 
         return redirect()
             ->route('admin.workshop.index')
-            ->with('success', 'Workshop berhasil dihapus.');
+            ->with(
+                'success',
+                'Workshop berhasil dihapus.'
+            );
     }
 }
+

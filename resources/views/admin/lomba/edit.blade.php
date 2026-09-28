@@ -1,28 +1,7 @@
 @extends('layouts.admin')
 
 @section('content')
-
- <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
-
-    <style>
-        .ql-container {
-            height: auto !important;
-            min-height: 220px;
-        }
-
-        .ql-editor {
-            min-height: 220px;
-            height: auto;
-        }
-
-        #syarat-editor .ql-editor {
-            min-height: 260px;
-        }
-
-        #deskripsi-editor .ql-editor {
-            min-height: 220px;
-        }
-    </style>
+    
 
     <div class="max-w-5xl mx-auto space-y-6">
 
@@ -53,7 +32,8 @@
 
         <div class="bg-white rounded-xl shadow p-8">
 
-            <form id="lomba-form" action="{{ route('admin.lomba.update', $lomba->id) }}" method="POST" enctype="multipart/form-data">
+            <form id="lomba-form" action="{{ route('admin.lomba.update', $lomba->id) }}" method="POST"
+                enctype="multipart/form-data">
 
                 @csrf
                 @method('PUT')
@@ -270,14 +250,16 @@
                     {{-- Deskripsi --}}
                     <div class="md:col-span-2">
 
-                        <label class="block font-semibold text-gray-700 mb-2">
+                        <label for="deskripsi" class="block font-semibold text-gray-700 mb-2">
                             Deskripsi
                         </label>
 
-                        <div id="deskripsi-editor" class="bg-white"></div>
+                        <textarea name="deskripsi" id="deskripsi" rows="15" placeholder="Masukkan HTML untuk deskripsi lomba..."
+                            class="w-full rounded-xl border border-gray-300 px-4 py-3 font-mono text-sm focus:border-blue-500 focus:ring-blue-500">{{ old('deskripsi', $lomba->deskripsi) }}</textarea>
 
-                        <input type="hidden" name="deskripsi" id="deskripsi"
-                            value="{{ old('deskripsi', $lomba->deskripsi) }}">
+                        <p class="text-xs text-gray-500 mt-2">
+                            Mendukung HTML dan inline CSS.
+                        </p>
 
                         @error('deskripsi')
                             <p class="text-red-500 text-sm mt-1">
@@ -287,16 +269,20 @@
 
                     </div>
 
+
                     {{-- Syarat --}}
                     <div class="md:col-span-2">
 
-                        <label class="block font-semibold text-gray-700 mb-2">
+                        <label for="syarat" class="block font-semibold text-gray-700 mb-2">
                             Syarat dan Ketentuan
                         </label>
 
-                        <div id="syarat-editor" class="bg-white  border border-gray-300"></div>
+                        <textarea name="syarat" id="syarat" rows="15" placeholder="Masukkan HTML untuk syarat dan ketentuan..."
+                            class="w-full rounded-xl border border-gray-300 px-4 py-3 font-mono text-sm focus:border-blue-500 focus:ring-blue-500">{{ old('syarat', $lomba->syarat) }}</textarea>
 
-                        <input type="hidden" name="syarat" id="syarat" value="{{ old('syarat', $lomba->syarat) }}">
+                        <p class="text-xs text-gray-500 mt-2">
+                            Mendukung HTML dan inline CSS.
+                        </p>
 
                         @error('syarat')
                             <p class="text-red-500 text-sm mt-1">
@@ -305,6 +291,8 @@
                         @enderror
 
                     </div>
+
+
 
                 </div>
 
@@ -333,72 +321,5 @@
 
     </div>
 
-    <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-
-            const toolbarOptions = [
-                ['bold', 'italic', 'underline'],
-                [{
-                    'header': [1, 2, 3, false]
-                }],
-                [{
-                    'list': 'ordered'
-                }, {
-                    'list': 'bullet'
-                }],
-                [{
-                    'align': []
-                }],
-                ['blockquote', 'clean']
-            ];
-
-            // Editor Deskripsi
-            const deskripsiEditor = new Quill('#deskripsi-editor', {
-                theme: 'snow',
-                placeholder: 'Tulis deskripsi lomba...',
-                modules: {
-                    toolbar: toolbarOptions
-                }
-            });
-
-            // Editor Syarat
-            const syaratEditor = new Quill('#syarat-editor', {
-                theme: 'snow',
-                placeholder: 'Tulis syarat dan ketentuan lomba...',
-                modules: {
-                    toolbar: toolbarOptions
-                }
-            });
-
-
-            // Ambil old input jika validasi gagal
-            const oldDeskripsi = @json(old('deskripsi'));
-            const oldSyarat = @json(old('syarat'));
-
-            if (oldDeskripsi) {
-                deskripsiEditor.clipboard.dangerouslyPasteHTML(oldDeskripsi);
-            }
-
-            if (oldSyarat) {
-                syaratEditor.clipboard.dangerouslyPasteHTML(oldSyarat);
-            }
-
-
-            // Sebelum submit, masukkan HTML editor ke hidden input
-            const form = document.querySelector('form');
-
-            form.addEventListener('submit', function() {
-
-                document.getElementById('deskripsi').value =
-                    deskripsiEditor.root.innerHTML;
-
-                document.getElementById('syarat').value =
-                    syaratEditor.root.innerHTML;
-
-            });
-
-        });
-    </script>
+    
 @endsection

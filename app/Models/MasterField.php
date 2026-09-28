@@ -3,14 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class MasterField extends Model
 {
-    public function lombaFields()
-    {
-        return $this->hasMany(LombaField::class);
-    }
-
     protected $fillable = [
 
         'label',
@@ -30,4 +26,19 @@ class MasterField extends Model
         'readonly',
 
     ];
+
+    public function lombaFields()
+    {
+        return $this->hasMany(LombaField::class);
+    }
+
+    public function umkmFields(): HasMany
+    {
+        return $this->hasMany(UmkmField::class);
+    }
+
+    public function jawabanUmkms(): HasMany
+    {
+        return $this->hasMany(JawabanUmkm::class);
+    }
 }

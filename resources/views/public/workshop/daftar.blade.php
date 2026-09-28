@@ -171,7 +171,7 @@
                             Pastikan data kamu sudah benar sebelum menekan
                             tombol <strong>Daftar Sekarang</strong>. <br>
 
-                            <a href="{{ route('public.profile.show') }}"
+                            <a href="{{ route('public.profile.edit') }}"
                                 class="font-bold underline hover:text-blue-900">Ubah Data</a>
                         </p>
 

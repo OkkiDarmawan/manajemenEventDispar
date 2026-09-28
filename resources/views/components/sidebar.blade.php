@@ -48,7 +48,7 @@
         </li>
 
         <li>
-            <a href="#" class="block px-3 py-2 rounded text-gray-300 hover:text-white hover:bg-gray-800 transition-colors">
+            <a href="{{ route('admin.umkm.index') }}" class="block px-3 py-2 rounded text-gray-300 hover:text-white hover:bg-gray-800 transition-colors">
                 UMKM
             </a>
         </li>
@@ -67,6 +67,11 @@
         <li>
             <a href="{{ route('admin.pendaftaran-workshop.index') }}" class="block px-3 py-2 rounded text-gray-300 hover:text-white hover:bg-gray-800 transition-colors">
                 Pendaftaran Workshop
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('admin.pendaftaran-umkm.index') }}" class="block px-3 py-2 rounded text-gray-300 hover:text-white hover:bg-gray-800 transition-colors">
+                Pendaftaran UMKM
             </a>
         </li>
         

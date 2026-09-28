@@ -59,12 +59,12 @@
                                     Menunggu
                                 </span>
                             @elseif ($pendaftaran->status === 'Diterima')
-                                <span class="inline-flex px-4 py-2 rounded-full bg-green-100 text-green-700 text-sm font-semibold">
+                                <span
+                                    class="inline-flex px-4 py-2 rounded-full bg-green-100 text-green-700 text-sm font-semibold">
                                     Diterima
                                 </span>
 
-                                <div
-                                    class="mt-3 text-sm text-green-700 font-semibold">
+                                <div class="mt-3 text-sm text-green-700 font-semibold">
                                     Nomor Peserta:
 
                                     @if ($pendaftaran->nomor_peserta)
@@ -169,13 +169,13 @@
                                     class="inline-flex px-4 py-2 rounded-full bg-yellow-100 text-yellow-700 text-sm font-semibold">
                                     Menunggu
                                 </span>
-                              @elseif ($pendaftaran->status === 'Diterima')
-                                <span class="inline-flex px-4 py-2 rounded-full bg-green-100 text-green-700 text-sm font-semibold">
+                            @elseif ($pendaftaran->status === 'Diterima')
+                                <span
+                                    class="inline-flex px-4 py-2 rounded-full bg-green-100 text-green-700 text-sm font-semibold">
                                     Diterima
                                 </span>
 
-                                <div
-                                    class="mt-3 text-sm text-green-700 font-semibold">
+                                <div class="mt-3 text-sm text-green-700 font-semibold">
                                     Nomor Peserta:
 
                                     @if ($pendaftaran->nomor_peserta)
@@ -237,6 +237,168 @@
             @endforelse
 
         </div>
+
+
+        {{-- ============================================== --}}
+        {{-- PENDAFTARAN UMKM --}}
+        {{-- ============================================== --}}
+
+        <div class="mt-10">
+
+            <div class="mb-5">
+
+                <h2 class="text-2xl font-bold text-gray-800">
+                    Pendaftaran UMKM
+                </h2>
+
+                <p class="text-gray-500 mt-1">
+                    Riwayat pendaftaran UMKM kamu.
+                </p>
+
+            </div>
+
+
+            @if ($pendaftaranUmkm->isEmpty())
+
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+
+                    <p class="text-gray-500">
+                        Belum ada pendaftaran UMKM.
+                    </p>
+
+                </div>
+            @else
+                <div class="space-y-4">
+
+                    @foreach ($pendaftaranUmkm as $pendaftaran)
+                        <div
+                            class="bg-white rounded-2xl
+                           shadow-sm
+                           border border-gray-100
+                           p-6">
+
+                            <div
+                                class="flex flex-col md:flex-row
+                                md:items-center
+                                md:justify-between
+                                gap-4">
+
+                                {{-- Informasi UMKM --}}
+                                <div>
+
+                                    <p class="text-sm text-blue-600 font-semibold">
+                                        {{ $pendaftaran->umkm->event->nama_event }}
+                                    </p>
+
+                                    <h3 class="text-xl font-bold text-gray-800 mt-1">
+                                        {{ $pendaftaran->umkm->nama }}
+                                    </h3>
+
+                                    @if ($pendaftaran->nomor_peserta)
+                                        <p class="text-sm text-gray-500 mt-2">
+                                            Nomor Peserta:
+                                            <span class="font-bold text-blue-600">
+                                                #{{ $pendaftaran->nomor_peserta }}
+                                            </span>
+                                        </p>
+                                    @endif
+
+                                </div>
+
+
+                                {{-- Status --}}
+                                <div>
+
+                                    @if ($pendaftaran->status === 'Menunggu')
+                                        <span
+                                            class="inline-flex
+                                           px-4 py-2
+                                           rounded-full
+                                           bg-yellow-100
+                                           text-yellow-700
+                                           text-sm
+                                           font-semibold">
+                                            🟡 Menunggu
+                                        </span>
+                                    @elseif ($pendaftaran->status === 'Diterima')
+                                        <span
+                                            class="inline-flex
+                                           px-4 py-2
+                                           rounded-full
+                                           bg-green-100
+                                           text-green-700
+                                           text-sm
+                                           font-semibold">
+                                            🟢 Diterima
+                                        </span>
+                                    @elseif ($pendaftaran->status === 'Ditolak')
+                                        <span
+                                            class="inline-flex
+                                           px-4 py-2
+                                           rounded-full
+                                           bg-red-100
+                                           text-red-700
+                                           text-sm
+                                           font-semibold">
+                                            🔴 Ditolak
+                                        </span>
+                                    @endif
+
+                                </div>
+
+                            </div>
+
+
+                            {{-- Alasan Penolakan --}}
+                            @if ($pendaftaran->status === 'Ditolak' && $pendaftaran->alasan_penolakan)
+                                <div
+                                    class="mt-5
+                                   bg-red-50
+                                   border border-red-200
+                                   rounded-xl
+                                   p-4">
+
+                                    <p class="text-sm font-semibold text-red-700">
+                                        Alasan Penolakan
+                                    </p>
+
+                                    <p class="text-sm text-gray-700 mt-1">
+                                        {{ $pendaftaran->alasan_penolakan }}
+                                    </p>
+
+                                </div>
+                            @endif
+
+
+                            {{-- Detail --}}
+                            <div class="mt-5 pt-5 border-t border-gray-100">
+
+                                <a href="{{ route('public.umkm.show', $pendaftaran->umkm->id) }}"
+                                    class="inline-flex
+                                   items-center
+                                   px-4 py-2
+                                   rounded-lg
+                                   bg-blue-600
+                                   hover:bg-blue-700
+                                   text-white
+                                   text-sm
+                                   font-semibold
+                                   transition">
+                                    Lihat UMKM
+                                </a>
+
+                            </div>
+
+                        </div>
+                    @endforeach
+
+                </div>
+
+            @endif
+
+        </div>
+
+
 
     </div>
 

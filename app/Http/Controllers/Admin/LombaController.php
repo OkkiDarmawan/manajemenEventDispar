@@ -35,11 +35,10 @@ class LombaController extends Controller
                         );
 
                     });
-
             });
         }
 
-        // Pagination 6 data per halaman
+        // Pagination
         $lombas = $query
             ->latest()
             ->paginate(6)
@@ -47,9 +46,7 @@ class LombaController extends Controller
 
         // Summary
         $totalLomba = Lomba::count();
-
         $totalEvent = Event::count();
-
         $totalKuota = Lomba::sum('kuota');
 
         return view(
@@ -70,7 +67,10 @@ class LombaController extends Controller
     {
         $events = Event::orderBy('nama_event')->get();
 
-        return view('admin.lomba.create', compact('events'));
+        return view(
+            'admin.lomba.create',
+            compact('events')
+        );
     }
 
     /**
@@ -78,88 +78,28 @@ class LombaController extends Controller
      */
     public function store(StoreLombaRequest $request)
     {
-        $validated = $request->validate([
-            'event_id' => [
-                'required',
-                'exists:events,id',
-            ],
+        $validated = $request->validated();
 
-            'nama_lomba' => [
-                'required',
-                'string',
-                'max:255',
-            ],
-
-            'kuota' => [
-                'required',
-                'integer',
-                'min:1',
-            ],
-
-            'biaya' => [
-                'required',
-                'numeric',
-                'min:0',
-            ],
-
-            'hadiah' => [
-                'nullable',
-                'string',
-                'max:255',
-            ],
-
-            'pendaftaran_terbuka' => [
-                'required',
-                'date',
-            ],
-
-            'pendaftaran_tertutup' => [
-                'required',
-                'date',
-                'after_or_equal:pendaftaran_terbuka',
-            ],
-
-            'syarat' => [
-                'required',
-                'string',
-            ],
-
-            'deskripsi' => [
-                'required',
-                'string',
-            ],
-
-            'poster' => [
-                'nullable',
-                'image',
-                'mimes:jpg,jpeg,png',
-                'max:2048',
-            ],
-
-            'penyelenggara' => [
-                'required',
-                'string',
-                'max:255',
-            ],
-        ]);
-
-        // Sanitasi HTML dari Quill
-        $allowedTags = '<p><br><strong><b><em><i><u><ol><ul><li><h1><h2><h3><blockquote>';
-
-        $validated['deskripsi'] = strip_tags(
-            $validated['deskripsi'],
-            $allowedTags
-        );
-
-        $validated['syarat'] = strip_tags(
-            $validated['syarat'],
-            $allowedTags
-        );
+        /*
+        |--------------------------------------------------------------------------
+        | Upload Poster
+        |--------------------------------------------------------------------------
+        */
 
         if ($request->hasFile('poster')) {
+
             $validated['poster'] = $request->file('poster')
                 ->store('poster-lomba', 'public');
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Simpan Lomba
+        |--------------------------------------------------------------------------
+        |
+        | Deskripsi dan syarat disimpan sebagai HTML.
+        |
+        */
 
         Lomba::create($validated);
 
@@ -183,43 +123,50 @@ class LombaController extends Controller
     {
         $events = Event::orderBy('nama_event')->get();
 
-        return view('admin.lomba.edit', compact(
-            'lomba',
-            'events'
-        ));
+        return view(
+            'admin.lomba.edit',
+            compact(
+                'lomba',
+                'events'
+            )
+        );
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateLombaRequest $request, Lomba $lomba)
-    {
-        $data = [
-            'event_id' => $request->event_id,
-            'nama_lomba' => $request->nama_lomba,
-            'kuota' => $request->kuota,
-            'biaya' => $request->biaya,
-            'hadiah' => $request->hadiah,
-            'pendaftaran_terbuka' => $request->pendaftaran_terbuka,
-            'pendaftaran_tertutup' => $request->pendaftaran_tertutup,
-            'syarat' => $request->syarat,
-            'deskripsi' => $request->deskripsi,
-            'penyelenggara' => $request->penyelenggara,
-        ];
+    public function update(
+        UpdateLombaRequest $request,
+        Lomba $lomba
+    ) {
+        $data = $request->validated();
 
-        // Jika ada poster baru
+        /*
+        |--------------------------------------------------------------------------
+        | Upload Poster Baru
+        |--------------------------------------------------------------------------
+        */
+
         if ($request->hasFile('poster')) {
 
             $data['poster'] = $request->file('poster')
                 ->store('poster-lomba', 'public');
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | Update Data Lomba
+        |--------------------------------------------------------------------------
+        |
+        | Deskripsi dan syarat tetap berupa HTML custom.
+        |
+        */
+
         $lomba->update($data);
 
         return redirect()
             ->route('admin.lomba.index')
             ->with('success', 'Data lomba berhasil diperbarui.');
-
     }
 
     /**
@@ -227,7 +174,6 @@ class LombaController extends Controller
      */
     public function destroy(Lomba $lomba)
     {
-        // Hapus data lomba
         $lomba->delete();
 
         return redirect()
@@ -235,3 +181,4 @@ class LombaController extends Controller
             ->with('success', 'Data lomba berhasil dihapus.');
     }
 }
+

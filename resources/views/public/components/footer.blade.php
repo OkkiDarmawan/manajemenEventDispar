@@ -125,11 +125,11 @@
                     </li>
 
                     <li>
-                        📞 08xx-xxxx-xxxx
+                        📞 0821-7986-2826
                     </li>
 
                     <li>
-                        ✉️ info@example.com
+                        ✉️ <a href="mailto:tic.pangkalpinang@gmail.com">tic.pangkalpinang@gmail.com</a>
                     </li>
 
                 </ul>

@@ -593,13 +593,13 @@
 
 
                                 {{-- Penyelenggara --}}
-                              
+
 
                                 <p class="mt-3 text-sm font-bold text-black" x-text="lomba.penyelenggara">
 
 
 
-                                {{-- Footer --}}
+                                    {{-- Footer --}}
                                 <div
                                     class="mt-5
                                        flex
@@ -1130,7 +1130,7 @@
                                 </p>
 
 
-                            
+
 
 
                                 {{-- Info --}}
@@ -1261,4 +1261,234 @@
         </div>
 
     </section>
+
+
+    {{-- ===================================================== --}}
+    {{-- UMKM --}}
+    {{-- ===================================================== --}}
+
+    @if ($event->umkms->isNotEmpty())
+        <section class="py-16 bg-gray-50">
+
+            <div class="max-w-7xl mx-auto px-6 lg:px-8">
+
+                {{-- Header --}}
+                <div class="text-center">
+
+                    <p class="text-blue-600 font-semibold">
+                        UMKM
+                    </p>
+
+                    <h2
+                        class="mt-2
+                           text-3xl
+                           font-bold
+                           text-gray-900">
+                        Kegiatan UMKM
+                    </h2>
+
+                    <p class="mt-3 text-gray-500">
+                        Ikuti kegiatan UMKM yang tersedia dalam event ini.
+                    </p>
+
+                </div>
+
+
+                {{-- Cards --}}
+                <div
+                    class="mt-10
+                       grid
+                       grid-cols-1
+                       md:grid-cols-2
+                       lg:grid-cols-3
+                       gap-6">
+
+                    @foreach ($event->umkms as $umkm)
+                        <a href="{{ route('public.umkm.show', $umkm->id) }}" class="group">
+
+                            <div
+                                class="bg-white
+                                   rounded-2xl
+                                   border border-gray-100
+                                   overflow-hidden
+                                   shadow-sm
+                                   hover:shadow-xl
+                                   hover:-translate-y-1
+                                   transition-all
+                                   duration-300">
+
+                                {{-- Poster --}}
+                                <div
+                                    class="relative
+                                       h-52
+                                       overflow-hidden">
+
+                                    @if ($umkm->poster)
+                                        <img src="{{ asset('storage/' . $umkm->poster) }}" alt="{{ $umkm->nama }}"
+                                            class="w-full
+                                               h-full
+                                               object-cover
+                                               transition-transform
+                                               duration-700
+                                               group-hover:scale-105">
+                                    @else
+                                        <div
+                                            class="w-full
+                                               h-full
+                                               bg-gray-100
+                                               flex
+                                               items-center
+                                               justify-center
+                                               text-5xl">
+                                            🏪
+                                        </div>
+                                    @endif
+
+
+                                    {{-- Overlay --}}
+                                    <div
+                                        class="absolute
+                                           inset-0
+                                           bg-gradient-to-t
+                                           from-black/60
+                                           via-transparent
+                                           to-transparent">
+                                    </div>
+
+
+                                    {{-- Biaya --}}
+                                    <div
+                                        class="absolute
+                                           top-4
+                                           right-4">
+
+                                        @if ($umkm->biaya > 0)
+                                            <span
+                                                class="inline-flex
+                                                   px-3 py-1.5
+                                                   rounded-full
+                                                   bg-blue-600/90
+                                                   text-white
+                                                   text-xs
+                                                   font-bold">
+                                                Berbayar
+                                            </span>
+                                        @else
+                                            <span
+                                                class="inline-flex
+                                                   px-3 py-1.5
+                                                   rounded-full
+                                                   bg-green-500/90
+                                                   text-white
+                                                   text-xs
+                                                   font-bold">
+                                                Gratis
+                                            </span>
+                                        @endif
+
+                                    </div>
+
+                                </div>
+
+
+                                {{-- Content --}}
+                                <div class="p-6">
+
+                                    {{-- Nama --}}
+                                    <h3
+                                        class="text-xl
+                                           font-bold
+                                           text-gray-900
+                                           group-hover:text-blue-600
+                                           transition">
+                                        {{ $umkm->nama }}
+                                    </h3>
+
+                                    {{-- Info --}}
+                                    <div
+                                        class="mt-5
+                                           space-y-2
+                                           text-sm
+                                           text-gray-500">
+
+                                        {{-- Kuota --}}
+                                        <div class="flex items-center gap-2">
+
+                                            <span>👥</span>
+
+                                            <span>
+
+                                                Kuota:
+
+                                                @if ($umkm->kuota !== null)
+                                                    {{ $umkm->kuota }} peserta
+                                                @else
+                                                    Tidak dibatasi
+                                                @endif
+
+                                            </span>
+
+                                        </div>
+
+
+                                        {{-- Periode --}}
+                                        @if ($umkm->pendaftaran_terbuka && $umkm->pendaftaran_tertutup)
+                                            <div class="flex items-start gap-2">
+
+                                                <span>📅</span>
+
+                                                <span>
+
+                                                    {{ \Carbon\Carbon::parse($umkm->pendaftaran_terbuka)->translatedFormat('d F Y') }}
+
+                                                    -
+
+                                                    {{ \Carbon\Carbon::parse($umkm->pendaftaran_tertutup)->translatedFormat('d F Y') }}
+
+                                                </span>
+
+                                            </div>
+                                        @endif
+
+                                    </div>
+
+
+                                    {{-- Footer --}}
+                                    <div
+                                        class="mt-5
+                                           flex
+                                           items-center
+                                           justify-between">
+
+                                        <span
+                                            class="text-blue-600
+                                               font-semibold
+                                               text-sm">
+                                            Lihat UMKM
+                                        </span>
+
+                                        <span
+                                            class="text-blue-600
+                                               group-hover:translate-x-1
+                                               transition">
+                                            →
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </a>
+                    @endforeach
+
+                </div>
+
+            </div>
+
+        </section>
+    @endif
+
+
 @endsection

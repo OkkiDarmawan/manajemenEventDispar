@@ -122,9 +122,15 @@ class EventController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Event $event)
     {
-        //
+        $event->load([
+            'lombas',
+            'workshops',
+            'umkms',
+        ]);
+
+        return view('public.event.show', compact('event'));
     }
 
     /**

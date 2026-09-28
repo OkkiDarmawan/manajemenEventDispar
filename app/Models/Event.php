@@ -59,7 +59,12 @@ class Event extends Model
     }
 
     public function workshops()
-{
-    return $this->hasMany(Workshop::class);
-}
+    {
+        return $this->hasMany(Workshop::class);
+    }
+
+    public function umkms()
+    {
+        return $this->hasMany(Umkm::class);
+    }
 }

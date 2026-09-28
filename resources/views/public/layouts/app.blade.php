@@ -13,7 +13,7 @@
 
     @include('public.components.navbar')
 
-    <main class="pt-20">
+    <main class="">
 
         @yield('content')
 

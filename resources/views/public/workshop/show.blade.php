@@ -1,4 +1,3 @@
-
 @extends('public.layouts.app')
 
 @section('title', $workshop->judul)
@@ -8,7 +7,7 @@
     <div class="max-w-7xl mx-auto px-6 py-12">
 
 
-          {{-- Poster Lomba --}}
+        {{-- Poster Lomba --}}
         @if ($workshop->poster)
             <div class="mb-10">
 
@@ -43,7 +42,7 @@
                 {{ $workshop->judul }}
             </h1>
 
-          
+
 
         </div>
 
@@ -73,8 +72,29 @@
 
                     </div>
 
-                     <div class="text-gray-600 leading-relaxed prose prose-gray max-w-none">
+                    <div class="text-gray-600 leading-relaxed prose prose-gray max-w-none">
                         {!! $workshop->deskripsi !!}
+                    </div>
+
+                </div>
+
+                {{-- Syarat dan Ketentuan --}}
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
+
+                    <div class="mb-5">
+
+                        <p class="text-sm font-semibold text-blue-600 uppercase tracking-wide">
+                            Ketentuan
+                        </p>
+
+                        <h2 class="mt-1 text-2xl font-bold text-gray-800">
+                            Syarat dan Ketentuan
+                        </h2>
+
+                    </div>
+
+                    <div class="text-gray-600 leading-relaxed prose prose-gray max-w-none">
+                        {!! $workshop->syarat !!}
                     </div>
 
                 </div>
@@ -414,4 +434,3 @@
     </div>
 
 @endsection
-

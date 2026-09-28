@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\PendaftaranWorkshopExport;
 use App\Http\Controllers\Controller;
 use App\Models\Event;
-use App\Models\Workshop;
 use App\Models\PendaftaranWorkshop;
+use App\Models\Workshop;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PendaftaranWorkshopController extends Controller
 {
@@ -14,137 +16,130 @@ class PendaftaranWorkshopController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-{
-    $query = PendaftaranWorkshop::with([
-        'user',
-        'workshop.event',
-    ]);
+    {
+        $query = PendaftaranWorkshop::with([
+            'user',
+            'workshop.event',
+        ]);
 
+        // =====================================================
+        // SEARCH
+        // =====================================================
 
-    // =====================================================
-    // SEARCH
-    // =====================================================
+        if ($request->filled('search')) {
 
-    if ($request->filled('search')) {
+            $search = trim($request->search);
 
-        $search = trim($request->search);
+            $query->where(function ($q) use ($search) {
 
-        $query->where(function ($q) use ($search) {
+                // Cari berdasarkan data peserta
+                $q->whereHas('user', function ($userQuery) use ($search) {
 
-            // Cari berdasarkan data peserta
-            $q->whereHas('user', function ($userQuery) use ($search) {
+                    $userQuery->where(
+                        'name',
+                        'like',
+                        "%{$search}%"
+                    )
+                        ->orWhere(
+                            'nik',
+                            'like',
+                            "%{$search}%"
+                        )
+                        ->orWhere(
+                            'no_hp',
+                            'like',
+                            "%{$search}%"
+                        );
 
-                $userQuery->where(
-                    'name',
-                    'like',
-                    "%{$search}%"
-                )
-                ->orWhere(
-                    'nik',
-                    'like',
-                    "%{$search}%"
-                )
-                ->orWhere(
-                    'no_hp',
-                    'like',
-                    "%{$search}%"
-                );
+                });
+
+                // Cari berdasarkan nomor peserta
+                $nomorPeserta = ltrim($search, '#');
+
+                if (is_numeric($nomorPeserta)) {
+
+                    $q->orWhere(
+                        'nomor_peserta',
+                        (int) $nomorPeserta
+                    );
+
+                }
 
             });
+        }
 
+        // =====================================================
+        // FILTER EVENT
+        // =====================================================
 
-            // Cari berdasarkan nomor peserta
-            $nomorPeserta = ltrim($search, '#');
+        if ($request->filled('event_id')) {
 
-            if (is_numeric($nomorPeserta)) {
+            $query->whereHas(
+                'workshop',
+                function ($workshopQuery) use ($request) {
 
-                $q->orWhere(
-                    'nomor_peserta',
-                    (int) $nomorPeserta
-                );
+                    $workshopQuery->where(
+                        'event_id',
+                        $request->event_id
+                    );
 
-            }
+                }
+            );
+        }
 
-        });
-    }
+        // =====================================================
+        // FILTER WORKSHOP
+        // =====================================================
 
+        if ($request->filled('workshop_id')) {
 
-    // =====================================================
-    // FILTER EVENT
-    // =====================================================
+            $query->where(
+                'workshop_id',
+                $request->workshop_id
+            );
+        }
 
-    if ($request->filled('event_id')) {
+        // =====================================================
+        // FILTER STATUS
+        // =====================================================
 
-        $query->whereHas(
-            'workshop',
-            function ($workshopQuery) use ($request) {
+        if ($request->filled('status')) {
 
-                $workshopQuery->where(
-                    'event_id',
-                    $request->event_id
-                );
+            $query->where(
+                'status',
+                $request->status
+            );
+        }
 
-            }
+        // =====================================================
+        // PAGINATION
+        // =====================================================
+
+        $pendaftarans = $query
+            ->latest()
+            ->paginate(6)
+            ->withQueryString();
+
+        // =====================================================
+        // DATA FILTER
+        // =====================================================
+
+        $events = Event::orderBy('nama_event')
+            ->get();
+
+        $workshops = Workshop::orderBy('judul')
+            ->get();
+
+        return view(
+            'admin.pendaftaran-workshop.index',
+            compact(
+                'pendaftarans',
+                'events',
+                'workshops'
+            )
         );
     }
 
-
-    // =====================================================
-    // FILTER WORKSHOP
-    // =====================================================
-
-    if ($request->filled('workshop_id')) {
-
-        $query->where(
-            'workshop_id',
-            $request->workshop_id
-        );
-    }
-
-
-    // =====================================================
-    // FILTER STATUS
-    // =====================================================
-
-    if ($request->filled('status')) {
-
-        $query->where(
-            'status',
-            $request->status
-        );
-    }
-
-
-    // =====================================================
-    // PAGINATION
-    // =====================================================
-
-    $pendaftarans = $query
-        ->latest()
-        ->paginate(6)
-        ->withQueryString();
-
-
-    // =====================================================
-    // DATA FILTER
-    // =====================================================
-
-    $events = Event::orderBy('nama_event')
-        ->get();
-
-    $workshops = Workshop::orderBy('judul')
-        ->get();
-
-
-    return view(
-        'admin.pendaftaran-workshop.index',
-        compact(
-            'pendaftarans',
-            'events',
-            'workshops'
-        )
-    );
-}
     /**
      * Show the form for creating a new resource.
      */
@@ -188,7 +183,8 @@ class PendaftaranWorkshopController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, PendaftaranWorkshop $pendaftaranWorkshop) {
+    public function update(Request $request, PendaftaranWorkshop $pendaftaranWorkshop)
+    {
         $request->validate([
             'status' => 'required|in:Menunggu,Diterima,Ditolak',
 
@@ -323,5 +319,13 @@ class PendaftaranWorkshopController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function export()
+    {
+        return Excel::download(
+            new PendaftaranWorkshopExport,
+            'pendaftaran-workshop.xlsx'
+        );
     }
 }

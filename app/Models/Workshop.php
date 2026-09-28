@@ -18,6 +18,8 @@ class Workshop extends Model
         'kuota',
         'biaya',
         'event_id',
+        'syarat',
+        'penyelenggara'
     ];
 
     public function event(): BelongsTo

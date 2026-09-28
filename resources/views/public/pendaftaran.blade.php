@@ -6,10 +6,11 @@
 
     <div class="max-w-3xl mx-auto px-6 py-12">
 
- <a href="{{ route('public.lomba.show', $lomba->id) }}"
+        {{-- Kembali --}}
+        <a href="{{ route('public.lomba.show', $lomba->id) }}"
             class="inline-flex items-center gap-2
-           text-gray-600 hover:text-blue-600
-           font-medium transition mb-6">
+                   text-gray-600 hover:text-blue-600
+                   font-medium transition mb-6">
 
             <span>←</span>
 
@@ -17,6 +18,8 @@
 
         </a>
 
+
+        {{-- Header --}}
         <div class="mb-8">
 
             <p class="text-blue-600 font-semibold">
@@ -34,9 +37,10 @@
         </div>
 
 
+        {{-- Form --}}
         <div class="bg-white rounded-2xl shadow p-8">
 
-            <form action="{{ route('public.lomba.daftar.store', $lomba->id) }}" method="POST">
+            <form action="{{ route('public.lomba.daftar.store', $lomba->id) }}" method="POST" enctype="multipart/form-data">
 
                 @csrf
 
@@ -49,7 +53,8 @@
 
                     <div class="mb-6">
 
-                        <label class="block font-semibold mb-2">
+                        {{-- Label --}}
+                        <label for="field_{{ $masterField->id }}" class="block font-semibold mb-2">
 
                             {{ $masterField->label }}
 
@@ -60,16 +65,20 @@
                         </label>
 
 
+                        {{-- ===================================== --}}
                         {{-- TEXTAREA --}}
-
+                        {{-- ===================================== --}}
                         @if ($masterField->tipe === 'textarea')
-                            <textarea name="field_{{ $masterField->id }}" class="w-full rounded-lg border-gray-300"
-                                placeholder="{{ $masterField->placeholder }}">{{ old('field_' . $masterField->id) }}</textarea>
+                            <textarea id="field_{{ $masterField->id }}" name="field_{{ $masterField->id }}" rows="4"
+                                class="w-full rounded-lg border-gray-300" placeholder="{{ $masterField->placeholder }}">{{ old('field_' . $masterField->id) }}</textarea>
 
 
+                            {{-- ===================================== --}}
                             {{-- SELECT --}}
-                        @elseif($masterField->tipe === 'select')
-                            <select name="field_{{ $masterField->id }}" class="w-full rounded-lg border-gray-300">
+                            {{-- ===================================== --}}
+                        @elseif ($masterField->tipe === 'select')
+                            <select id="field_{{ $masterField->id }}" name="field_{{ $masterField->id }}"
+                                class="w-full rounded-lg border-gray-300">
 
                                 <option value="">
                                     -- Pilih --
@@ -78,16 +87,44 @@
                             </select>
 
 
+                            {{-- ===================================== --}}
+                            {{-- FILE --}}
+                            {{-- ===================================== --}}
+                        @elseif ($masterField->tipe === 'file')
+                            <input type="file" id="field_{{ $masterField->id }}" name="field_{{ $masterField->id }}"
+                                accept=".jpg,.jpeg,.png,.pdf"
+                                class="w-full
+                                       rounded-lg
+                                       border border-gray-300
+                                       bg-white
+                                       px-4 py-2
+                                       text-gray-700
+                                       file:mr-4
+                                       file:py-2
+                                       file:px-4
+                                       file:rounded-lg
+                                       file:border-0
+                                       file:bg-blue-50
+                                       file:text-blue-700
+                                       hover:file:bg-blue-100">
+
+                            <p class="text-xs text-gray-500 mt-2">
+                                Format yang diperbolehkan: JPG, JPEG, PNG, atau PDF.
+                                Maksimal 2 MB.
+                            </p>
+
+
+                            {{-- ===================================== --}}
                             {{-- INPUT BIASA --}}
+                            {{-- ===================================== --}}
                         @else
-                            <input type="{{ $masterField->tipe }}" name="field_{{ $masterField->id }}"
-                                value="{{ old('field_' . $masterField->id) }}" class="w-full rounded-lg border-gray-300"
-                                placeholder="{{ $masterField->placeholder }}">
+                            <input type="{{ $masterField->tipe }}" id="field_{{ $masterField->id }}"
+                                name="field_{{ $masterField->id }}" value="{{ old('field_' . $masterField->id) }}"
+                                class="w-full rounded-lg border-gray-300" placeholder="{{ $masterField->placeholder }}">
                         @endif
 
 
-                        {{-- ERROR FIELD --}}
-
+                        {{-- Error --}}
                         @error('field_' . $masterField->id)
                             <p class="text-red-500 text-sm mt-1">
                                 {{ $message }}
@@ -98,10 +135,17 @@
                 @endforeach
 
 
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl">
-
+                {{-- Tombol --}}
+                <button type="submit"
+                    class="w-full
+                           bg-blue-600
+                           hover:bg-blue-700
+                           text-white
+                           py-3
+                           rounded-xl
+                           font-semibold
+                           transition">
                     Kirim Pendaftaran
-
                 </button>
 
             </form>

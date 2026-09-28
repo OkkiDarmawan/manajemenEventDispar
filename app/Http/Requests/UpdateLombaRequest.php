@@ -23,7 +23,17 @@ class UpdateLombaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'event_id' => ['required', 'exists:events,id'], 
+            'nama_lomba' => ['required', 'string', 'max:255'], 
+            'penyelenggara' => ['nullable', 'string', 'max:255'], 
+            'deskripsi' => ['nullable', 'string'], 
+            'syarat' => ['nullable', 'string'], 
+            'kuota' => ['required', 'integer', 'min:1'], 
+            'biaya' => ['required', 'numeric', 'min:0'], 
+            'hadiah' => ['nullable', 'string', 'max:255'], 
+            'pendaftaran_terbuka' => ['nullable', 'date'], 
+            'pendaftaran_tertutup' => ['nullable', 'date', 'after_or_equal:pendaftaran_terbuka'], 
+            'poster' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
         ];
     }
 }
