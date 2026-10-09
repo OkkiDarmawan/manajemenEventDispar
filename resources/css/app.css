@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@keyframes rainbow-bg {
+    0%   { background-color: #ef4444; } /* Merah */
+    14%  { background-color: #f97316; } /* Jingga / Oranye */
+    28%  { background-color: #eab308; } /* Kuning */
+    42%  { background-color: #22c55e; } /* Hijau */
+    57%  { background-color: #06b6d4; } /* Biru Muda / Sian */
+    71%  { background-color: #3b82f6; } /* Biru */
+    85%  { background-color: #8b5cf6; } /* Ungu / Nila */
+    100% { background-color: #ef4444; } /* Kembali ke Merah */
+}
+
+.animate-rainbow {
+    animation: rainbow-bg 8s linear infinite;
+}

@@ -235,11 +235,18 @@ class PendaftaranUmkmController extends Controller
             );
     }
 
-    public function export()
+    public function export(Request $request)
     {
-        return Excel::download(
-            new PendaftaranUmkmExport,
-            'pendaftaran-umkm.xlsx'
-        );
+          return Excel::download(
+        new PendaftaranUmkmExport(
+            $request->only([
+                'search',
+                'event_id',
+                'umkm_id',
+                'status',
+            ])
+        ),
+        'pendaftaran-umkm.xlsx'
+    );
     }
 }

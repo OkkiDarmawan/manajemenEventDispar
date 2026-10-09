@@ -218,6 +218,30 @@
 
                 </div>
 
+                 {{-- LINK GMAPS --}}
+
+                    <div>
+
+                        <label class="block font-medium mb-2">
+                            Link Google Maps
+                        </label>
+
+                        <input type="url" name="link_gmaps" value="{{ old('link_gmaps', $workshop->link_gmaps ?? '') }}"
+                            placeholder="Tempel link Google Maps di sini"
+                            class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+
+                        <p class="text-xs text-gray-500 mt-1">
+                            Masukkan URL Google Maps untuk lokasi kegiatan.
+                        </p>
+
+                        @error('link_gmaps')
+                            <p class="text-red-500 text-sm mt-1">
+                                {{ $message }}
+                            </p>
+                        @enderror
+
+                    </div>
+
                 {{-- BIAYA --}}
 
                 <div class="mb-6">

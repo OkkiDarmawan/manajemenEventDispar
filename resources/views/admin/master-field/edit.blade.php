@@ -147,6 +147,8 @@
 
                         <option value="Dokumen" {{ old('kategori', $masterField->kategori) == 'Dokumen' ? 'selected' : '' }}> Dokumen</option>
 
+                        <option value="galeri" {{ old('kategori', $masterField->kategori) == 'galeri' ? 'selected' : '' }}> Galeri</option>
+
                         <option value="Lainnya" {{ old('kategori', $masterField->kategori) == 'Lainnya' ? 'selected' : '' }} >Lainnya</option>
 
                     </select>

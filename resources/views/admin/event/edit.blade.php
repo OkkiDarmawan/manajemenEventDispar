@@ -57,6 +57,49 @@
 
                     </div>
 
+                    {{-- Penyelenggara --}}
+                    <div class="md:col-span-2">
+
+                        <label class="block font-medium mb-2">
+                            Nama Penyelenggara
+                        </label>
+
+                        <input type="text" name="penyelenggara"
+                            value="{{ old('penyelenggara', $event->penyelenggara ?? '') }}"
+                            placeholder="Masukkan nama penyelenggara"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500">
+
+                        @error('penyelenggara')
+                            <p class="text-red-500 text-sm mt-1">
+                                {{ $message }}
+                            </p>
+                        @enderror
+
+                    </div>
+
+                    {{-- Biaya --}}
+                    <div class="md:col-span-2">
+
+                        <label class="block font-medium mb-2">
+                            Biaya
+                        </label>
+
+                        <input type="number" id="biaya" name="biaya" min="0"
+                            value="{{ old('biaya', $event->biaya ?? 0) }}" placeholder="0"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2">
+
+                        <p class="text-xs text-gray-500 mt-1">
+                            Isi 0 jika event gratis.
+                        </p>
+
+                        @error('biaya')
+                            <p class="text-red-500 text-sm mt-1">
+                                {{ $message }}
+                            </p>
+                        @enderror
+
+                    </div>
+
                     <!-- Lokasi -->
 
                     <div>
@@ -70,6 +113,30 @@
                             class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500">
 
                         @error('lokasi')
+                            <p class="text-red-500 text-sm mt-1">
+                                {{ $message }}
+                            </p>
+                        @enderror
+
+                    </div>
+
+                     {{-- LINK GMAPS --}}
+
+                    <div>
+
+                        <label class="block font-medium mb-2">
+                            Link Google Maps
+                        </label>
+
+                        <input type="url" name="link_gmaps" value="{{ old('link_gmaps', $event->link_gmaps ?? '') }}"
+                            placeholder="Tempel link Google Maps di sini"
+                            class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+
+                        <p class="text-xs text-gray-500 mt-1">
+                            Masukkan URL Google Maps untuk lokasi kegiatan.
+                        </p>
+
+                        @error('link_gmaps')
                             <p class="text-red-500 text-sm mt-1">
                                 {{ $message }}
                             </p>

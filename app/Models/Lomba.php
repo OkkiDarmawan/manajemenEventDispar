@@ -43,6 +43,10 @@ class Lomba extends Model
 
         'syarat',
 
+        'lokasi',   
+
+        'link_gmaps',
+
         'kuota',
 
         'biaya',

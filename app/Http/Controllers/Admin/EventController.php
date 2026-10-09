@@ -104,6 +104,12 @@ class EventController extends Controller
 
             'deskripsi' => $request->deskripsi,
 
+            'penyelenggara' => $request->penyelenggara,
+
+            'biaya' => $request->biaya,
+
+            'link_gmaps' => $request->link_gmaps,
+
             'lokasi' => $request->lokasi,
 
             'tanggal_mulai' => $request->tanggal_mulai,
@@ -164,10 +170,21 @@ class EventController extends Controller
         // Update data
         $event->update([
             'nama_event' => $request->nama_event,
+
             'deskripsi' => $request->deskripsi,
+
+            'penyelenggara' => $request->penyelenggara,
+
+            'biaya' => $request->biaya,
+
+            'link_gmaps' => $request->link_gmaps,
+
             'lokasi' => $request->lokasi,
+
             'tanggal_mulai' => $request->tanggal_mulai,
+
             'tanggal_selesai' => $request->tanggal_selesai,
+            
             'poster' => $poster,
         ]);
 

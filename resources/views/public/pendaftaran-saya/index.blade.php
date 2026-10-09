@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <div class="max-w-6xl mx-auto px-6 py-12">
+    <div class="max-w-6xl mx-auto px-6 pt-28 pb-12">
 
         {{-- Header --}}
         <div class="mb-8">
@@ -106,14 +106,24 @@
                     @endif
 
                     @if ($pendaftaran->status === 'Ditolak')
-                        <div class="mt-6">
+                         {{-- Detail --}}
+                            <div class="mt-5 pt-5 border-t border-gray-100">
 
-                            <a href="{{ route('public.lomba.daftar', $pendaftaran->lomba->id) }}"
-                                class="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition">
-                                Daftar Kembali
-                            </a>
+                                <a href="{{ route('public.lomba.show', $pendaftaran->lomba->id) }}"
+                                    class="inline-flex
+                                   items-center
+                                   px-4 py-2
+                                   rounded-lg
+                                   bg-blue-600
+                                   hover:bg-blue-700
+                                   text-white
+                                   text-sm
+                                   font-semibold
+                                   transition">
+                                    Lihat Lomba
+                                </a>
 
-                        </div>
+                            </div>
                     @endif
                 </div>
 
@@ -217,14 +227,24 @@
                     @endif
 
                     @if ($pendaftaran->status === 'Ditolak')
-                        <div class="mt-6">
+                        {{-- Detail --}}
+                            <div class="mt-5 pt-5 border-t border-gray-100">
 
-                            <a href="{{ route('public.workshop.daftar', $pendaftaran->workshop->id) }}"
-                                class="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition">
-                                Daftar Kembali
-                            </a>
+                                <a href="{{ route('public.workshop.show', $pendaftaran->workshop->id) }}"
+                                    class="inline-flex
+                                   items-center
+                                   px-4 py-2
+                                   rounded-lg
+                                   bg-blue-600
+                                   hover:bg-blue-700
+                                   text-white
+                                   text-sm
+                                   font-semibold
+                                   transition">
+                                    Lihat Workshop
+                                </a>
 
-                        </div>
+                            </div>
                     @endif
 
                 </div>

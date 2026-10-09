@@ -43,6 +43,12 @@ class Event extends Model
 
         'deskripsi',
 
+        'penyelenggara',
+
+        'biaya',
+
+        'link_gmaps',
+
         'lokasi',
 
         'tanggal_mulai',

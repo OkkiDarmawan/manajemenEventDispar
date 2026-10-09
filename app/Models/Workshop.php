@@ -17,6 +17,7 @@ class Workshop extends Model
         'lokasi',
         'kuota',
         'biaya',
+        'link_gmaps',
         'event_id',
         'syarat',
         'penyelenggara'

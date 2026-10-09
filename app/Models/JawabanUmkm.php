@@ -22,4 +22,12 @@ class JawabanUmkm extends Model
     {
         return $this->belongsTo(MasterField::class);
     }
+
+    public function umkmField()
+    {
+        return $this->belongsTo(
+            UmkmField::class,
+            'umkm_field_id'
+        );
+    }
 }

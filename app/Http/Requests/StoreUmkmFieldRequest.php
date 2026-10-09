@@ -22,21 +22,17 @@ class StoreUmkmFieldRequest extends FormRequest
      */
     public function rules(): array
     {
+
         return [
-            'master_fields' => [
-                'nullable',
-                'array',
-            ],
+            'master_fields' => ['nullable', 'array'],
+            'master_fields.*' => ['integer', 'exists:master_fields,id'],
 
-             'master_fields.*.active' => [
-                'nullable',
-                'boolean',
-            ],
+            'required_fields' => ['nullable', 'array'],
+            'required_fields.*' => ['integer', 'exists:master_fields,id'],
 
-            'master_fields.*.required' => [
-                'nullable',
-                'boolean',
-            ],
+            'order' => ['nullable', 'array'],
+            'order.*' => ['nullable', 'integer', 'min:1'],
         ];
+
     }
 }

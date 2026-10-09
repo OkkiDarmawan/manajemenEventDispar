@@ -16,9 +16,11 @@ class Umkm extends Model
         'pendaftaran_terbuka',
         'pendaftaran_tertutup',
         'kuota',
+        'link_gmaps',
         'biaya',
         'syarat',
-        'penyelenggara'
+        'penyelenggara',
+        'lokasi'
     ];
 
     public function event(): BelongsTo

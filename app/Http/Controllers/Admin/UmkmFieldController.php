@@ -28,11 +28,16 @@ class UmkmFieldController extends Controller
             ->pluck('master_field_id')
             ->toArray();
 
+        $fieldOrders = $umkm->umkmFields()
+            ->pluck('urutan', 'master_field_id')
+            ->toArray();
+
         return view('admin.umkm.field', compact(
             'umkm',
             'masterFields',
             'selectedFields',
-            'requiredFields'
+            'requiredFields',
+            'fieldOrders'
         ));
     }
 
@@ -41,16 +46,17 @@ class UmkmFieldController extends Controller
      */
     public function store(StoreUmkmFieldRequest $request, Umkm $umkm)
     {
-        $masterFields = $request->input('master_fields', []);
+        $selectedFields = $request->input('master_fields', []);
+        $requiredFields = $request->input('required_fields', []);
+        $orders = $request->input('order', []);
 
-        // Nonaktifkan seluruh field lama
+        // Nonaktifkan semua field lama
         $umkm->umkmFields()->update([
             'is_active' => false,
+            'required' => false,
         ]);
 
-        foreach ($masterFields as $masterFieldId => $data) {
-
-            $isActive = isset($data['active']);
+        foreach ($selectedFields as $masterFieldId) {
 
             UmkmField::updateOrCreate(
                 [
@@ -58,8 +64,9 @@ class UmkmFieldController extends Controller
                     'master_field_id' => $masterFieldId,
                 ],
                 [
-                    'required' => $isActive && isset($data['required']),
-                    'is_active' => $isActive,
+                    'is_active' => true,
+                    'required' => in_array($masterFieldId, $requiredFields),
+                    'urutan' => (int) ($orders[$masterFieldId] ?? 0),
                 ]
             );
         }

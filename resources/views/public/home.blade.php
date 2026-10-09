@@ -492,173 +492,173 @@
     </section>
 
 
-    {{-- ===================================================== --}}
-    {{-- FAQ SECTION (Alpine.js Client-Side Filtering) --}}
-    {{-- ===================================================== --}}
-
-    @php
-        // 1. Amankan data: Jika dari Controller masih pakai paginate(), kita ambil array item-nya saja.
-        // Jika sudah pakai get(), langsung pakai.
-        $faqArray = is_object($faqs) && method_exists($faqs, 'items') ? $faqs->items() : $faqs;
-
-        // 2. Ambil kategori unik langsung dari array yang sudah diamankan
-        $kategoriFaq = collect($faqArray)->pluck('kategori')->filter()->unique()->sort()->values();
-    @endphp
-
-    <section class="py-16 bg-gray-50" id="faq" x-data="{
-        faqs: @js($faqArray),
-        search: '',
-        kategori: '',
-    
-        filteredFaqs() {
-            const keyword = this.search.toLowerCase().trim();
-    
-            return this.faqs.filter(faq => {
-                // Cek Pencarian di Pertanyaan & Jawaban
-                const pertanyaan = (faq.pertanyaan || '').toLowerCase();
-                const jawaban = (faq.jawaban || '').toLowerCase();
-                const cocokSearch = pertanyaan.includes(keyword) || jawaban.includes(keyword);
-    
-                // Cek Filter Kategori
-                let cocokKategori = true;
-                if (this.kategori !== '') {
-                    cocokKategori = (faq.kategori || '') === this.kategori;
-                }
-    
-                return cocokSearch && cocokKategori;
-            });
-        }
-    }">
-
-        <div class="max-w-4xl mx-auto px-6">
-
-            {{-- Header --}}
-            <div class="text-center mb-10">
-                <p class="text-blue-600 font-semibold">FAQ</p>
-                <h2 class="text-3xl font-bold text-gray-800 mt-2">
-                    Pertanyaan yang Sering Ditanyakan
-                </h2>
-                <p class="text-gray-500 mt-3">
-                    Temukan jawaban dari pertanyaan yang sering ditanyakan mengenai pendaftaran dan kegiatan.
-                </p>
-            </div>
 
 
-            {{-- ================================================= --}}
-            {{-- KONDISI 1: TIDAK ADA DATA FAQ SAMA SEKALI --}}
-            {{-- ================================================= --}}
-            <template x-if="faqs.length === 0">
-                <div class="bg-white rounded-xl shadow-sm p-10 text-center border border-gray-100">
-                    <div class="text-5xl mb-4">💬</div>
-                    <h3 class="text-xl font-semibold text-gray-800">Belum Ada FAQ</h3>
-                    <p class="mt-2 text-gray-500">Belum ada pertanyaan yang ditambahkan.</p>
-                </div>
-            </template>
 
 
-            {{-- Jika ada data, tampilkan area pencarian --}}
-            <div x-show="faqs.length > 0" x-cloak>
 
-                {{-- SEARCH & FILTER --}}
-                <div class="mb-8">
-                    <div class="flex flex-col md:flex-row gap-4">
+    <section class="py-16 bg-gray-50" id="faq">
 
-                        {{-- Search Input --}}
-                        <div class="relative flex-1">
-                            <span
-                                class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="m21 21-4.35-4.35m1.35-5.65a7 7 0 1 1-14 0 7 7 0 0 1 14 0z" />
-                                </svg>
-                            </span>
+    <div class="max-w-4xl mx-auto px-6">
 
-                            <input type="text" x-model="search" placeholder="Cari pertanyaan atau jawaban..."
-                                class="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 bg-white focus:border-blue-500 focus:ring-blue-500 transition">
-                        </div>
+        {{-- Header --}}
+        <div class="text-center mb-10">
 
-                        {{-- Dropdown Kategori --}}
-                        <div class="md:w-56">
-                            <select x-model="kategori"
-                                class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-700 focus:border-blue-500 focus:ring-blue-500 transition">
+            <p class="text-blue-600 font-semibold">
+                FAQ
+            </p>
 
-                                <option value="">Semua Kategori</option>
+            <h2 class="text-3xl font-bold text-gray-800 mt-2">
+                Pertanyaan yang Sering Ditanyakan
+            </h2>
 
-                                @foreach ($kategoriFaq as $kat)
-                                    <option value="{{ $kat }}">{{ $kat }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        {{-- Tombol Reset --}}
-                        <button type="button" x-show="search !== '' || kategori !== ''"
-                            @click="search = ''; kategori = ''"
-                            class="px-6 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold transition">
-                            Reset
-                        </button>
-
-                    </div>
-                </div>
-
-
-                {{-- INFO JUMLAH HASIL --}}
-                <div class="mb-5 text-sm text-gray-500">
-                    Menampilkan <span class="font-semibold text-gray-800" x-text="filteredFaqs().length"></span> FAQ
-                </div>
-
-
-                {{-- ================================================= --}}
-                {{-- KONDISI 2: DATA TIDAK DITEMUKAN SAAT CARI/FILTER --}}
-                {{-- ================================================= --}}
-                <template x-if="filteredFaqs().length === 0">
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-10 text-center">
-                        <div class="text-5xl mb-4">🔎</div>
-                        <h3 class="text-xl font-semibold text-gray-800">FAQ Tidak Ditemukan</h3>
-                        <p class="mt-2 text-gray-500">Tidak ada FAQ yang cocok dengan pencarian Anda.</p>
-                    </div>
-                </template>
-
-
-                {{-- ================================================= --}}
-                {{-- DAFTAR FAQ --}}
-                {{-- ================================================= --}}
-                <div x-show="filteredFaqs().length > 0" class="space-y-4">
-
-                    <template x-for="faq in filteredFaqs()" :key="faq.id">
-
-                        <div x-data="{ open: false }"
-                            class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-
-                            <button type="button" @click="open = !open"
-                                class="w-full flex items-center justify-between text-left px-6 py-5 hover:bg-gray-50 transition">
-
-                                <div class="flex-1">
-                                    <div class="flex flex-wrap items-center gap-3">
-                                        <template x-if="faq.kategori">
-                                            <span
-                                                class="px-2.5 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold flex-shrink-0"
-                                                x-text="faq.kategori"></span>
-                                        </template>
-
-                                        <span class="font-semibold text-gray-800" x-text="faq.pertanyaan"></span>
-                                    </div>
-                                </div>
-
-                                <span class="ml-4 text-gray-500 text-xl flex-shrink-0" x-text="open ? '−' : '+'"></span>
-                            </button>
-
-                            <div x-show="open" x-transition class="px-6 pb-5">
-                                <p class="text-gray-600 leading-relaxed" x-text="faq.jawaban"></p>
-                            </div>
-
-                        </div>
-
-                    </template>
-
-                </div>
-
-            </div>
+            <p class="text-gray-500 mt-3">
+                Temukan jawaban dari pertanyaan yang sering ditanyakan mengenai
+                pendaftaran dan kegiatan.
+            </p>
 
         </div>
-    </section>
+
+
+        {{-- ISI FAQ --}}
+        <div id="faq-content">
+
+            @include('public.partials.faq-content')
+
+        </div>
+
+    </div>
+
+</section>
+@push('scripts')
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const faqContent = document.getElementById('faq-content');
+
+    if (!faqContent) {
+        return;
+    }
+
+
+    // Fungsi memuat FAQ tanpa refresh halaman
+    async function loadFaq(url) {
+
+        try {
+
+            faqContent.style.opacity = '0.5';
+            faqContent.style.pointerEvents = 'none';
+
+            const response = await fetch(url, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'text/html'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Gagal memuat FAQ.');
+            }
+
+            const html = await response.text();
+
+            faqContent.innerHTML = html;
+
+            // Aktifkan kembali Alpine pada elemen yang baru
+            if (window.Alpine) {
+                Alpine.initTree(faqContent);
+            }
+
+            faqContent.style.opacity = '1';
+            faqContent.style.pointerEvents = 'auto';
+
+        } catch (error) {
+
+            console.error(error);
+
+            faqContent.style.opacity = '1';
+            faqContent.style.pointerEvents = 'auto';
+
+        }
+    }
+
+
+    // Submit Search
+    faqContent.addEventListener('submit', function (event) {
+
+        if (!event.target.matches('#faq-form')) {
+            return;
+        }
+
+        event.preventDefault();
+
+        const form = event.target;
+
+        const params = new URLSearchParams(
+            new FormData(form)
+        );
+
+        loadFaq(
+            `${form.action}?${params.toString()}`
+        );
+
+    });
+
+
+    // Filter kategori langsung jalan
+    faqContent.addEventListener('change', function (event) {
+
+        if (!event.target.matches('#faq-kategori')) {
+            return;
+        }
+
+        const form = document.getElementById('faq-form');
+
+        const params = new URLSearchParams(
+            new FormData(form)
+        );
+
+        // Reset pagination ke halaman 1 saat filter berubah
+        params.delete('faq_page');
+
+        loadFaq(
+            `${form.action}?${params.toString()}`
+        );
+
+    });
+
+
+    // Tombol reset
+    faqContent.addEventListener('click', function (event) {
+
+        if (!event.target.matches('#faq-reset')) {
+            return;
+        }
+
+        loadFaq('{{ url('/') }}');
+
+    });
+
+
+    // Pagination tanpa refresh
+    faqContent.addEventListener('click', function (event) {
+
+        const link = event.target.closest('.pagination a');
+
+        if (!link) {
+            return;
+        }
+
+        event.preventDefault();
+
+        loadFaq(link.href);
+
+    });
+
+});
+</script>
+
+@endpush
+
 @endsection

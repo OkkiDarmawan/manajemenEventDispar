@@ -25,7 +25,7 @@ class PendaftaranUmkm extends Model
     {
         return $this->belongsTo(User::class);
     }
-
+    
     public function jawabanUmkms(): HasMany
     {
         return $this->hasMany(JawabanUmkm::class);

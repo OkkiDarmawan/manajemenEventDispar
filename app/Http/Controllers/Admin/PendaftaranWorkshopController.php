@@ -321,11 +321,18 @@ class PendaftaranWorkshopController extends Controller
         //
     }
 
-    public function export()
+    public function export(Request $request)
     {
-        return Excel::download(
-            new PendaftaranWorkshopExport,
-            'pendaftaran-workshop.xlsx'
-        );
+          return Excel::download(
+        new PendaftaranWorkshopExport(
+            $request->only([
+                'search',
+                'event_id',
+                'workshop_id',
+                'status',
+            ])
+        ),
+        'pendaftaran-workshop.xlsx'
+    );
     }
 }

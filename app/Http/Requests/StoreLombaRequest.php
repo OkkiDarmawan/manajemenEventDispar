@@ -27,9 +27,15 @@ class StoreLombaRequest extends FormRequest
 
             'nama_lomba' => ['required', 'max:255'],
 
+            'penyelenggara' => ['required','string','max:255'],
+
             'deskripsi' => ['required'],
 
+            'link_gmaps' => ['nullable', 'url', 'max:2000'],
+
             'syarat' => ['required'],
+
+            'lokasi' => ['nullable', 'string', 'max:255'],
 
             'kuota' => ['required', 'integer', 'min:1'],
 

@@ -10,6 +10,7 @@ class UmkmField extends Model
     protected $fillable = [
         'umkm_id',
         'master_field_id',
+        'urutan',
         'required',
         'is_active',
     ];

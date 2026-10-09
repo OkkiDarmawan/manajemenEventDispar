@@ -2,36 +2,132 @@
 
 namespace App\Exports;
 
-use App\Models\UmkmField;
 use App\Models\JawabanUmkm;
 use App\Models\PendaftaranUmkm;
+use App\Models\UmkmField;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class PendaftaranUmkmExport implements FromCollection, WithHeadings
 {
+    protected array $filters;
+
     protected Collection $pendaftaran;
+
     protected Collection $fields;
+
     protected Collection $jawaban;
 
-    public function __construct()
+    public function __construct(array $filters = [])
     {
-        $this->pendaftaran = PendaftaranUmkm::with([
+        $this->filters = $filters;
+
+        /*
+        |--------------------------------------------------------------------------
+        | Query Pendaftaran UMKM
+        |--------------------------------------------------------------------------
+        */
+
+        $query = PendaftaranUmkm::with([
             'user',
             'umkm.event',
-        ])
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Search
+        |--------------------------------------------------------------------------
+        */
+
+        if (!empty($filters['search'])) {
+
+            $search = $filters['search'];
+
+            $query->where(function ($q) use ($search) {
+
+                $q->whereHas('user', function ($userQuery) use ($search) {
+                    $userQuery
+                        ->where('name', 'like', "%{$search}%")
+                        ->orWhere('nik', 'like', "%{$search}%")
+                        ->orWhere('no_hp', 'like', "%{$search}%");
+                })
+
+                ->orWhere('nomor_peserta', 'like', "%{$search}%")
+
+                ->orWhereHas('umkm', function ($umkmQuery) use ($search) {
+
+                    $umkmQuery
+                        ->where('nama', 'like', "%{$search}%")
+                        ->orWhereHas('event', function ($eventQuery) use ($search) {
+                            $eventQuery->where(
+                                'nama_event',
+                                'like',
+                                "%{$search}%"
+                            );
+                        });
+                });
+            });
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Filter Event
+        |--------------------------------------------------------------------------
+        */
+
+        if (!empty($filters['event_id'])) {
+
+            $query->whereHas('umkm', function ($umkmQuery) use ($filters) {
+
+                $umkmQuery->where(
+                    'event_id',
+                    $filters['event_id']
+                );
+            });
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Filter UMKM
+        |--------------------------------------------------------------------------
+        */
+
+        if (!empty($filters['umkm_id'])) {
+
+            $query->where(
+                'umkm_id',
+                $filters['umkm_id']
+            );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Filter Status
+        |--------------------------------------------------------------------------
+        */
+
+        if (!empty($filters['status'])) {
+
+            $query->where(
+                'status',
+                $filters['status']
+            );
+        }
+
+        $this->pendaftaran = $query
             ->latest()
             ->get();
 
         /*
         |--------------------------------------------------------------------------
-        | Field UMKM dinamis
+        | Dynamic Field UMKM
         |--------------------------------------------------------------------------
         */
 
         $umkmIds = $this->pendaftaran
             ->pluck('umkm_id')
+            ->filter()
             ->unique()
             ->values();
 
@@ -45,7 +141,7 @@ class PendaftaranUmkmExport implements FromCollection, WithHeadings
 
         /*
         |--------------------------------------------------------------------------
-        | Jawaban peserta
+        | Jawaban UMKM
         |--------------------------------------------------------------------------
         */
 
@@ -54,15 +150,22 @@ class PendaftaranUmkmExport implements FromCollection, WithHeadings
             ->values();
 
         $this->jawaban = JawabanUmkm::with('masterField')
-            ->whereIn('pendaftaran_umkm_id', $pendaftaranIds)
+            ->whereIn(
+                'pendaftaran_umkm_id',
+                $pendaftaranIds
+            )
             ->get()
             ->groupBy('pendaftaran_umkm_id');
     }
 
     public function collection(): Collection
     {
-        return $this->pendaftaran->values()->map(
-            function (PendaftaranUmkm $pendaftaran, $index) {
+        return $this->pendaftaran
+            ->values()
+            ->map(function (
+                PendaftaranUmkm $pendaftaran,
+                $index
+            ) {
 
                 $row = [
                     $index + 1,
@@ -76,6 +179,7 @@ class PendaftaranUmkmExport implements FromCollection, WithHeadings
                     $pendaftaran->user?->alamat,
 
                     $pendaftaran->umkm?->nama,
+                    $pendaftaran->umkm?->penyelenggara,
                     $pendaftaran->umkm?->event?->nama_event,
 
                     $pendaftaran->umkm?->biaya,
@@ -83,12 +187,14 @@ class PendaftaranUmkmExport implements FromCollection, WithHeadings
                     $pendaftaran->status,
                     $pendaftaran->alasan_penolakan ?? null,
 
-                    $pendaftaran->created_at?->format('d-m-Y H:i'),
+                    $pendaftaran->created_at?->format(
+                        'd-m-Y H:i'
+                    ),
                 ];
 
                 /*
                 |--------------------------------------------------------------------------
-                | Field dinamis
+                | Dynamic Field
                 |--------------------------------------------------------------------------
                 */
 
@@ -109,7 +215,8 @@ class PendaftaranUmkmExport implements FromCollection, WithHeadings
                         $field->masterField?->tipe === 'file'
                     ) {
                         $value = asset(
-                            'storage/' . ltrim($value, '/')
+                            'storage/' .
+                            ltrim($value, '/')
                         );
                     }
 
@@ -117,8 +224,7 @@ class PendaftaranUmkmExport implements FromCollection, WithHeadings
                 }
 
                 return $row;
-            }
-        );
+            });
     }
 
     public function headings(): array
@@ -134,12 +240,14 @@ class PendaftaranUmkmExport implements FromCollection, WithHeadings
             'Alamat',
 
             'Nama UMKM',
+            'Penyelenggara',
             'Event',
 
             'Biaya',
 
             'Status',
             'Alasan Penolakan',
+
             'Tanggal Pendaftaran',
         ];
 
@@ -150,4 +258,3 @@ class PendaftaranUmkmExport implements FromCollection, WithHeadings
         return $headings;
     }
 }
-

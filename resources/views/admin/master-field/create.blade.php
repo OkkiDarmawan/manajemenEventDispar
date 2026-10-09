@@ -146,6 +146,8 @@
 
                         <option value="Dokumen">Dokumen</option>
 
+                        <option value="galeri">Galeri</option>
+
                         <option value="Lainnya">Lainnya</option>
 
                     </select>

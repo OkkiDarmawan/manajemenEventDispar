@@ -27,13 +27,19 @@ class StoreEventRequest extends FormRequest
 
             'deskripsi' => ['required'],
 
+            'penyelenggara' => ['required','string','max:255'],
+
             'lokasi' => ['required'],
+
+            'link_gmaps' => ['nullable', 'url', 'max:2000'],
 
             'tanggal_mulai' => ['required', 'date'],
 
             'tanggal_selesai' => ['required', 'date', 'after_or_equal:tanggal_mulai'],
 
             'poster' => ['nullable', 'image', 'max:2048'],
+
+            'biaya' => ['required','numeric','min:0'],
 
         ];
     }

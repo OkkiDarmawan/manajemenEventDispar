@@ -1,305 +1,244 @@
 @extends('layouts.admin')
 
-@section('title', 'Kelola Field UMKM')
-
 @section('content')
 
-    <div class="p-6">
+    <div class="max-w-5xl mx-auto space-y-6">
 
         {{-- Header --}}
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+        <div class="flex items-center justify-between">
 
             <div>
 
-                <p class="text-blue-600 font-semibold">
-                    {{ $umkm->event->nama_event }}
-                </p>
-
-                <h1 class="text-3xl font-bold text-gray-800 mt-1">
-                    Kelola Field UMKM
+                <h1 class="text-3xl font-bold text-gray-800">
+                    Kelola Field
                 </h1>
 
-                <p class="text-gray-500 mt-2">
-                    Atur field yang akan digunakan pada formulir pendaftaran
-                    <span class="font-semibold text-gray-700">
-                        {{ $umkm->nama }}
-                    </span>.
+                <p class="text-gray-500 mt-1">
+
+                    {{ $umkm->nama }}
+
+                    •
+
+                    {{ $umkm->event->nama_event }}
+
                 </p>
 
             </div>
 
+            <a
+                href="{{ route('admin.umkm.index') }}"
+                class="px-5 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg transition">
 
-            <a href="{{ route('admin.umkm.index') }}"
-                class="inline-flex items-center justify-center
-                       px-5 py-2
-                       bg-gray-200
-                       hover:bg-gray-300
-                       rounded-lg
-                       transition">
                 ← Kembali
+
             </a>
 
         </div>
 
 
-        {{-- Informasi --}}
-        <div class="bg-blue-50 border border-blue-200 rounded-2xl p-5 mb-6">
+        {{-- Card utama --}}
+        <div class="bg-white rounded-xl shadow p-8">
 
-            <p class="font-semibold text-blue-800">
-                Pengaturan Field
-            </p>
+            <form
+                action="{{ route('admin.umkm.field.store', $umkm->id) }}"
+                method="POST">
 
-            <p class="text-sm text-blue-700 mt-1">
-                Centang <strong>Aktif</strong> untuk menampilkan field pada
-                formulir pendaftaran masyarakat. Centang <strong>Wajib</strong>
-                jika field tersebut harus diisi.
-            </p>
-
-        </div>
-
-
-        {{-- Form --}}
-        <form action="{{ route('admin.umkm.field.store', $umkm->id) }}" method="POST">
-
-            @csrf
-
-
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-
-
-                {{-- Header Table --}}
-                <div class="px-6 py-5 border-b border-gray-100">
-
-                    <div class="grid grid-cols-12 gap-4 items-center">
-
-                        <div class="col-span-1"></div>
-
-                        <div class="col-span-5">
-                            <p class="text-sm font-semibold text-gray-600">
-                                Field
-                            </p>
-                        </div>
-
-                        <div class="col-span-3">
-                            <p class="text-sm font-semibold text-gray-600">
-                                Tipe
-                            </p>
-                        </div>
-
-                        <div class="col-span-3 text-center">
-                            <p class="text-sm font-semibold text-gray-600">
-                                Wajib
-                            </p>
-                        </div>
-
-                    </div>
-
-                </div>
+                @csrf
 
 
                 {{-- Daftar Master Field --}}
-                <div class="divide-y divide-gray-100">
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
 
-                    @forelse ($masterFields as $masterField)
-                        @php
-                            $oldFields = old('master_fields');
+                    @foreach ($masterFields as $field)
 
-                            if (is_array($oldFields) && array_key_exists($masterField->id, $oldFields)) {
-                                $isSelected = isset($oldFields[$masterField->id]['active']);
-                                $isRequired = isset($oldFields[$masterField->id]['required']);
-                            } else {
-                                $isSelected = in_array($masterField->id, $selectedFields ?? []);
+                        <div
+                            class="field-card border rounded-xl shadow-sm hover:shadow-md transition bg-white p-5">
 
-                                $isRequired = in_array($masterField->id, $requiredFields ?? []);
-                            }
-                        @endphp
+                            {{-- Header --}}
+                            <div class="flex items-start justify-between">
 
+                                <div>
 
-                        <div class="field-row px-6 py-5
-                                   hover:bg-gray-50
-                                   transition"
-                            data-field-id="{{ $masterField->id }}">
+                                    <h3 class="font-bold text-lg text-gray-800">
+                                        {{ $field->label }}
+                                    </h3>
 
-                            <div class="grid grid-cols-12 gap-4 items-center">
+                                    <p class="text-sm text-gray-500 mt-1">
+                                        {{ ucfirst($field->tipe) }}
+                                    </p>
+
+                                </div>
 
 
                                 {{-- Aktif --}}
-                                <div class="col-span-1 flex justify-center">
+                                <input
+                                    type="checkbox"
+                                    class="master-field w-5 h-5 text-blue-600 rounded"
+                                    name="master_fields[]"
+                                    value="{{ $field->id }}"
+                                    {{ in_array($field->id, $selectedFields ?? []) ? 'checked' : '' }}>
 
-                                    <input type="checkbox" name="master_fields[{{ $masterField->id }}][active]"
-                                        value="1"
-                                        class="active-field
-                                               rounded
-                                               border-gray-300
-                                               text-blue-600
-                                               focus:ring-blue-500"
-                                        {{ $isSelected ? 'checked' : '' }}>
-
-                                </div>
+                            </div>
 
 
-                                {{-- Informasi Field --}}
-                                <div class="col-span-5">
+                            {{-- Kategori --}}
+                            <div class="mt-4">
 
-                                    <p class="font-semibold text-gray-800">
-                                        {{ $masterField->label }}
-                                    </p>
+                                <span
+                                    class="inline-flex px-3 py-1 rounded-full text-xs bg-blue-100 text-blue-700">
 
-                                    @if ($masterField->placeholder)
-                                        <p class="text-xs text-gray-400 mt-1">
-                                            {{ $masterField->placeholder }}
-                                        </p>
-                                    @endif
+                                    {{ $field->kategori }}
 
-                                </div>
+                                </span>
+
+                            </div>
 
 
-                                {{-- Tipe --}}
-                                <div class="col-span-3">
+                            {{-- Required --}}
+                            <div class="required-option mt-6">
 
-                                    @php
-                                        $typeLabel = match ($masterField->tipe) {
-                                            'text' => 'Text',
-                                            'textarea' => 'Textarea',
-                                            'select' => 'Select',
-                                            'number' => 'Number',
-                                            'date' => 'Date',
-                                            'file' => 'File',
-                                            default => ucfirst($masterField->tipe),
-                                        };
-                                    @endphp
+                                <label class="flex items-center justify-between">
 
-                                    <span
-                                        class="inline-flex
-                                               px-3 py-1
-                                               rounded-full
-                                               bg-gray-100
-                                               text-gray-700
-                                               text-sm
-                                               font-medium">
-                                        {{ $typeLabel }}
+                                    <span class="text-sm text-gray-600">
+                                        Wajib Diisi
                                     </span>
 
-                                </div>
+                                    <input
+                                        type="checkbox"
+                                        name="required_fields[]"
+                                        value="{{ $field->id }}"
+                                        class="w-5 h-5 text-green-600 rounded"
+                                        {{ in_array($field->id, $requiredFields ?? []) ? 'checked' : '' }}>
+
+                                </label>
+
+                            </div>
 
 
-                                {{-- Wajib --}}
-                                <div class="col-span-3">
+                            {{-- Urutan --}}
+                            <div class="order-option mt-5">
 
-                                    <label class="flex items-center justify-center gap-2">
+                                <label class="text-sm text-gray-600">
+                                    Urutan Tampil
+                                </label>
 
-                                        <input type="checkbox" name="master_fields[{{ $masterField->id }}][required]"
-                                            value="1"
-                                            class="required-field
-                                                   rounded
-                                                   border-gray-300
-                                                   text-blue-600
-                                                   focus:ring-blue-500"
-                                            {{ $isRequired ? 'checked' : '' }} {{ !$isSelected ? 'disabled' : '' }}>
+                                <select
+                                    name="order[{{ $field->id }}]"
+                                    class="mt-2 w-full rounded-lg border-gray-300">
 
-                                        <span class="text-sm text-gray-700">
-                                            Wajib
-                                        </span>
+                                    @for ($i = 1; $i <= count($masterFields); $i++)
 
-                                    </label>
+                                        <option
+                                            value="{{ $i }}"
+                                            {{ ($fieldOrders[$field->id] ?? null) == $i ? 'selected' : '' }}>
 
-                                </div>
+                                            {{ $i }}
+
+                                        </option>
+
+                                    @endfor
+
+                                </select>
 
                             </div>
 
                         </div>
 
-                    @empty
-
-                        <div class="px-6 py-10 text-center">
-
-                            <p class="text-gray-500">
-                                Belum ada Master Field yang tersedia.
-                            </p>
-
-                        </div>
-                    @endforelse
+                    @endforeach
 
                 </div>
 
 
-                {{-- Footer --}}
-                <div
-                    class="px-6 py-5
-                           border-t border-gray-100
-                           bg-gray-50
-                           flex flex-col sm:flex-row
-                           justify-between
-                           gap-3">
+                {{-- Tombol --}}
+                <div class="mt-8 flex justify-end gap-3">
 
-                    <a href="{{ route('admin.umkm.index') }}"
-                        class="px-5 py-3
-                               rounded-xl
-                               border border-gray-300
-                               bg-white
-                               hover:bg-gray-50
-                               text-gray-700
-                               text-center
-                               transition">
+                    <a
+                        href="{{ route('admin.umkm.index') }}"
+                        class="px-6 py-2 rounded-lg bg-gray-700 hover:bg-gray-800 text-white">
+
                         Batal
+
                     </a>
 
-                    <button type="submit"
-                        class="px-6 py-3
-                               rounded-xl
-                               bg-blue-600
-                               hover:bg-blue-700
-                               text-white
-                               font-semibold
-                               transition">
-                        Simpan Field
+                    <button
+                        type="submit"
+                        class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+
+                        Simpan
+
                     </button>
 
                 </div>
 
-            </div>
+            </form>
 
-        </form>
+        </div>
 
     </div>
 
-
-    {{-- Aktif / Wajib --}}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-
-            const rows = document.querySelectorAll('.field-row');
-
-            rows.forEach(function(row) {
-
-                const activeCheckbox =
-                    row.querySelector('.active-field');
-
-                const requiredCheckbox =
-                    row.querySelector('.required-field');
+@endsection
 
 
-                function updateRequiredState() {
+@push('scripts')
 
-                    requiredCheckbox.disabled = !activeCheckbox.checked;
+<script>
+document.addEventListener('DOMContentLoaded', function () {
 
-                    if (!activeCheckbox.checked) {
-                        requiredCheckbox.checked = false;
-                    }
-                }
+    document.querySelectorAll('.master-field').forEach(function (checkbox) {
 
+        updateCard(checkbox);
 
-                activeCheckbox.addEventListener(
-                    'change',
-                    updateRequiredState
-                );
+        checkbox.addEventListener('change', function () {
 
-
-                updateRequiredState();
-
-            });
+            updateCard(this);
 
         });
-    </script>
 
-@endsection
+    });
+
+
+    function updateCard(masterCheckbox) {
+
+        const card = masterCheckbox.closest('.field-card');
+
+        const required = card.querySelector('.required-option');
+        const order = card.querySelector('.order-option');
+
+        if (masterCheckbox.checked) {
+
+            required.classList.remove('hidden');
+            order.classList.remove('hidden');
+
+            card.classList.add(
+                'ring-2',
+                'ring-blue-500',
+                'border-blue-500',
+                'bg-blue-50'
+            );
+
+        } else {
+
+            required.classList.add('hidden');
+            order.classList.add('hidden');
+
+            const requiredInput = required.querySelector('input');
+
+            if (requiredInput) {
+                requiredInput.checked = false;
+            }
+
+            card.classList.remove(
+                'ring-2',
+                'ring-blue-500',
+                'border-blue-500',
+                'bg-blue-50'
+            );
+
+        }
+
+    }
+
+});
+</script>
+
+@endpush

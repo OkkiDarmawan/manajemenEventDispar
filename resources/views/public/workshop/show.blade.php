@@ -7,14 +7,17 @@
     <div class="max-w-7xl mx-auto px-6 py-12">
 
 
-        {{-- Poster Lomba --}}
+         {{-- Poster Workshop --}}
         @if ($workshop->poster)
-            <div class="mb-10">
+            <div class="w-screen relative left-1/2 -translate-x-1/2 mb-10">
 
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="relative w-full h-[45vh] min-h-[280px] max-h-[520px] overflow-hidden bg-gray-900">
 
-                    <img src="{{ asset('storage/' . $workshop->poster) }}" alt="Poster {{ $workshop->nama_lomba }}"
-                        class="w-full max-h-[600px] object-contain mx-auto bg-gray-50">
+                    <img src="{{ asset('storage/' . $workshop->poster) }}" alt="Poster {{ $workshop->judul }}"
+                        class="w-full h-full object-cover object-center">
+
+                    {{-- Overlay supaya poster lebih elegan --}}
+                    <div class="absolute inset-0 bg-black/10"></div>
 
                 </div>
 
@@ -99,6 +102,23 @@
 
                 </div>
 
+                @if ($workshop->link_gmaps)
+                    <div class="mt-6 overflow-hidden rounded-2xl border border-gray-200 shadow-sm">
+                        <iframe src="{{ $workshop->link_gmaps }}" width="100%" height="400" style="border:0;"
+                            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                @endif
+
+                @php
+                    $hariIni = \Carbon\Carbon::today();
+
+                    $pendaftaranDibuka =
+                        (!$workshop->tanggal_mulai ||
+                            $hariIni->greaterThanOrEqualTo(\Carbon\Carbon::parse($workshop->tanggal_mulai))) &&
+                        (!$workshop->tanggal_selesai ||
+                            $hariIni->lessThanOrEqualTo(\Carbon\Carbon::parse($workshop->tanggal_selesai)));
+                @endphp
 
                 {{-- Status Pendaftaran --}}
                 <div>
@@ -107,8 +127,22 @@
 
                         {{-- Belum pernah mendaftar --}}
                         @if (!$pendaftaran)
-                            @if ($kuotaPenuh)
+                            {{-- Pendaftaran sudah ditutup --}}
+                            @if (!$pendaftaranDibuka)
+                                <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6">
+
+                                    <p class="text-gray-600 font-bold text-lg">
+                                        🔒 Pendaftaran Ditutup
+                                    </p>
+
+                                    <p class="text-sm text-gray-500 mt-1">
+                                        Periode pendaftaran workshop sudah berakhir.
+                                    </p>
+
+                                </div>
+
                                 {{-- Kuota penuh --}}
+                            @elseif ($kuotaPenuh)
                                 <div class="bg-red-50 border border-red-200 rounded-2xl p-6">
 
                                     <p class="text-red-600 font-bold text-lg">
@@ -120,18 +154,14 @@
                                     </p>
 
                                 </div>
+
+                                {{-- Masih bisa daftar --}}
                             @else
-                                {{-- Masih tersedia --}}
                                 <a href="{{ route('public.workshop.daftar', $workshop->id) }}"
-                                    class="inline-flex items-center
-                                           px-8 py-4
-                                           rounded-xl
-                                           bg-blue-600
-                                           hover:bg-blue-700
-                                           text-white
-                                           font-semibold
-                                           transition">
-                                    Daftar Workshop →
+                                    class="inline-flex items-center px-8 py-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition">
+
+                                    Daftar Sekarang →
+
                                 </a>
                             @endif
 
@@ -231,13 +261,22 @@
                                 @endif
 
 
-                                {{-- Daftar kembali --}}
-                                @if (!$kuotaPenuh)
+                                 {{-- Daftar Kembali --}}
+                                @if (!$pendaftaranDibuka)
+                                    <div class="mt-4 text-sm text-gray-500 font-semibold">
+                                        🔒 Periode pendaftaran sudah ditutup.
+                                    </div>
+                                @elseif (!$kuotaPenuh)
                                     <a href="{{ route('public.workshop.daftar', $workshop->id) }}"
-                                        class="inline-block mt-4 px-5 py-2
-                                               bg-blue-600 hover:bg-blue-700
-                                               text-white rounded-lg">
+                                        class="inline-block mt-4
+                               px-5 py-2
+                               bg-blue-600
+                               hover:bg-blue-700
+                               text-white
+                               rounded-lg">
+
                                         Daftar Kembali
+
                                     </a>
                                 @else
                                     <div class="mt-4 text-sm text-red-600 font-semibold">
@@ -245,11 +284,25 @@
                                     </div>
                                 @endif
 
+
                             </div>
                         @endif
                     @else
                         {{-- Belum Login --}}
-                        @if ($kuotaPenuh)
+
+                        @if (!$pendaftaranDibuka)
+                            <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6">
+
+                                <p class="text-gray-600 font-bold text-lg">
+                                    🔒 Pendaftaran Ditutup
+                                </p>
+
+                                <p class="text-sm text-gray-500 mt-1">
+                                    Periode pendaftaran workshop sudah berakhir.
+                                </p>
+
+                            </div>
+                        @elseif ($kuotaPenuh)
                             <div class="bg-red-50 border border-red-200 rounded-2xl p-6">
 
                                 <p class="text-red-600 font-bold text-lg">
@@ -264,17 +317,20 @@
                         @else
                             <a href="{{ route('login') }}"
                                 class="inline-flex items-center
-                                       px-8 py-4
-                                       bg-blue-600 hover:bg-blue-700
-                                       text-white font-semibold
-                                       rounded-xl
-                                       transition">
+                       px-8 py-4
+                       bg-blue-600
+                       hover:bg-blue-700
+                       text-white
+                       font-semibold
+                       rounded-xl
+                       transition">
+
                                 Login untuk Mendaftar
+
                             </a>
                         @endif
 
                     @endauth
-
                 </div>
 
             </div>
@@ -287,6 +343,15 @@
             <div class="lg:col-span-1">
 
                 <div class="lg:sticky lg:top-24 space-y-6">
+
+                    {{-- Poster Workshop --}}
+                    @if (!empty($workshop->poster))
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-2 overflow-hidden">
+                            <img src="{{ asset('storage/' . $workshop->poster) }}"
+                                alt="Poster {{ $workshop->nama ?? 'UMKM' }}"
+                                class="w-full h-auto rounded-xl object-cover hover:scale-[1.02] transition-transform duration-300">
+                        </div>
+                    @endif
 
 
                     {{-- Informasi Workshop --}}
@@ -304,6 +369,19 @@
 
                         </div>
 
+
+                        {{-- Penyelenggara --}}
+                        <div class="pb-5 border-b border-gray-100">
+
+                            <p class="text-sm text-gray-500">
+                                Penyelenggara
+                            </p>
+
+                            <p class="mt-1 font-semibold text-gray-800">
+                                {{ $workshop->penyelenggara }}
+                            </p>
+
+                        </div>
 
                         {{-- Narasumber --}}
                         <div class="pb-5 border-b border-gray-100">

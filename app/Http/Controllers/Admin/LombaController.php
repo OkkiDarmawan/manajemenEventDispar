@@ -7,6 +7,7 @@ use App\Http\Requests\StoreLombaRequest;
 use App\Http\Requests\UpdateLombaRequest;
 use App\Models\Event;
 use App\Models\Lomba;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class LombaController extends Controller
@@ -63,9 +64,31 @@ class LombaController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Lomba $lomba)
     {
         $events = Event::orderBy('nama_event')->get();
+
+         $sekarang = Carbon::today();
+
+    // Belum dibuka
+    if (
+        $lomba->pendaftaran_terbuka &&
+        $sekarang->lt(Carbon::parse($lomba->pendaftaran_terbuka))
+    ) {
+        return redirect()
+            ->route('public.lomba.show', $lomba)
+            ->with('error', 'Pendaftaran lomba belum dibuka.');
+    }
+
+    // Sudah ditutup
+    if (
+        $lomba->pendaftaran_tertutup &&
+        $sekarang->gt(Carbon::parse($lomba->pendaftaran_tertutup))
+    ) {
+        return redirect()
+            ->route('public.lomba.show', $lomba)
+            ->with('error', 'Pendaftaran lomba sudah ditutup.');
+    }
 
         return view(
             'admin.lomba.create',
@@ -76,9 +99,25 @@ class LombaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreLombaRequest $request)
+    public function store(StoreLombaRequest $request, Lomba $lomba)
     {
         $validated = $request->validated();
+
+         $sekarang = Carbon::today();
+
+    if (
+        $lomba->pendaftaran_terbuka &&
+        $sekarang->lt(Carbon::parse($lomba->pendaftaran_terbuka))
+    ) {
+        return back()->with('error', 'Pendaftaran lomba belum dibuka.');
+    }
+
+    if (
+        $lomba->pendaftaran_tertutup &&
+        $sekarang->gt(Carbon::parse($lomba->pendaftaran_tertutup))
+    ) {
+        return back()->with('error', 'Pendaftaran lomba sudah ditutup.');
+    }
 
         /*
         |--------------------------------------------------------------------------
@@ -135,10 +174,7 @@ class LombaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(
-        UpdateLombaRequest $request,
-        Lomba $lomba
-    ) {
+    public function update(UpdateLombaRequest $request,Lomba $lomba) {
         $data = $request->validated();
 
         /*

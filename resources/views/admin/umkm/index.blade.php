@@ -338,30 +338,23 @@
                                 {{-- Aksi --}}
                                 <td class="px-6 py-4">
 
-                                    <div class="flex items-center gap-2">
-
-                                        <a href="{{ route('admin.umkm.show', $umkm->id) }}"
-                                            class="px-3 py-2
-                                                   rounded-lg
-                                                   bg-blue-600
-                                                   hover:bg-blue-700
-                                                   text-white">
-                                            Detail
-                                        </a>
+                                    <div class="flex justify-center items-center gap-2">
 
 
-                                        <a href="{{ route('admin.umkm.edit', $umkm->id) }}"
-                                            class="px-3 py-2
-                                                   rounded-lg
-                                                   bg-yellow-500
-                                                   hover:bg-yellow-600
-                                                   text-white">
-                                            Edit
-                                        </a>
+
 
                                         <a href="{{ route('admin.umkm.field', $umkm->id) }}"
-                                            class="px-3 py-2 rounded-lg bg-purple-600  hover:bg-purple-700  text-white">
+                                            class="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-center rounded-lg">
+
                                             Kelola Field
+
+                                        </a>
+
+                                        <a href="{{ route('admin.umkm.edit', $umkm->id) }}"
+                                            class="px-3 py-1 bg-yellow-500 hover:bg-yellow-600 text-white text-center rounded">
+
+                                            Edit
+
                                         </a>
 
 

@@ -97,23 +97,14 @@
 
                             {{-- Prefix +62 --}}
                             <span
-                                class="inline-flex items-center px-4
-                   rounded-l-xl
-                   border border-r-0 border-gray-300
-                   bg-gray-50
-                   text-gray-600
-                   font-medium">
+                                class="inline-flex items-center px-4 rounded-l-xl border border-r-0 border-gray-300 bg-gray-50 text-gray-600 font-medium">
                                 +62
                             </span>
 
 
                             {{-- Nomor --}}
                             <x-text-input id="no_hp"
-                                class="block w-full rounded-r-xl
-                   border-gray-300
-                   focus:border-blue-500
-                   focus:ring-blue-500
-                   py-3"
+                                class="block w-full rounded-r-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500 py-3"
                                 type="tel" name="no_hp" :value="old('no_hp')" required autocomplete="tel"
                                 inputmode="numeric" maxlength="13" placeholder="81234567890" />
 

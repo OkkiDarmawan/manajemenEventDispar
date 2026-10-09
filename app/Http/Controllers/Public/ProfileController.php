@@ -96,10 +96,7 @@ class ProfileController extends Controller
         $user->update($validated);
 
         return redirect()
-            ->route('public.profile.show')
-            ->with(
-                'success',
-                'Profil berhasil diperbarui.'
-            );
+            ->back()
+            ->with('success', 'Data peserta berhasil diperbarui.');
     }
 }

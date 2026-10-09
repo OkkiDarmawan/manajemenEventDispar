@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\Workshop;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class WorkshopController extends Controller
@@ -72,9 +73,18 @@ class WorkshopController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Workshop $workshop)
     {
         $events = Event::orderBy('nama_event')->get();
+
+         if (
+        $workshop->tanggal_selesai &&
+        Carbon::today()->gt(Carbon::parse($workshop->tanggal_selesai))
+    ) {
+        return redirect()
+            ->route('public.workshop.show', $workshop)
+            ->with('error', 'Pendaftaran workshop sudah ditutup karena workshop telah selesai.');
+    }
 
         return view('admin.workshop.create', compact('events'));
     }
@@ -82,8 +92,17 @@ class WorkshopController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Workshop $workshop)
     {
+
+     if (
+        $workshop->tanggal_selesai &&
+        Carbon::today()->gt(Carbon::parse($workshop->tanggal_selesai))
+    ) {
+        return back()
+            ->with('error', 'Pendaftaran workshop sudah ditutup karena workshop telah selesai.');
+    }
+
         $validated = $request->validate([
             'judul' => 'required|string|max:255',
 
@@ -104,6 +123,8 @@ class WorkshopController extends Controller
             ],
 
             'lokasi' => 'required|string|max:255',
+
+             'link_gmaps' => 'nullable|url|max:2000',
 
             'kuota' => 'required|integer|min:1',
 
@@ -245,6 +266,8 @@ class WorkshopController extends Controller
             'lokasi' => 'required|string|max:255',
 
             'kuota' => 'required|integer|min:1',
+
+            'link_gmaps' => 'nullable|url|max:2000',
 
             'biaya' => [
                 'required',

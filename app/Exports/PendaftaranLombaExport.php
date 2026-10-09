@@ -2,8 +2,8 @@
 
 namespace App\Exports;
 
-use App\Models\LombaField;
 use App\Models\JawabanLomba;
+use App\Models\LombaField;
 use App\Models\PendaftaranLomba;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -11,27 +11,129 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class PendaftaranLombaExport implements FromCollection, WithHeadings
 {
+    protected array $filters;
+
     protected Collection $pendaftaran;
+
     protected Collection $fields;
+
     protected Collection $jawaban;
 
-    public function __construct()
+    public function __construct(array $filters = [])
     {
-        $this->pendaftaran = PendaftaranLomba::with([
+        $this->filters = $filters;
+
+        /*
+        |--------------------------------------------------------------------------
+        | Query Pendaftaran Lomba
+        |--------------------------------------------------------------------------
+        */
+
+        $query = PendaftaranLomba::with([
             'user',
             'lomba.event',
-        ])
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Search
+        |--------------------------------------------------------------------------
+        */
+
+        if (!empty($filters['search'])) {
+
+            $search = $filters['search'];
+
+            $query->where(function ($q) use ($search) {
+
+                $q->whereHas('user', function ($userQuery) use ($search) {
+                    $userQuery
+                        ->where('name', 'like', "%{$search}%")
+                        ->orWhere('nik', 'like', "%{$search}%")
+                        ->orWhere('no_hp', 'like', "%{$search}%");
+                })
+
+                ->orWhere('nomor_peserta', 'like', "%{$search}%")
+
+                ->orWhereHas('lomba', function ($lombaQuery) use ($search) {
+
+                    $lombaQuery
+                        ->where('nama_lomba', 'like', "%{$search}%")
+                        ->orWhereHas('event', function ($eventQuery) use ($search) {
+                            $eventQuery->where(
+                                'nama_event',
+                                'like',
+                                "%{$search}%"
+                            );
+                        });
+                });
+            });
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Filter Event
+        |--------------------------------------------------------------------------
+        */
+
+        if (!empty($filters['event_id'])) {
+
+            $query->whereHas('lomba', function ($lombaQuery) use ($filters) {
+
+                $lombaQuery->where(
+                    'event_id',
+                    $filters['event_id']
+                );
+            });
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Filter Lomba
+        |--------------------------------------------------------------------------
+        */
+
+        if (!empty($filters['lomba_id'])) {
+
+            $query->where(
+                'lomba_id',
+                $filters['lomba_id']
+            );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Filter Status
+        |--------------------------------------------------------------------------
+        */
+
+        if (!empty($filters['status'])) {
+
+            $query->where(
+                'status',
+                $filters['status']
+            );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Ambil Data
+        |--------------------------------------------------------------------------
+        */
+
+        $this->pendaftaran = $query
             ->latest()
             ->get();
 
         /*
         |--------------------------------------------------------------------------
-        | Ambil semua field dinamis Lomba yang aktif
+        | Ambil Dynamic Field
         |--------------------------------------------------------------------------
         */
 
         $lombaIds = $this->pendaftaran
             ->pluck('lomba_id')
+            ->filter()
             ->unique()
             ->values();
 
@@ -45,7 +147,7 @@ class PendaftaranLombaExport implements FromCollection, WithHeadings
 
         /*
         |--------------------------------------------------------------------------
-        | Ambil seluruh jawaban peserta
+        | Ambil Jawaban
         |--------------------------------------------------------------------------
         */
 
@@ -54,19 +156,28 @@ class PendaftaranLombaExport implements FromCollection, WithHeadings
             ->values();
 
         $this->jawaban = JawabanLomba::with('masterField')
-            ->whereIn('pendaftaran_lomba_id', $pendaftaranIds)
+            ->whereIn(
+                'pendaftaran_lomba_id',
+                $pendaftaranIds
+            )
             ->get()
             ->groupBy('pendaftaran_lomba_id');
     }
 
     public function collection(): Collection
     {
-        return $this->pendaftaran->values()->map(
-            function (PendaftaranLomba $pendaftaran, $index) {
+        return $this->pendaftaran
+            ->values()
+            ->map(function (
+                PendaftaranLomba $pendaftaran,
+                $index
+            ) {
 
                 $row = [
                     $index + 1,
+
                     $pendaftaran->nomor_peserta,
+
                     $pendaftaran->user?->name,
                     $pendaftaran->user?->nik,
                     $pendaftaran->user?->no_hp,
@@ -84,7 +195,7 @@ class PendaftaranLombaExport implements FromCollection, WithHeadings
 
                 /*
                 |--------------------------------------------------------------------------
-                | Jawaban Field Dinamis
+                | Dynamic Field
                 |--------------------------------------------------------------------------
                 */
 
@@ -100,10 +211,6 @@ class PendaftaranLombaExport implements FromCollection, WithHeadings
 
                     $value = $answer?->value;
 
-                    /*
-                    | Jika field berupa file, ubah menjadi URL
-                    */
-
                     if (
                         $value &&
                         $field->masterField?->tipe === 'file'
@@ -117,8 +224,7 @@ class PendaftaranLombaExport implements FromCollection, WithHeadings
                 }
 
                 return $row;
-            }
-        );
+            });
     }
 
     public function headings(): array
@@ -126,6 +232,7 @@ class PendaftaranLombaExport implements FromCollection, WithHeadings
         $headings = [
             'No',
             'Nomor Peserta',
+
             'Nama Peserta',
             'NIK',
             'No HP',
@@ -147,4 +254,3 @@ class PendaftaranLombaExport implements FromCollection, WithHeadings
         return $headings;
     }
 }
-

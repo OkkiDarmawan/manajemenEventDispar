@@ -121,6 +121,50 @@
 
                     </div>
 
+                    {{-- Lokasi --}}
+
+                    <div class="md:col-span-2">
+
+                        <label for="lokasi" class="block font-semibold text-gray-700 mb-2">
+                            Lokasi
+                        </label>
+
+                        <input type="text" id="lokasi" name="lokasi" value="{{ old('lokasi') }}"
+                            placeholder="Masukkan lokasi"
+                            class="w-full rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+
+                        @error('lokasi')
+                            <p class="text-red-500 text-sm mt-1">
+                                {{ $message }}
+                            </p>
+                        @enderror
+
+                    </div>
+
+                     {{-- LINK GMAPS --}}
+
+                    <div class="md:col-span-2">
+
+                        <label class="block font-medium mb-2">
+                            Link Google Maps
+                        </label>
+
+                        <input type="url" name="link_gmaps" value="{{ old('link_gmaps', $umkm->link_gmaps ?? '') }}"
+                            placeholder="Tempel link Google Maps di sini"
+                            class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+
+                        <p class="text-xs text-gray-500 mt-1">
+                            Masukkan URL Google Maps untuk lokasi kegiatan.
+                        </p>
+
+                        @error('link_gmaps')
+                            <p class="text-red-500 text-sm mt-1">
+                                {{ $message }}
+                            </p>
+                        @enderror
+
+                    </div>
+
 
                    
 

@@ -3,15 +3,29 @@
 @section('content')
     <div class="max-w-3xl mx-auto space-y-6">
 
-        <div>
+        {{-- Header --}}
+        <div class="flex items-center justify-between">
 
-            <h1 class="text-3xl font-bold text-gray-800">
-                Tambah Workshop
-            </h1>
+            <div>
 
-            <p class="text-gray-500 mt-1">
-                Tambahkan informasi workshop baru.
-            </p>
+                <h1 class="text-3xl font-bold text-gray-800">
+                    Tambah Workshop
+                </h1>
+
+                <p class="text-gray-500 mt-1">
+                    Tambahkan kegiatan Workshop baru untuk event yang dipilih.
+                </p>
+
+            </div>
+
+            <a href="{{ route('admin.workshop.index') }}"
+                class="px-5 py-2
+                       bg-gray-200
+                       hover:bg-gray-300
+                       rounded-lg
+                       transition">
+                ← Kembali
+            </a>
 
         </div>
 
@@ -199,6 +213,30 @@
                     @enderror
 
                 </div>
+
+                 {{-- LINK GMAPS --}}
+
+                    <div>
+
+                        <label class="block font-medium mb-2">
+                            Link Google Maps
+                        </label>
+
+                        <input type="url" name="link_gmaps" value="{{ old('link_gmaps', $workshop->link_gmaps ?? '') }}"
+                            placeholder="Tempel link Google Maps di sini"
+                            class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+
+                        <p class="text-xs text-gray-500 mt-1">
+                            Masukkan URL Google Maps untuk lokasi kegiatan.
+                        </p>
+
+                        @error('link_gmaps')
+                            <p class="text-red-500 text-sm mt-1">
+                                {{ $message }}
+                            </p>
+                        @enderror
+
+                    </div>
 
 
                 {{-- Kuota --}}

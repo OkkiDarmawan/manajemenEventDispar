@@ -16,6 +16,8 @@ use App\Http\Controllers\Admin\WorkshopController;
 // Import Public
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Public\EventController as PublicEventController;
+
+use App\Http\Controllers\Public\GaleriUmkmController;
 use App\Http\Controllers\Public\LombaController as PublicLombaController;
 use App\Http\Controllers\Public\PendaftaranLombaController as PublicPendaftaranLombaController;
 use App\Http\Controllers\Public\PendaftaranSayaController;
@@ -33,6 +35,14 @@ Route::get('/lomba/{lomba}', [PublicLombaController::class, 'show'])
 
 Route::get('/event/{event}', [PublicEventController::class, 'show'])
     ->name('public.event.show');
+
+Route::get('/galeri-umkm', [GaleriUmkmController::class, 'index'])
+    ->name('public.galeri-umkm');
+
+Route::get('/galeri-umkm/{pendaftaranUmkm}', [
+    GaleriUmkmController::class,
+    'show',
+])->name('public.galeri-umkm.show');
 
 Route::middleware('auth')->group(function () {
 
@@ -190,7 +200,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         '/pendaftaran-lomba/{pendaftaranLomba}',
         [PendaftaranLombaController::class, 'show']
     )->name('pendaftaran-lomba.show');
-
 
     Route::get(
         '/pendaftaran-workshop/{pendaftaranWorkshop}',

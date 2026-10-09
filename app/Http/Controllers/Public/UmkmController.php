@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
-use App\Models\PendaftaranUmkm;
 use App\Models\JawabanUmkm;
+use App\Models\PendaftaranUmkm;
 use App\Models\Umkm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -59,6 +59,8 @@ class UmkmController extends Controller
         $fields = $umkm->umkmFields()
             ->with('masterField')
             ->where('is_active', true)
+            ->orderBy('urutan')
+            ->orderBy('id')
             ->get();
 
         return view('public.umkm.daftar', compact(

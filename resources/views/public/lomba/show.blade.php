@@ -25,21 +25,23 @@
             </div>
         @endif
 
-       
+
         {{-- Poster Lomba --}}
         @if ($lomba->poster)
-            <div class="mb-10">
+            <div class="w-screen relative left-1/2 -translate-x-1/2 mb-10">
 
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="relative w-full h-[45vh] min-h-[280px] max-h-[520px] overflow-hidden bg-gray-900">
 
                     <img src="{{ asset('storage/' . $lomba->poster) }}" alt="Poster {{ $lomba->nama_lomba }}"
-                        class="w-full max-h-[600px] object-contain mx-auto bg-gray-50">
+                        class="w-full h-full object-cover object-center">
+
+                    {{-- Overlay supaya poster lebih elegan --}}
+                    <div class="absolute inset-0 bg-black/10"></div>
 
                 </div>
 
             </div>
         @endif
-        
 
 
 
@@ -122,6 +124,25 @@
 
                 </div>
 
+                @if ($lomba->link_gmaps)
+                    <div class="mt-6 overflow-hidden rounded-2xl border border-gray-200 shadow-sm">
+                        <iframe src="{{ $lomba->link_gmaps }}" width="100%" height="400" style="border:0;"
+                            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                @endif
+
+
+                @php
+                    $hariIni = \Carbon\Carbon::today();
+
+                    $pendaftaranDibuka =
+                        (!$lomba->pendaftaran_terbuka ||
+                            $hariIni->greaterThanOrEqualTo(\Carbon\Carbon::parse($lomba->pendaftaran_terbuka))) &&
+                        (!$lomba->pendaftaran_tertutup ||
+                            $hariIni->lessThanOrEqualTo(\Carbon\Carbon::parse($lomba->pendaftaran_tertutup)));
+                @endphp
+
 
                 {{-- Status Pendaftaran / Tombol --}}
                 <div>
@@ -130,8 +151,22 @@
 
                         {{-- Belum Pernah Mendaftar --}}
                         @if (!$pendaftaran)
-                            @if ($kuotaPenuh)
-                                {{-- Kuota Penuh --}}
+                            {{-- Pendaftaran sudah ditutup --}}
+                            @if (!$pendaftaranDibuka)
+                                <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6">
+
+                                    <p class="text-gray-600 font-bold text-lg">
+                                        🔒 Pendaftaran Ditutup
+                                    </p>
+
+                                    <p class="text-sm text-gray-500 mt-1">
+                                        Periode pendaftaran lomba sudah berakhir.
+                                    </p>
+
+                                </div>
+
+                                {{-- Kuota penuh --}}
+                            @elseif ($kuotaPenuh)
                                 <div class="bg-red-50 border border-red-200 rounded-2xl p-6">
 
                                     <p class="text-red-600 font-bold text-lg">
@@ -143,18 +178,14 @@
                                     </p>
 
                                 </div>
+
+                                {{-- Masih bisa daftar --}}
                             @else
-                                {{-- Masih Tersedia --}}
                                 <a href="{{ route('public.lomba.daftar', $lomba->id) }}"
-                                    class="inline-flex items-center
-                                           px-8 py-4
-                                           rounded-xl
-                                           bg-blue-600
-                                           hover:bg-blue-700
-                                           text-white
-                                           font-semibold
-                                           transition">
+                                    class="inline-flex items-center px-8 py-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition">
+
                                     Daftar Sekarang →
+
                                 </a>
                             @endif
 
@@ -260,15 +291,21 @@
 
 
                                 {{-- Daftar Kembali --}}
-                                @if (!$kuotaPenuh)
+                                @if (!$pendaftaranDibuka)
+                                    <div class="mt-4 text-sm text-gray-500 font-semibold">
+                                        🔒 Periode pendaftaran sudah ditutup.
+                                    </div>
+                                @elseif (!$kuotaPenuh)
                                     <a href="{{ route('public.lomba.daftar', $lomba->id) }}"
                                         class="inline-block mt-4
-                                               px-5 py-2
-                                               bg-blue-600
-                                               hover:bg-blue-700
-                                               text-white
-                                               rounded-lg">
+                               px-5 py-2
+                               bg-blue-600
+                               hover:bg-blue-700
+                               text-white
+                               rounded-lg">
+
                                         Daftar Kembali
+
                                     </a>
                                 @else
                                     <div class="mt-4 text-sm text-red-600 font-semibold">
@@ -276,11 +313,25 @@
                                     </div>
                                 @endif
 
+
                             </div>
                         @endif
                     @else
                         {{-- Belum Login --}}
-                        @if ($kuotaPenuh)
+
+                        @if (!$pendaftaranDibuka)
+                            <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6">
+
+                                <p class="text-gray-600 font-bold text-lg">
+                                    🔒 Pendaftaran Ditutup
+                                </p>
+
+                                <p class="text-sm text-gray-500 mt-1">
+                                    Periode pendaftaran lomba sudah berakhir.
+                                </p>
+
+                            </div>
+                        @elseif ($kuotaPenuh)
                             <div class="bg-red-50 border border-red-200 rounded-2xl p-6">
 
                                 <p class="text-red-600 font-bold text-lg">
@@ -295,14 +346,16 @@
                         @else
                             <a href="{{ route('login') }}"
                                 class="inline-flex items-center
-                                       px-8 py-4
-                                       bg-blue-600
-                                       hover:bg-blue-700
-                                       text-white
-                                       font-semibold
-                                       rounded-xl
-                                       transition">
+                       px-8 py-4
+                       bg-blue-600
+                       hover:bg-blue-700
+                       text-white
+                       font-semibold
+                       rounded-xl
+                       transition">
+
                                 Login untuk Mendaftar
+
                             </a>
                         @endif
 
@@ -320,6 +373,14 @@
             <div class="lg:col-span-1">
 
                 <div class="lg:sticky lg:top-24 space-y-6">
+
+                    {{-- Poster Lomba --}}
+                    @if (!empty($lomba->poster))
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-2 overflow-hidden">
+                            <img src="{{ asset('storage/' . $lomba->poster) }}" alt="Poster {{ $lomba->nama ?? 'UMKM' }}"
+                                class="w-full h-auto rounded-xl object-cover hover:scale-[1.02] transition-transform duration-300">
+                        </div>
+                    @endif
 
 
                     {{-- Informasi Lomba --}}
@@ -397,6 +458,20 @@
                                 {{ $lomba->hadiah ?? '-' }}
                             </p>
 
+                        </div>
+
+                        {{-- Lokasi --}}
+                        <div class="pt-5 border-b border-gray-100">
+                            <p class="text-sm text-gray-500">
+                                Lokasi
+                            </p>
+
+                            <div class="mt-1 flex items-start gap-2">
+
+                                <p class="font-semibold text-gray-800 leading-snug">
+                                    {{ $lomba->lokasi ?? 'Online / Tidak ditentukan' }}
+                                </p>
+                            </div>
                         </div>
 
 

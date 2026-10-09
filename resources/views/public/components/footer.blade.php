@@ -1,4 +1,4 @@
-<footer class="bg-gray-900 text-gray-300 mt-20">
+<footer class="bg-gray-900 text-gray-300 ">
 
     <div class="max-w-7xl mx-auto px-6 py-12">
 
@@ -90,21 +90,7 @@
                             FAQ
 
                         </a>
-                    </li>
-
-                    @auth
-
-                        <li>
-                            <a
-                                href="{{ route('public.pendaftaran-saya.index') }}"
-                                class="hover:text-white transition">
-
-                                Pendaftaran Saya
-
-                            </a>
-                        </li>
-
-                    @endauth
+                    </li>                   
 
                 </ul>
 

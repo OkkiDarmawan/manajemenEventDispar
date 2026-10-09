@@ -325,11 +325,18 @@ class PendaftaranLombaController extends Controller
         //
     }
 
-    public function export()
+    public function export(Request $request)
     {
-        return Excel::download(
-            new PendaftaranLombaExport,
-            'pendaftaran-lomba.xlsx'
-        );
+          return Excel::download(
+        new PendaftaranLombaExport(
+            $request->only([
+                'search',
+                'event_id',
+                'lomba_id',
+                'status',
+            ])
+        ),
+        'pendaftaran-lomba.xlsx'
+    );
     }
 }

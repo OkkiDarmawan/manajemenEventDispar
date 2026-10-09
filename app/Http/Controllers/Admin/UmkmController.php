@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\Umkm;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -65,9 +66,31 @@ class UmkmController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Umkm $umkm)
     {
         $events = Event::orderBy('nama_event')->get();
+
+        $sekarang = Carbon::today();
+
+        // Belum dibuka
+        if (
+            $umkm->pendaftaran_terbuka &&
+            $sekarang->lt(Carbon::parse($umkm->pendaftaran_terbuka))
+        ) {
+            return redirect()
+                ->route('public.umkm.show', $umkm)
+                ->with('error', 'Pendaftaran UMKM belum dibuka.');
+        }
+
+        // Sudah ditutup
+        if (
+            $umkm->pendaftaran_tertutup &&
+            $sekarang->gt(Carbon::parse($umkm->pendaftaran_tertutup))
+        ) {
+            return redirect()
+                ->route('public.umkm.show', $umkm)
+                ->with('error', 'Pendaftaran UMKM sudah ditutup.');
+        }
 
         return view(
             'admin.umkm.create',
@@ -78,8 +101,29 @@ class UmkmController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Umkm $umkm)
     {
+
+        $sekarang = Carbon::today();
+
+        // Belum dibuka
+        if (
+            $umkm->pendaftaran_terbuka &&
+            $sekarang->lt(Carbon::parse($umkm->pendaftaran_terbuka))
+        ) {
+            return back()
+                ->with('error', 'Pendaftaran UMKM belum dibuka.');
+        }
+
+        // Sudah ditutup
+        if (
+            $umkm->pendaftaran_tertutup &&
+            $sekarang->gt(Carbon::parse($umkm->pendaftaran_tertutup))
+        ) {
+            return back()
+                ->with('error', 'Pendaftaran UMKM sudah ditutup.');
+        }
+
         $validated = $request->validate([
             'event_id' => [
                 'required',
@@ -107,6 +151,14 @@ class UmkmController extends Controller
                 'nullable',
                 'string',
             ],
+
+            'lokasi' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+
+            'link_gmaps' => ['nullable', 'url', 'max:2000'],
 
             'poster' => [
                 'nullable',
@@ -254,6 +306,14 @@ class UmkmController extends Controller
                 'nullable',
                 'string',
             ],
+
+            'lokasi' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+
+            'link_gmaps' => ['nullable', 'url', 'max:2000'],
 
             'poster' => [
                 'nullable',
